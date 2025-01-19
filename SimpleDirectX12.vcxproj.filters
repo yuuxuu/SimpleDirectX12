@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Window">
+      <UniqueIdentifier>{6a28d3e5-5b04-4825-9861-cf9803d80a22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Window">
+      <UniqueIdentifier>{c186c29a-7469-4f78-b931-9529112e74f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsAPI">
+      <UniqueIdentifier>{99510256-b27e-48e5-a953-d7983b229028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsAPI">
+      <UniqueIdentifier>{8b2278d7-af43-44dd-a4f9-016f1b750d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\math">
+      <UniqueIdentifier>{067a7f13-079f-4fdb-aba7-1691ae77c48c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\math">
+      <UniqueIdentifier>{8b717b33-ddcd-4b34-b4c7-c1ecc289afd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsAPI\DirectX12">
+      <UniqueIdentifier>{45a87d69-cdf9-49f9-985e-c57102675652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsAPI\DirectX12\DX12Resource">
+      <UniqueIdentifier>{da9175f2-6373-451e-b5e8-be725b7d9d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsAPI\DirectX12\DX12Resource\RTV">
+      <UniqueIdentifier>{2363641e-a5d3-43e3-b1f4-31edaa9f1bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsAPI\DirectX12">
+      <UniqueIdentifier>{98144a07-e591-43e0-8fbb-2925cd4f2571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource">
+      <UniqueIdentifier>{8f733588-fecd-4781-ab75-7a1848313e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource\RTV">
+      <UniqueIdentifier>{d6758b8e-6285-4f0e-8bd1-80a312a26790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource\DSV">
+      <UniqueIdentifier>{f04142f3-687d-492e-a6b5-94747e775cd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsAPI\DirectX12\DX12Resource\DSV">
+      <UniqueIdentifier>{da2fca99-c6f6-4e97-a9ea-1bbfff4a8bf2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\stdafx.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Window\Winow.cpp">
+      <Filter>ソース ファイル\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\math\math.cpp">
+      <Filter>ソース ファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12\DX12Resource\RTV</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Device.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12\DX12Resource\DSV</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp">
+      <Filter>ソース ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\main .h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Window\Winow.h">
+      <Filter>ヘッダー ファイル\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\math\math.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Command.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Device.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\IGraphics.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource\RTV</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12\DX12Resource\DSV</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h">
+      <Filter>ヘッダー ファイル\GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

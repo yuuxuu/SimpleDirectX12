@@ -1,0 +1,6 @@
+.vs
+*ilk
+*.pdb
+Debug
+Release
+!*.lib
