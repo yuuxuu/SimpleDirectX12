@@ -12,6 +12,8 @@
 
 namespace Graphics
 {
+    class IGraphicsResource;
+
     class IGraphics
     {
     public:
@@ -23,6 +25,10 @@ namespace Graphics
         virtual void FinalizeGraphics() = 0;
 
         virtual void UpdateGraphics(UINT width, UINT height) = 0;
+
+        virtual void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, const UINT byteWidth) = 0;
+
+        virtual void UpdateGraphicsResource(IGraphicsResource* pGraphicsResource, const void* updateSource) = 0;
     };
 } // namespace
 

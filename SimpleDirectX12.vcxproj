@@ -135,14 +135,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Camera\Camera.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Device.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.cpp" />
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\math\math.cpp" />
+    <ClCompile Include="Sources\Scene\Scene.cpp" />
     <ClCompile Include="Sources\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -150,16 +154,22 @@
     <ClCompile Include="Sources\Window\Winow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Camera\Camera.h" />
+    <ClInclude Include="Sources\Camera\CameraBufferType.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Command.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Device.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.h" />
     <ClInclude Include="Sources\GraphicsAPI\IGraphics.h" />
+    <ClInclude Include="Sources\GraphicsAPI\IGraphicsResource.h" />
     <ClInclude Include="Sources\main .h" />
     <ClInclude Include="Sources\math\math.h" />
+    <ClInclude Include="Sources\Scene\Scene.h" />
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\Window\Winow.h" />
   </ItemGroup>

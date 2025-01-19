@@ -9,6 +9,8 @@
 
 #include "Window/Winow.h"
 
+#include "Scene/Scene.h"
+
 #include "GraphicsAPI/DirectX12/DX12Graphics.h"
 
 namespace Simple {
@@ -51,12 +53,18 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
         return -1;
     }
 
+    auto windowWidth = window.GetWindowSize().w;
+    auto windowHeight = window.GetWindowSize().h;
+
     std::unique_ptr<Graphics::IGraphics> graphics = std::make_unique<Graphics::DX12Graphics>();
-    if (!graphics->InitializeGraphics(window.GetHwnd(), window.GetWindowSize().w, window.GetWindowSize().h))
+    if (!graphics->InitializeGraphics(window.GetHwnd(), windowWidth, windowHeight))
     {
         graphics->FinalizeGraphics();
         return -1;
     }
+
+    Simple::Scene scene(graphics.get());
+    scene.SetUpScene(windowWidth, windowHeight);
 
     MSG	msg;
     while (1) {
@@ -69,7 +77,7 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
             // メッセージをWndProcへ送る
             DispatchMessage(&msg);
 
-            graphics->UpdateGraphics(window.GetWindowSize().w, window.GetWindowSize().h);
+            scene.UpdateScene(windowWidth, windowHeight);
         }
     }
 

@@ -25,6 +25,8 @@ namespace Graphics
 
         DX12Device*                     pDX12Device;
 
+        UINT                            m_heapIndex;
+
     private:
         DX12HeapAllocator(const DX12HeapAllocator&) = delete;
         DX12HeapAllocator& operator=(const DX12HeapAllocator) = delete;
@@ -35,8 +37,14 @@ namespace Graphics
 
         bool CreateDescriptorHeap();
 
-        D3D12_CPU_DESCRIPTOR_HANDLE GetStartDescriptorHeapHandle();
-        D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHeapHandle(UINT heapIndex);
+        D3D12_CPU_DESCRIPTOR_HANDLE GetStartCPUDescriptorHeapHandle();
+        D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHeapHandle(UINT heapIndex);
+
+        void AddHeapIndex();
+
+        const UINT GetHeapIndex() const { return m_heapIndex; }
+
+        const UINT GetMaxNumDescriptors() const { return m_descriptorHeapDesc.NumDescriptors; }
     };
 } // namespace
 

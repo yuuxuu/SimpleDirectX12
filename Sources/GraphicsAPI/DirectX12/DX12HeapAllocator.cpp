@@ -30,15 +30,15 @@ namespace Graphics
         return true;
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartDescriptorHeapHandle()
+    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartCPUDescriptorHeapHandle()
     {
         return m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetDescriptorHeapHandle(UINT heapIndex)
+    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetCPUDescriptorHeapHandle(UINT heapIndex)
     {
         if (heapIndex == 0)
-            return GetStartDescriptorHeapHandle();
+            return GetStartCPUDescriptorHeapHandle();
         else if (heapIndex >= m_descriptorHeapDesc.NumDescriptors)
             heapIndex = m_descriptorHeapDesc.NumDescriptors - 1;
 
@@ -48,6 +48,17 @@ namespace Graphics
         handle.ptr += (handleSize * heapIndex);
 
         return handle;
+    }
+
+    void DX12HeapAllocator::AddHeapIndex()
+    {
+        if (m_heapIndex >= m_descriptorHeapDesc.NumDescriptors)
+        {
+            MessageBoxA(NULL, "Descriptor最大値を超えています。", "MessageBox", MB_OK);
+            return;
+        }
+
+        m_heapIndex++;
     }
 
 } // namespace

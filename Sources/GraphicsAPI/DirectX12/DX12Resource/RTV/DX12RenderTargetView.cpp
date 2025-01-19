@@ -55,7 +55,7 @@ namespace Graphics
 
         if (m_pResource)
         {
-            m_descriptorHandle = pDX12HeapAllocator->GetDescriptorHeapHandle(heapIndex);
+            m_descriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
             CreateResourceView(m_descriptorHandle);
         }
     }
