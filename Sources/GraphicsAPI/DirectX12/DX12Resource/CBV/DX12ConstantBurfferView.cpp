@@ -59,11 +59,12 @@ namespace Graphics
         if (heapProperties && resourceDesc)
         {
             CreateResource(*heapProperties, *resourceDesc);
-            MapResouce();
         }
 
         if (m_pResource)
         {
+            MapResouce();
+
             m_SizeInBytes = m_pConstantBufferViewDesc->SizeInBytes;
             m_pConstantBufferViewDesc->BufferLocation = m_pResource->GetGPUVirtualAddress();
 

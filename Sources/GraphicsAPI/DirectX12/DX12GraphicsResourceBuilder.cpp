@@ -13,6 +13,10 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/RTV/DX12RenderTargetView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/DSV/DX12DepthStencilView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/CBV/DX12ConstantBurfferView.h"
+#include "GraphicsAPI/DirectX12/DX12Resource/SRV/DX12ShaderResourceView.h"
+
+#include "Param/TextureDataParam.h"
+#include "Param/ConstantBufferParam.h"
 
 namespace Graphics
 {
@@ -25,8 +29,7 @@ namespace Graphics
     void DX12GraphicsResourceBuilder::CreateRenderTargetView(
         DX12Device* pDX12Device, 
         DX12HeapAllocator* pHeapAllocator, 
-        UINT windowWidth, 
-        UINT windowHeight,
+        Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pDX12Resource)
     {
         auto renderTargetView = std::make_unique<DX12RenderTargetView>(pDX12Device, pHeapAllocator, nullptr);
@@ -38,10 +41,16 @@ namespace Graphics
     void DX12GraphicsResourceBuilder::CreateDepthStencilView(
         DX12Device* pDX12Device, 
         DX12HeapAllocator* pHeapAllocator,
-        UINT windowWidth, 
-        UINT windowHeight,
+        Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pDX12Resource)
     {
+        auto pTextureDataParam = static_cast<Simple::TextureDataParam*>(pParam);
+        if (!pTextureDataParam)
+        {
+            MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
         D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilviewDesc = {};
 
         depthStencilviewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -52,8 +61,8 @@ namespace Graphics
         D3D12_RESOURCE_DESC resourceDesc = {};
 
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        resourceDesc.Width = windowWidth;
-        resourceDesc.Height = windowHeight;
+        resourceDesc.Width = pTextureDataParam->Width;
+        resourceDesc.Height = pTextureDataParam->Height;
         resourceDesc.DepthOrArraySize = 1;
         resourceDesc.MipLevels = 1;
         resourceDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
@@ -61,7 +70,7 @@ namespace Graphics
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
         resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
-        CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+        auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
         auto pDepthStencilView = std::make_unique<DX12DepthStencilView>(pDX12Device,pHeapAllocator, &depthStencilviewDesc);
         pDepthStencilView->Initialize(&prop, &resourceDesc);
@@ -72,17 +81,24 @@ namespace Graphics
     void DX12GraphicsResourceBuilder::CreateConstantBufferView(
         DX12Device* pDX12Device,
         DX12HeapAllocator* pHeapAllocator,
-        UINT byteWidth,
+        Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pDX12Resource)
     {
+        auto pConstantBufferParam = static_cast<Simple::ConstantBufferParam*>(pParam);
+        if (!pConstantBufferParam)
+        {
+            MessageBoxA(NULL, "ConstantBufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
         D3D12_CONSTANT_BUFFER_VIEW_DESC constantBufferViewDesc = {};
 
-        constantBufferViewDesc.SizeInBytes = (byteWidth + 0xff) & ~0xff;
+        constantBufferViewDesc.SizeInBytes = (pConstantBufferParam->byteWidth + 0xff) & ~0xff;
 
         D3D12_RESOURCE_DESC resourceDesc = {};
 
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDesc.Width = (byteWidth + 0xff) & ~0xff;
+        resourceDesc.Width = constantBufferViewDesc.SizeInBytes;
         resourceDesc.Height = 1;
         resourceDesc.DepthOrArraySize = 1;
         resourceDesc.MipLevels = 1;
@@ -91,7 +107,7 @@ namespace Graphics
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         resourceDesc.SampleDesc.Count = 1;
 
-        CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
         auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc);
         pConstantBufferView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
@@ -99,6 +115,54 @@ namespace Graphics
         pHeapAllocator->AddHeapIndex();
 
         pDX12Resource = std::move(pConstantBufferView);
+    }
+
+    void DX12GraphicsResourceBuilder::CreateShaderResourceView(
+        DX12Device* pDX12Device, 
+        DX12Command* pDX12Command,
+        DX12HeapAllocator* pHeapAllocator,
+        Simple::IParam* pParam,
+        std::unique_ptr<IDX12Resouce>& pGraphicsResource)
+    {
+        auto pTextureDataParam = static_cast<Simple::TextureDataParam*>(pParam);
+        if (!pTextureDataParam)
+        {
+            MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+        D3D12_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = {};
+
+        shaderResourceViewDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        shaderResourceViewDesc.Format = pTextureDataParam->Format;
+        shaderResourceViewDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+        D3D12_RESOURCE_DESC resourceDesc = {};
+
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Width = pTextureDataParam->Width;
+        resourceDesc.Height = pTextureDataParam->Height;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = pTextureDataParam->Format;
+        resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+        resourceDesc.SampleDesc.Count = 1;
+
+        auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+
+        D3D12_SUBRESOURCE_DATA subData = {};
+
+        subData.pData = pTextureDataParam->pData.get();
+        subData.RowPitch = pTextureDataParam->RowPitch;
+        subData.SlicePitch = pTextureDataParam->SlicePitch;
+
+        auto pShaderResourceView = std::make_unique<DX12ShaderResourceView>(pDX12Device, pDX12Command, pHeapAllocator, &shaderResourceViewDesc, &subData);
+        pShaderResourceView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
+
+        pHeapAllocator->AddHeapIndex();
+
+        pGraphicsResource = std::move(pShaderResourceView);
     }
 
 } // namespace

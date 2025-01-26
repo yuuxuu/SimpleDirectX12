@@ -53,11 +53,13 @@
 
 // D3DX
 #include <D3DX12/d3dx12.h>
-#include <DirectXMath/DirectXMath.h>
+
+// DirectXMath
+//#include <DirectXMath/DirectXMath.h>
 
 // DirectXTex
-//#include <DirectXTex/DirectXTex.h>
-//#pragma comment(lib, "DirectXTex.lib")
+#include <DirectXTex/DirectXTex.h>
+#pragma comment(lib, "DirectXTex.lib")
 
 // FBXSDK
 //#include <fbxsdk.h>

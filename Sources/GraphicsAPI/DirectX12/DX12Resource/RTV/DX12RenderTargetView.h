@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef _DX12_RESOURCE_RENDER_TARGET_VIEW_H_
-#define _DX12_RESOURCE_RENDER_TARGET_VIEW_H_
+#ifndef _DX12_RENDER_TARGET_VIEW_H_
+#define _DX12_RENDER_TARGET_VIEW_H_
 
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
@@ -48,4 +48,4 @@ namespace Graphics
     };
 } // namespace
 
-#endif // _DX12_RESOURCE_RENDER_TARGET_VIEW_H_
+#endif // _DX12_RENDER_TARGET_VIEW_H_

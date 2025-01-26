@@ -13,7 +13,8 @@ namespace Graphics
 {
     DX12HeapAllocator::DX12HeapAllocator(DX12Device* pDX12Device, D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc) :
         pDX12Device(pDX12Device),
-        m_descriptorHeapDesc(descriptorHeapDesc)
+        m_descriptorHeapDesc(descriptorHeapDesc),
+        m_heapIndex(0)
     {}
 
     DX12HeapAllocator::~DX12HeapAllocator()

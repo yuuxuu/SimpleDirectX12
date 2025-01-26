@@ -10,6 +10,8 @@
 #ifndef _IGRAPHICS_H_
 #define _IGRAPHICS_H_
 
+#include "Param/IParam.h"
+
 namespace Graphics
 {
     class IGraphicsResource;
@@ -26,7 +28,7 @@ namespace Graphics
 
         virtual void UpdateGraphics(UINT width, UINT height) = 0;
 
-        virtual void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, const UINT byteWidth) = 0;
+        virtual void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam) = 0;
 
         virtual void UpdateGraphicsResource(IGraphicsResource* pGraphicsResource, const void* updateSource) = 0;
     };

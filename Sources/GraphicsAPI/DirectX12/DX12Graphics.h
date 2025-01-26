@@ -13,6 +13,8 @@
 #include "GraphicsAPI/IGraphics.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
+#include "Param/IParam.h"
+
 namespace Graphics
 {
     class DX12Device;
@@ -28,7 +30,6 @@ namespace Graphics
         std::unique_ptr<DX12Device>                     m_pDX12Device;
         std::unique_ptr<DX12Command>                    m_pDX12Command;
         HeapAllocatorMap                                m_pDX12HeapAllocatorMap;
-        std::unique_ptr<DX12GraphicsResourceBuilder>    m_pDX12GraphicsResourceBuilder;
 
         std::vector<std::unique_ptr<IDX12Resouce>>      m_pRenderTargetViews;
         std::unique_ptr<IDX12Resouce>                   m_pDepthStencilView;
@@ -49,7 +50,7 @@ namespace Graphics
 
         void UpdateGraphics(const UINT windowWidth, const UINT windowHeight) override;
 
-        void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, const UINT byteWidth) override;
+        void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam) override;
 
         void UpdateGraphicsResource(IGraphicsResource* pGraphicsResource, const void* updateSource) override;
     };

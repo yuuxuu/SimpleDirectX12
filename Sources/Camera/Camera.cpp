@@ -7,6 +7,7 @@
 
 #include "Camera.h"
 #include "CameraBufferType.h"
+#include "Param/ConstantBufferParam.h"
 
 namespace Simple 
 {
@@ -15,6 +16,7 @@ namespace Simple
 
     // コンストラクタ
     Camera::Camera(const UINT windowWidth, const UINT windowHeight) :
+        m_pGraphicsResource(),
         m_eye(0.0f, 0.0f, -10.0f),
         m_forcus(),
         m_up(0.0f, 1.0f, 0.0f),
@@ -80,7 +82,10 @@ namespace Simple
 
     void Camera::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->InitializeGraphicsResource(m_pGraphicsResource, sizeof(CameraBuffer));
+        ConstantBufferParam param;
+        param.byteWidth = sizeof(CameraBuffer);
+
+        pGraphics->InitializeGraphicsResource(m_pGraphicsResource, &param);
 
         Matrix matVP = GetViewProjectionMatrix();
         matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);

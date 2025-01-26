@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -53,10 +53,8 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="Shared"></ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -70,6 +68,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -108,10 +112,12 @@
       <AdditionalIncludeDirectories>C:\c++\SimpleDirectX12\Sources;C:\c++\SimpleDirectX12\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>"stdafx.h"</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\c++\SimpleDirectX12\Lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,15 +132,22 @@
       <AdditionalIncludeDirectories>C:\c++\SimpleDirectX12\Sources;C:\c++\SimpleDirectX12\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>"stdafx.h"</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\c++\SimpleDirectX12\Lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\main.cpp" />
+    <ClCompile Include="Sources\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Sources\Camera\Camera.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Device.cpp" />
@@ -144,36 +157,40 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.cpp" />
-    <ClCompile Include="Sources\main.cpp" />
-    <ClCompile Include="Sources\math\math.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.cpp" />
+    <ClCompile Include="Sources\Math\math.cpp" />
     <ClCompile Include="Sources\Scene\Scene.cpp" />
-    <ClCompile Include="Sources\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Sources\Texture\Texture.cpp" />
+    <ClCompile Include="Sources\Utility\utility.cpp" />
     <ClCompile Include="Sources\Window\Winow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\main .h" />
+    <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\Camera\Camera.h" />
     <ClInclude Include="Sources\Camera\CameraBufferType.h" />
+    <ClInclude Include="Sources\GraphicsAPI\IGraphics.h" />
+    <ClInclude Include="Sources\GraphicsAPI\IGraphicsResource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Command.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Device.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h" />
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.h" />
-    <ClInclude Include="Sources\GraphicsAPI\IGraphics.h" />
-    <ClInclude Include="Sources\GraphicsAPI\IGraphicsResource.h" />
-    <ClInclude Include="Sources\main .h" />
-    <ClInclude Include="Sources\math\math.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.h" />
+    <ClInclude Include="Sources\Math\math.h" />
+    <ClInclude Include="Sources\Param\ConstantBufferParam.h" />
+    <ClInclude Include="Sources\Param\CubeTextureDataParam.h" />
+    <ClInclude Include="Sources\Param\IParam.h" />
+    <ClInclude Include="Sources\Param\TextureDataParam.h" />
     <ClInclude Include="Sources\Scene\Scene.h" />
-    <ClInclude Include="Sources\stdafx.h" />
+    <ClInclude Include="Sources\Texture\Texture.h" />
+    <ClInclude Include="Sources\Utility\utility.h" />
     <ClInclude Include="Sources\Window\Winow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>

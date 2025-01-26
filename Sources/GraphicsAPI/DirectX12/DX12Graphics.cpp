@@ -16,6 +16,8 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/DSV/DX12DepthStencilView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/CBV/DX12ConstantBurfferView.h"
 
+#include "Texture/Texture.h"
+
 namespace Graphics
 {
     DX12Graphics::DX12Graphics()
@@ -42,8 +44,6 @@ namespace Graphics
             return false;
         }
 
-        m_pDX12GraphicsResourceBuilder = std::make_unique<DX12GraphicsResourceBuilder>();
-
         {
             const auto numRTV = 2;
 
@@ -61,11 +61,14 @@ namespace Graphics
                 {
                     std::unique_ptr<IDX12Resouce> renderTargetView;
 
-                    m_pDX12GraphicsResourceBuilder->CreateRenderTargetView(
+                    Simple::TextureDataParam param;
+                    param.Width = windowWidth;
+                    param.Height = windowHeight;
+
+                    DX12GraphicsResourceBuilder::CreateRenderTargetView(
                         m_pDX12Device.get(),
                         heapAllocator.get(),
-                        windowWidth,
-                        windowHeight,
+                        &param,
                         renderTargetView);
 
                     m_pRenderTargetViews.push_back(std::move(renderTargetView));
@@ -88,11 +91,14 @@ namespace Graphics
             auto heapAllocator = std::make_unique<DX12HeapAllocator>(m_pDX12Device.get(), descriptorHeapDesc);
             if (heapAllocator->CreateDescriptorHeap())
             {
-                m_pDX12GraphicsResourceBuilder->CreateDepthStencilView(
+                Simple::TextureDataParam param;
+                param.Width = windowWidth;
+                param.Height = windowHeight;
+
+                DX12GraphicsResourceBuilder::CreateDepthStencilView(
                     m_pDX12Device.get(),
                     heapAllocator.get(),
-                    windowWidth,
-                    windowHeight,
+                    &param,
                     m_pDepthStencilView);
 
                 m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(heapAllocator);
@@ -151,16 +157,17 @@ namespace Graphics
         m_pDX12Device->Present();
     }
 
-    void DX12Graphics::InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, const UINT byteWidth)
+    void DX12Graphics::InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam)
     {
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
         {
+            assert("対象のHeapAllocatorが取得出来ませんでした。\nGraphicsResourceの初期化が出来ませんでした。");
             return;
         }
 
         std::unique_ptr<IDX12Resouce> pDX12Resource;
-        m_pDX12GraphicsResourceBuilder->CreateConstantBufferView(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), byteWidth, pDX12Resource);
+        DX12GraphicsResourceBuilder::CreateConstantBufferView(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), pParam, pDX12Resource);
 
         pGraphicsResource = pDX12Resource.get();
 
