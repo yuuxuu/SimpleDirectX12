@@ -1,13 +1,14 @@
 ﻿/**
  * @file Camera.cpp
  * @brief
- * @author 木村優
+ * @author Yu Kimura
  * @date 2018/12/18
  */
 
 #include "Camera.h"
-#include "CameraBufferType.h"
-#include "Param/ConstantBufferParam.h"
+#include "Buffer/CameraBuffer.h"
+
+#include "Param/BufferParam.h"
 
 namespace Simple 
 {
@@ -16,9 +17,9 @@ namespace Simple
 
     // コンストラクタ
     Camera::Camera(const UINT windowWidth, const UINT windowHeight) :
-        m_pGraphicsResource(),
-        m_eye(0.0f, 0.0f, -10.0f),
-        m_forcus(),
+        pGraphicsResource(),
+        m_eye(0.0f, 0.0f, 5.0f),
+        m_forcus(0.0f, 0.0f, 0.0f),
         m_up(0.0f, 1.0f, 0.0f),
         m_speed(1.0f)
     {
@@ -82,10 +83,10 @@ namespace Simple
 
     void Camera::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        ConstantBufferParam param;
+        BufferParam param;
         param.byteWidth = sizeof(CameraBuffer);
 
-        pGraphics->InitializeGraphicsResource(m_pGraphicsResource, &param);
+        pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, &param, Graphics::GraphicsResourceType::CBV);
 
         Matrix matVP = GetViewProjectionMatrix();
         matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);
@@ -108,7 +109,12 @@ namespace Simple
             invMatProj,
         };
 
-        pGraphics->UpdateGraphicsResource(m_pGraphicsResource, &cameraBuffer);
+        pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &cameraBuffer, Graphics::GraphicsResourceType::CBV);
+    }
+
+    void Camera::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    {
+        pGraphics->SetConstantBufferResource(1, pGraphicsResource);
     }
 
 } // namespace

@@ -20,7 +20,7 @@ namespace Simple
     class Camera 
     {
     private:
-        Graphics::IGraphicsResource*    m_pGraphicsResource;
+        Graphics::IGraphicsResource*    pGraphicsResource;
 
         VECTOR3                         m_eye;
         VECTOR3                         m_forcus;
@@ -48,6 +48,8 @@ namespace Simple
         ~Camera();
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+
+        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
     };
 
 } // namespace

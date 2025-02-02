@@ -1,5 +1,5 @@
 ﻿/**
- * @file DX12ConstantBufferView.h
+ * @file CameraBuffer.h
  * @brief
  * @author Yu Kimura
  * @date 2025/01/17
@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef _CONSTANT_BUFFER_TYPE_H_
-#define _CONSTANT_BUFFER_TYPE_H_
+#ifndef _CAMERA_BUFFER_TYPE_H_
+#define _CAMERA_BUFFER_TYPE_H_
 
 #include "Math/math.h"
 
@@ -26,5 +26,5 @@ namespace Simple
 
 } // namespace
 
-#endif // _CONSTANT_BUFFER_TYPE_H_
+#endif // _CAMERA_BUFFER_TYPE_H_
 

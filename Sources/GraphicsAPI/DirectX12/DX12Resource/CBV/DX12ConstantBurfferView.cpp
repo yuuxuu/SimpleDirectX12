@@ -13,13 +13,14 @@
 
 namespace Graphics
 {
-    DX12ConstantBufferView::DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc) :
+    DX12ConstantBufferView::DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc, Simple::IParam* pParam) :
         pDX12Device(pDX12Device),
         pDX12HeapAllocator(pDX12HeapAllocator),
         m_pConstantBufferViewDesc(constantBufferViewDesc),
-        m_descriptorHandle(),
-        m_pMappedBuffer(),
-        m_SizeInBytes()
+        m_pParam(dynamic_cast<Simple::BufferParam*>(pParam)),
+        m_CPUDescriptorHandle(),
+        m_GPUDescriptorHandle(),
+        m_pMappedBuffer()
     {}
 
     DX12ConstantBufferView::~DX12ConstantBufferView()
@@ -65,17 +66,20 @@ namespace Graphics
         {
             MapResouce();
 
-            m_SizeInBytes = m_pConstantBufferViewDesc->SizeInBytes;
             m_pConstantBufferViewDesc->BufferLocation = m_pResource->GetGPUVirtualAddress();
 
-            m_descriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
-            CreateResourceView(m_descriptorHandle);
+            m_CPUDescriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
+
+            if (pDX12HeapAllocator->IsVisibleShader())
+                m_GPUDescriptorHandle = pDX12HeapAllocator->GetGPUDescriptorHeapHandle(heapIndex);
+            
+            CreateResourceView(m_CPUDescriptorHandle);
         }
     }
 
     void DX12ConstantBufferView::UpdateResourceBuffer(const void* pSource)
     {
-        memcpy(m_pMappedBuffer, pSource, m_SizeInBytes);
+        memcpy(m_pMappedBuffer, pSource, m_pParam->byteWidth);
     }
 
 } // namespace

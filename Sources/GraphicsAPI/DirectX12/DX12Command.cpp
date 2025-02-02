@@ -11,8 +11,10 @@
 namespace Graphics
 {
     // コンストラクタ
-    DX12Command::DX12Command(ComPtr<ID3D12CommandQueue>& pCommandQueue)
-        : m_pCommandQueue(pCommandQueue)
+    DX12Command::DX12Command(ComPtr<ID3D12CommandQueue>& pCommandQueue) :
+        m_pCommandQueue(pCommandQueue),
+        m_fence_event(),
+        m_frames()
     {}
 
     // デストラクタ
@@ -130,10 +132,10 @@ namespace Graphics
     }
 
     // バッファを設定
-    void DX12Command::SetBuffer(D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView) {
-        m_pCommandList->IASetVertexBuffers(0, 1, &vbView);
+    void DX12Command::SetBuffer(D3D12_VERTEX_BUFFER_VIEW* vbView, D3D12_INDEX_BUFFER_VIEW* ibView) {
+        m_pCommandList->IASetVertexBuffers(0, 1, vbView);
 
-        m_pCommandList->IASetIndexBuffer(&ibView);
+        m_pCommandList->IASetIndexBuffer(ibView);
     }
 
     void DX12Command::DrawInstanced(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numVertices) {

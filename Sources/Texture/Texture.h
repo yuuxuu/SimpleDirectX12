@@ -1,7 +1,7 @@
 ﻿/**
  * @file Texture.h
  * @brief
- * @author 木村優
+ * @author Yu Kimura
  * @date 2021/05/07
  */
 
@@ -21,7 +21,7 @@ namespace Simple
     class Texture 
     {
     private:
-        Graphics::IGraphicsResource*            m_pGraphicsResource;
+        Graphics::IGraphicsResource*            pGraphicsResource;
 
         std::unique_ptr<TextureDataParam>       m_pTextureParam;
 
@@ -38,11 +38,13 @@ namespace Simple
         Texture();
         virtual ~Texture();
 
-        bool LoadTexture(const std::string& filePath, IParam*& pParam);
+        bool LoadTexture(const std::string& filePath);
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        const TextureDataParam* GetParam() const { return static_cast<TextureDataParam*>(m_pTextureParam.get()); }
+        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+
+        const TextureDataParam* GetParam() const { return m_pTextureParam.get(); }
     };
 
 } // namespace

@@ -17,7 +17,8 @@ namespace Graphics
         pDX12Device(pDX12Device),
         pDX12HeapAllocator(pDX12HeapAllocator),
         m_pRenderTargetViewDesc(renderTargetViewDesc),
-        m_descriptorHandle()
+        m_CPUDescriptorHandle(),
+        m_GPUDescriptorHandle()
     {}
 
     DX12RenderTargetView::~DX12RenderTargetView()
@@ -46,17 +47,19 @@ namespace Graphics
         D3D12_RESOURCE_DESC* resourceDesc,
         UINT heapIndex)
     {
-        static int backBufferIndex = 0;
-
         if(heapProperties && resourceDesc)
             CreateResource(*heapProperties, *resourceDesc);
         else
-            pDX12Device->GetBackBuffer(m_pResource, backBufferIndex++);
+            pDX12Device->GetBackBuffer(m_pResource, heapIndex);
 
         if (m_pResource)
         {
-            m_descriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
-            CreateResourceView(m_descriptorHandle);
+            m_CPUDescriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
+
+            if (pDX12HeapAllocator->IsVisibleShader())
+                m_GPUDescriptorHandle = pDX12HeapAllocator->GetGPUDescriptorHeapHandle(heapIndex);
+            
+            CreateResourceView(m_CPUDescriptorHandle);
         }
     }
 

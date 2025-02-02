@@ -8,15 +8,18 @@
 #include "DX12GraphicsResourceBuilder.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
+#include "GraphicsAPI/DirectX12/DX12Command.h"
 #include "GraphicsAPI/DirectX12/DX12HeapAllocator.h"
 
 #include "GraphicsAPI/DirectX12/DX12Resource/RTV/DX12RenderTargetView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/DSV/DX12DepthStencilView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/CBV/DX12ConstantBurfferView.h"
+#include "GraphicsAPI/DirectX12/DX12Resource/VBV/DX12VertexBufferView.h"
+#include "GraphicsAPI/DirectX12/DX12Resource/IBV/DX12IndexBufferView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/SRV/DX12ShaderResourceView.h"
 
 #include "Param/TextureDataParam.h"
-#include "Param/ConstantBufferParam.h"
+#include "Param/BufferParam.h"
 
 namespace Graphics
 {
@@ -44,7 +47,7 @@ namespace Graphics
         Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pDX12Resource)
     {
-        auto pTextureDataParam = static_cast<Simple::TextureDataParam*>(pParam);
+        auto pTextureDataParam = dynamic_cast<Simple::TextureDataParam*>(pParam);
         if (!pTextureDataParam)
         {
             MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
@@ -84,16 +87,16 @@ namespace Graphics
         Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pDX12Resource)
     {
-        auto pConstantBufferParam = static_cast<Simple::ConstantBufferParam*>(pParam);
-        if (!pConstantBufferParam)
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
         {
-            MessageBoxA(NULL, "ConstantBufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
             return;
         }
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC constantBufferViewDesc = {};
 
-        constantBufferViewDesc.SizeInBytes = (pConstantBufferParam->byteWidth + 0xff) & ~0xff;
+        constantBufferViewDesc.SizeInBytes = (pBufferParam->byteWidth + 0xff) & ~0xff;
 
         D3D12_RESOURCE_DESC resourceDesc = {};
 
@@ -109,12 +112,76 @@ namespace Graphics
 
         auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
-        auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc);
+        auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc, pParam);
         pConstantBufferView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
 
         pHeapAllocator->AddHeapIndex();
 
         pDX12Resource = std::move(pConstantBufferView);
+    }
+
+    void DX12GraphicsResourceBuilder::CreateVertexBufferView(
+        DX12Device* pDX12Device,
+        DX12HeapAllocator* pHeapAllocator,
+        Simple::IParam* pParam,
+        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    {
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
+        {
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        D3D12_RESOURCE_DESC resourceDesc = {};
+
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Width = pBufferParam->byteWidth;
+        resourceDesc.Height = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        resourceDesc.SampleDesc.Count = 1;
+
+        auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+
+        auto pVertexBufferView = std::make_unique<DX12VertexBufferView>(pDX12Device, pParam);
+        pVertexBufferView->Initialize(&prop, &resourceDesc);
+
+        pDX12Resource = std::move(pVertexBufferView);
+    }
+
+    void DX12GraphicsResourceBuilder::CreateIndexBufferView(
+        DX12Device* pDX12Device,
+        DX12HeapAllocator* pHeapAllocator,
+        Simple::IParam* pParam,
+        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    {
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
+        {
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        D3D12_RESOURCE_DESC resourceDesc = {};
+
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Width = pBufferParam->byteWidth;
+        resourceDesc.Height = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        resourceDesc.SampleDesc.Count = 1;
+
+        auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+
+        auto pIndexBufferView = std::make_unique<DX12IndexBufferView>(pDX12Device, pParam);
+        pIndexBufferView->Initialize(&prop, &resourceDesc);
+
+        pDX12Resource = std::move(pIndexBufferView);
     }
 
     void DX12GraphicsResourceBuilder::CreateShaderResourceView(
@@ -124,12 +191,13 @@ namespace Graphics
         Simple::IParam* pParam,
         std::unique_ptr<IDX12Resouce>& pGraphicsResource)
     {
-        auto pTextureDataParam = static_cast<Simple::TextureDataParam*>(pParam);
+        auto pTextureDataParam = dynamic_cast<Simple::TextureDataParam*>(pParam);
         if (!pTextureDataParam)
         {
             MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
             return;
         }
+
         D3D12_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = {};
 
         shaderResourceViewDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -139,7 +207,7 @@ namespace Graphics
 
         D3D12_RESOURCE_DESC resourceDesc = {};
 
-        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         resourceDesc.Width = pTextureDataParam->Width;
         resourceDesc.Height = pTextureDataParam->Height;
         resourceDesc.DepthOrArraySize = 1;

@@ -59,7 +59,7 @@ namespace Graphics {
 
         void ClearDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE handle, D3D12_CLEAR_FLAGS clearFlags);
 
-        void SetBuffer(D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView);
+        void SetBuffer(D3D12_VERTEX_BUFFER_VIEW* vbView, D3D12_INDEX_BUFFER_VIEW* ibView);
 
         void DrawInstanced(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numVertices);
 

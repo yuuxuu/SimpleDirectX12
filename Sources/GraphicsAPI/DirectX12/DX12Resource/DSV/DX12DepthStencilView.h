@@ -19,7 +19,9 @@ namespace Graphics
     private:
         ComPtr<ID3D12Resource>          m_pResource;
 
-        D3D12_CPU_DESCRIPTOR_HANDLE     m_descriptorHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE     m_CPUDescriptorHandle;
+
+        D3D12_GPU_DESCRIPTOR_HANDLE     m_GPUDescriptorHandle;
 
         D3D12_DEPTH_STENCIL_VIEW_DESC*  m_pDepthStencilViewDesc = nullptr;
 
@@ -41,10 +43,11 @@ namespace Graphics
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) override;
 
-    public:
-        ID3D12Resource* GetResouce() const { return m_pResource.Get(); }
+        ID3D12Resource* GetResource() const { return m_pResource.Get(); }
 
-        D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandle() const { return m_descriptorHandle; }
+        D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle() const { return m_CPUDescriptorHandle; }
+        
+        D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle() const { return m_GPUDescriptorHandle; }
     };
 } // namespace
 

@@ -12,25 +12,38 @@
 
 #include "Param/IParam.h"
 
+#include "GraphicsAPI/GraphicsResourceType.h"
+
 namespace Graphics
 {
     class IGraphicsResource;
-
     class IGraphics
     {
     public:
         IGraphics() {}
         virtual ~IGraphics() {}
 
-        virtual bool InitializeGraphics(HWND hwnd, UINT width, UINT height) = 0;
+        virtual bool Initialize(HWND hwnd, UINT width, UINT height) = 0;
 
-        virtual void FinalizeGraphics() = 0;
+        virtual void Finalize() = 0;
 
-        virtual void UpdateGraphics(UINT width, UINT height) = 0;
+        virtual void Update(UINT width, UINT height) = 0;
 
-        virtual void InitializeGraphicsResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam) = 0;
+        virtual void InitializeGraphicsPipeline() = 0;
 
-        virtual void UpdateGraphicsResource(IGraphicsResource* pGraphicsResource, const void* updateSource) = 0;
+        virtual void SetGraphicsPipeline() = 0;
+
+        virtual void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType GraphicsResourceType) = 0;
+
+        virtual void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, GraphicsResourceType graphicsResourceType) = 0;
+
+        virtual void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) = 0;
+
+        virtual void SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource) = 0;
+
+        virtual void DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties) = 0;
+
+        virtual void DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndeies) = 0;
     };
 } // namespace
 

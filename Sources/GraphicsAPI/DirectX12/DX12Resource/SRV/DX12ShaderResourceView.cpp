@@ -19,7 +19,8 @@ namespace Graphics
         pDX12HeapAllocator(pDX12HeapAllocator),
         m_pShaderSesourceViewDesc(shaderResourceViewDesc),
         m_pSubData(subData),
-        m_descriptorHandle()
+        m_CPUDescriptorHandle(),
+        m_GPUDescriptorHandle()
     {}
 
     DX12ShaderResourceView::~DX12ShaderResourceView()
@@ -88,8 +89,12 @@ namespace Graphics
         {
             UpdateSubresource();
 
-            m_descriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
-            CreateResourceView(m_descriptorHandle);
+            m_CPUDescriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
+
+            if(pDX12HeapAllocator->IsVisibleShader())
+                m_GPUDescriptorHandle = pDX12HeapAllocator->GetGPUDescriptorHeapHandle(heapIndex);
+            
+            CreateResourceView(m_CPUDescriptorHandle);
         }
     }
 

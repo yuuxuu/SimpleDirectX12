@@ -1,18 +1,22 @@
 ﻿/**
  * @file Texture.cpp
  * @brief
- * @author 木村優
+ * @author Yu Kimura
  * @date 2021/05/07
  */
 
 #include "Texture.h"
+
+#include "Utility/utility.h"
 
 #include "Math/math.h"
 
 namespace Simple {
 
     // コンストラクタ
-    Texture::Texture()
+    Texture::Texture() :
+        pGraphicsResource(),
+        m_isLoaded(false)
     {}
 
     // デストラクタ
@@ -20,10 +24,11 @@ namespace Simple {
     {}
 
     // テクスチャを読み込む
-    bool Texture::LoadTexture(const std::string& filePath, IParam*& pParam) {
+    bool Texture::LoadTexture(const std::string& filePath) {
         if (m_isLoaded) return true;
 
         std::wstring loadName;
+        Simple::StringConvertToWchar(filePath, loadName);
         
         DirectX::ScratchImage sImage;
         HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
@@ -49,8 +54,6 @@ namespace Simple {
         m_pTextureParam->Height = (UINT)image->height;
         m_pTextureParam->Format = image->format;
 
-        pParam = m_pTextureParam.get();
-
         m_isLoaded = true;
 
         return m_isLoaded;
@@ -58,7 +61,12 @@ namespace Simple {
 
     void Texture::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->InitializeGraphicsResource(m_pGraphicsResource, m_pTextureParam.get());
+        pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, m_pTextureParam.get(), Graphics::GraphicsResourceType::SRV);
+    }
+
+    void Texture::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    {
+        pGraphics->SetShaderResource(6, pGraphicsResource);
     }
 
     // テクスチャをキューブマップテクスチャに変換

@@ -143,11 +143,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sources\App\App.cpp" />
     <ClCompile Include="Sources\Camera\Camera.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Device.cpp" />
@@ -156,19 +156,27 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV\DX12IndexBufferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV\DX12VertexBufferView.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\Shader.cpp" />
     <ClCompile Include="Sources\Math\math.cpp" />
+    <ClCompile Include="Sources\Mesh\Mesh.cpp" />
     <ClCompile Include="Sources\Scene\Scene.cpp" />
     <ClCompile Include="Sources\Texture\Texture.cpp" />
     <ClCompile Include="Sources\Utility\utility.cpp" />
     <ClCompile Include="Sources\Window\Winow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\main .h" />
     <ClInclude Include="Sources\stdafx.h" />
+    <ClInclude Include="Sources\App\App.h" />
+    <ClInclude Include="Sources\Buffer\CameraBuffer.h" />
+    <ClInclude Include="Sources\Buffer\WorldBuffer.h" />
     <ClInclude Include="Sources\Camera\Camera.h" />
-    <ClInclude Include="Sources\Camera\CameraBufferType.h" />
+    <ClInclude Include="Sources\GraphicsAPI\GraphicsResourceType.h" />
     <ClInclude Include="Sources\GraphicsAPI\IGraphics.h" />
     <ClInclude Include="Sources\GraphicsAPI\IGraphicsResource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Command.h" />
@@ -179,10 +187,17 @@
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV\DX12IndexBufferView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV\DX12VertexBufferView.h" />
+    <ClInclude Include="Sources\GraphicsAPI\Shader\IShader.h" />
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.h" />
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.h" />
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\Shader.h" />
     <ClInclude Include="Sources\Math\math.h" />
-    <ClInclude Include="Sources\Param\ConstantBufferParam.h" />
+    <ClInclude Include="Sources\Mesh\Mesh.h" />
+    <ClInclude Include="Sources\Param\BufferParam.h" />
     <ClInclude Include="Sources\Param\CubeTextureDataParam.h" />
     <ClInclude Include="Sources\Param\IParam.h" />
     <ClInclude Include="Sources\Param\TextureDataParam.h" />

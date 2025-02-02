@@ -15,6 +15,7 @@ using Microsoft::WRL::ComPtr;
 namespace Graphics
 {
     class DX12Device;
+    class DX12Command;
 
     class DX12HeapAllocator
     {
@@ -37,14 +38,21 @@ namespace Graphics
 
         bool CreateDescriptorHeap();
 
+        void SetDescriptorHeap(DX12Command* pDX12Command);
+
         D3D12_CPU_DESCRIPTOR_HANDLE GetStartCPUDescriptorHeapHandle();
         D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHeapHandle(UINT heapIndex);
+
+        D3D12_GPU_DESCRIPTOR_HANDLE GetStartGPUDescriptorHeapHandle();
+        D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHeapHandle(UINT heapIndex);
 
         void AddHeapIndex();
 
         const UINT GetHeapIndex() const { return m_heapIndex; }
 
         const UINT GetMaxNumDescriptors() const { return m_descriptorHeapDesc.NumDescriptors; }
+
+        const bool IsVisibleShader() const { return m_descriptorHeapDesc.Flags == D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; }
     };
 } // namespace
 

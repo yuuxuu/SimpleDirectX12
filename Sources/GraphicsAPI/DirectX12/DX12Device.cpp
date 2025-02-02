@@ -111,26 +111,27 @@ namespace Graphics {
     bool DX12Device::CreateRootSignature(
         ComPtr<ID3D12RootSignature>& pRootSignature,
         ID3DBlob* pSignatureBlob,
-        D3D12_ROOT_SIGNATURE_DESC* pRsDesc) {
+        D3D12_ROOT_SIGNATURE_DESC* pRootSignatureDesc) {
 
         HRESULT hr;
 
-        if (pRsDesc) {
+        if (pSignatureBlob) 
+        {
+            hr = m_pDevice->CreateRootSignature(0, pSignatureBlob->GetBufferPointer(), pSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&pRootSignature));
+            if (FAILED(hr)) return false;
+        }
+        else if (pRootSignatureDesc) 
+        {
             ComPtr<ID3DBlob> signature;
             ComPtr<ID3DBlob> error;
 
-            hr = D3D12SerializeRootSignature(pRsDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+            hr = D3D12SerializeRootSignature(pRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
             if (FAILED(hr)) {
                 std::cout << static_cast<BYTE*>(error->GetBufferPointer()) << std::endl;
                 return false;
             }
 
             hr = m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&pRootSignature));
-            if (FAILED(hr)) return false;
-        }
-
-        if (pSignatureBlob) {
-            hr = m_pDevice->CreateRootSignature(0, pSignatureBlob->GetBufferPointer(), pSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&pRootSignature));
             if (FAILED(hr)) return false;
         }
 

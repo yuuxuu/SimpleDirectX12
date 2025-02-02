@@ -1,5 +1,5 @@
 ﻿/**
- * @file main.cpp
+ * @file App.cpp
  * @brief
  * @author Yu Kimura
  * @date 2018/12/15
@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef _Main_H_
-#define _Main_H_
+#ifndef _App_H_
+#define _App_H_
 
 namespace Simple {
 
@@ -16,4 +16,4 @@ namespace Simple {
 
 } // namespace
 
-#endif
+#endif // _APP_H

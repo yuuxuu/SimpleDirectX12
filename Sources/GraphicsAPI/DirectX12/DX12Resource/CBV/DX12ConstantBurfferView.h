@@ -12,6 +12,8 @@
 
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
+#include "Param/BufferParam.h"
+
 namespace Graphics
 {
     class DX12ConstantBufferView : public IDX12Resouce
@@ -19,7 +21,9 @@ namespace Graphics
     private:
         ComPtr<ID3D12Resource>              m_pResource;
 
-        D3D12_CPU_DESCRIPTOR_HANDLE         m_descriptorHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE         m_CPUDescriptorHandle;
+        
+        D3D12_GPU_DESCRIPTOR_HANDLE         m_GPUDescriptorHandle;
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC*    m_pConstantBufferViewDesc = nullptr;
 
@@ -29,7 +33,7 @@ namespace Graphics
 
         void*                               m_pMappedBuffer;
 
-        UINT                                m_SizeInBytes;
+        Simple::BufferParam*                m_pParam;
 
     private:
         DX12ConstantBufferView(const DX12ConstantBufferView&) = delete;
@@ -39,21 +43,21 @@ namespace Graphics
 
         void CreateResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) override;
 
-    private:
         void MapResouce();
 
     public:
-        DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc);
+        DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc, Simple::IParam* pParam);
         ~DX12ConstantBufferView();
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex) override;
-
-    public:
+        
         void UpdateResourceBuffer(const void* updateSource);
 
-        ID3D12Resource* GetResouce() const { return m_pResource.Get(); }
+        ID3D12Resource* GetResource() const { return m_pResource.Get(); }
 
-        D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandle() const { return m_descriptorHandle; }
+        D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle() const { return m_CPUDescriptorHandle; }
+        
+        D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle() const { return m_GPUDescriptorHandle; }
     };
 } // namespace
 

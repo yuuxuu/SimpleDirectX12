@@ -2,58 +2,79 @@
 <Project ToolsVersion="4.0">
   <ItemGroup>
     <Filter Include="Sources">
-      <UniqueIdentifier>{8f2ce502-2cf5-4113-8984-04e502e5d829}</UniqueIdentifier>
+      <UniqueIdentifier>{7b33550f-2c2f-4adf-9b5d-dba8cc421f3c}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Sources\App">
+      <UniqueIdentifier>{62fd29b1-6e5b-4363-8908-48cab26c3b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Buffer">
+      <UniqueIdentifier>{5404cefb-ecba-474c-9849-b311f3775a8f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sources\Camera">
-      <UniqueIdentifier>{4ae4fa7a-1d1b-460a-ab64-5690384b77c4}</UniqueIdentifier>
+      <UniqueIdentifier>{59cba11c-96fb-4f97-a680-31fa0b5be774}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI">
-      <UniqueIdentifier>{76b29c8c-7ca1-4d39-bec9-db723154ae81}</UniqueIdentifier>
+      <UniqueIdentifier>{780dbaeb-3c96-4cab-b40a-97fcdac505bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Math">
-      <UniqueIdentifier>{2538ec01-0ef3-4cab-ac5c-0f2e97ffacfd}</UniqueIdentifier>
+      <UniqueIdentifier>{1d24046d-6857-4237-8587-18e34fc17b5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Mesh">
+      <UniqueIdentifier>{ce64e107-94fa-46c3-a273-295ec659048d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Param">
-      <UniqueIdentifier>{397f24d6-25f3-4ae3-897d-0f6c23800afb}</UniqueIdentifier>
+      <UniqueIdentifier>{03a23d8d-f698-4366-9120-a357cd251ef9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scene">
-      <UniqueIdentifier>{0fb08ba7-33e4-4134-85e3-5a800a59b969}</UniqueIdentifier>
+      <UniqueIdentifier>{b42b6bc0-37c5-4982-bdeb-6bdb27e35bb8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Texture">
-      <UniqueIdentifier>{e4c2eae4-d352-4918-a44a-9a15e34e522d}</UniqueIdentifier>
+      <UniqueIdentifier>{9bc709f9-9d10-44ca-a3c6-8d4e1d855844}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Utility">
-      <UniqueIdentifier>{2cb6ec53-8757-4e8e-9a72-bbc394f21fc6}</UniqueIdentifier>
+      <UniqueIdentifier>{6d61e95e-295a-4f89-8839-0bf14303c537}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Window">
-      <UniqueIdentifier>{411adcd5-bcc6-4c0b-a174-b8155bc48dc1}</UniqueIdentifier>
+      <UniqueIdentifier>{b1966c14-6701-46fb-98d1-9d2e7eba6ef8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12">
-      <UniqueIdentifier>{113db461-8911-43bb-a658-e96e281f61d3}</UniqueIdentifier>
+      <UniqueIdentifier>{11725d9d-300b-4707-bd92-55f031f758f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GraphicsAPI\Shader">
+      <UniqueIdentifier>{4b0a958d-363e-4bab-9df2-9e04e0e9c3ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource">
-      <UniqueIdentifier>{1a3fc00c-4fd3-4809-87a7-02dff5c07597}</UniqueIdentifier>
+      <UniqueIdentifier>{36c53f71-4ef8-4145-9184-46913cfd1784}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV">
-      <UniqueIdentifier>{0d3285fd-d22d-40c6-b1ce-decfd8739c93}</UniqueIdentifier>
+      <UniqueIdentifier>{898cbc48-a13b-4b60-b224-4094067cd8ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV">
-      <UniqueIdentifier>{06402399-6e6b-4c7b-8157-ef993a4629b2}</UniqueIdentifier>
+      <UniqueIdentifier>{fb67a63c-b1cf-4a3c-882e-4fe8d839e87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV">
+      <UniqueIdentifier>{aad0ecca-c7c2-4716-8763-f92a065f2f2b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV">
-      <UniqueIdentifier>{c47066ff-2158-43d0-95c8-ad7fba5aaa8f}</UniqueIdentifier>
+      <UniqueIdentifier>{377927ca-cdb9-44be-a0ea-9e75abe2fe21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV">
-      <UniqueIdentifier>{3671dab2-194d-4e17-8365-5b10d989309f}</UniqueIdentifier>
+      <UniqueIdentifier>{e48abb64-4bba-42a0-94fc-02ef17f37fd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV">
+      <UniqueIdentifier>{ff4d14f1-c0c3-4706-9aa7-8928d6a31390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GraphicsAPI\Shader\DirectX">
+      <UniqueIdentifier>{d547df7a-45d9-4cf1-8819-f3178a67d714}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\main.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\stdafx.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\App\App.cpp">
+      <Filter>Sources\App</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Camera\Camera.cpp">
       <Filter>Sources\Camera</Filter>
@@ -79,14 +100,32 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\DSV</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV\DX12IndexBufferView.cpp">
+      <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\IBV</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.cpp">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\RTV</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.cpp">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\SRV</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV\DX12VertexBufferView.cpp">
+      <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\VBV</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.cpp">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.cpp">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\Shader.cpp">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Math\math.cpp">
       <Filter>Sources\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Mesh\Mesh.cpp">
+      <Filter>Sources\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene\Scene.cpp">
       <Filter>Sources\Scene</Filter>
@@ -102,17 +141,23 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\main .h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\stdafx.h">
       <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\App\App.h">
+      <Filter>Sources\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Buffer\CameraBuffer.h">
+      <Filter>Sources\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Buffer\WorldBuffer.h">
+      <Filter>Sources\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Camera\Camera.h">
       <Filter>Sources\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Camera\CameraBufferType.h">
-      <Filter>Sources\Camera</Filter>
+    <ClInclude Include="Sources\GraphicsAPI\GraphicsResourceType.h">
+      <Filter>Sources\GraphicsAPI</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GraphicsAPI\IGraphics.h">
       <Filter>Sources\GraphicsAPI</Filter>
@@ -144,16 +189,37 @@
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\DSV</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV\DX12IndexBufferView.h">
+      <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\IBV</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV\DX12RenderTargetView.h">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\RTV</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV\DX12ShaderResourceView.h">
       <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\SRV</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV\DX12VertexBufferView.h">
+      <Filter>Sources\GraphicsAPI\DirectX12\DX12Resource\VBV</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\Shader\IShader.h">
+      <Filter>Sources\GraphicsAPI\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.h">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.h">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\Shader.h">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Math\math.h">
       <Filter>Sources\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Param\ConstantBufferParam.h">
+    <ClInclude Include="Sources\Mesh\Mesh.h">
+      <Filter>Sources\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Param\BufferParam.h">
       <Filter>Sources\Param</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Param\CubeTextureDataParam.h">

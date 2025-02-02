@@ -1,0 +1,187 @@
+﻿//*****************************************************************************
+//!	@file	constantBuffer.hlsli
+//!	@brief	シェーダーインクルードヘッダー
+//!	@note	
+//!	@author	2020/03/13 作成：木村優
+//*****************************************************************************
+
+#ifndef _CONSTANT_BUFFER_H_
+#define _CONSTANT_BUFFER_H_
+
+// テクスチャ
+Texture2D           diffuseTex      : register(t0);
+Texture2D           specularTex     : register(t1);
+Texture2D           normalTex       : register(t2);
+Texture2D           posTex          : register(t3);
+TextureCube	        cubeTex	        : register(t4);
+Texture2D<float>    depthTex        : register(t5);
+
+Texture2D<uint2>    stencilTex      : register(t6);
+TextureCube	        dynamicCubeTex  : register(t7);
+Texture2D           albedoTex       : register(t8);
+Texture2D           displacementTex	: register(t9);
+Texture2D           roughnessTex    : register(t10);
+Texture2D           hdrTex          : register(t11);
+Texture2D           toneMapTex      : register(t12);
+
+Texture2D           BlurTex0        : register(t13);
+Texture2D           BlurTex1        : register(t14);
+Texture2D           BlurTex2        : register(t15);
+Texture2D           BlurTex3        : register(t16);
+Texture2D           BlurTex4        : register(t17);
+Texture2D           BlurTex5        : register(t18);
+Texture2D           BlurTex6        : register(t19);
+Texture2D           BlurTex7        : register(t20);
+
+// サンプラー
+SamplerState sampleState                    : register(s0);
+SamplerComparisonState shadowSamplerState   : register(s1);
+SamplerState sampleState1                   : register(s2);
+
+cbuffer CbWorld : register(b0)
+{
+    float4x4 matW;  // ワールド行列
+}
+
+cbuffer CbCamera : register(b1)
+{
+    float4x4 matVP; // ビュープロジェクション行列
+
+    float3 cameraPos; // カメラの位置
+    float dummy;
+
+    float4x4 matView;
+    float4x4 matProj;
+    float4x4 invMatProj;
+}
+
+struct Material {
+    float4  diffuse;    // マテリアルディフューズ色
+    float4  specular;   // マテリアルスペキュラー色
+    float4  ambinet;    // マテリアルアンビエント色
+	float4  emissive;   // マテリアルエミッシブ色
+};
+
+// マテリアル
+cbuffer CbMaterial : register(b2)
+{
+    Material material;
+}
+
+struct DirectionalLight {
+    float4 pos;
+    float4 diffuse;
+    float4 specular;
+};
+
+// ディレクショナルライト
+cbuffer CbDirectionalLight : register(b3)
+{
+    DirectionalLight directionalLight;
+}
+
+struct PointLight {
+    float3  pos;
+    float   radius;
+    float4  diffuse;
+    float4  specular;
+    float4  attenuation;
+};
+
+#define LIGHT_MAX 1000
+
+cbuffer CbPointLight : register(b4)
+{
+    PointLight pointLights[LIGHT_MAX];
+
+    int numPointLight;
+}
+
+struct SpotLight {
+    float3  pos;
+    float   angle;
+    float4  diffuse;
+    float4  specular;
+    float4  attenuation;
+};
+
+cbuffer CbSpotLight : register(b5)
+{
+    SpotLight spotLights[LIGHT_MAX];
+
+    int numSpotLight;
+}
+
+#define OFFSET_MAX 15
+
+cbuffer CbPostEffect : register(b6)
+{
+    float4 blurOffset[OFFSET_MAX];
+}
+
+cbuffer CbScreenParam : register(b7)
+{
+    int textureWidth;
+    int textureHeight;
+    float nearZ;
+    float farZ;
+}
+
+//// 行列コンスタントバッファ
+//cbuffer CbMatrix : register(b4)
+//{
+//	float4x4	insWorldMatrix[INSTANCE_MAX];	// インスタンスワールド変換行列
+//}
+//
+//cbuffer cbDynamicCube : register(b5)
+//{
+//	float4x4	views[6];				// 動的キューブマップビュー変換行列
+//}
+//
+//// PBRパラメーターコンスタントバッファ
+//cbuffer CbPBRParam : register(b6)
+//{
+//	float4		PBRParam;				// PBRパラメーター(x:metallic, y:roughness, z:reflectance)
+//}
+//
+//// ブラーコンスタントバッファ
+//cbuffer CbBlur : register(b7)
+//{
+//	float4		offset[OFFSET_MAX];
+//}
+//
+//// Tessパラメーターコンスタントバッファ
+//cbuffer CbTessParam : register(b8)
+//{
+//	float4		tessParam;
+//}
+//
+//// 波パラメーターコンスタントバッファ
+//cbuffer CbWaveParam : register(b9)
+//{
+//	float4		wavePos;		// 波の原点位置
+//	float4		waveParam;		// 波パラメーター(x:振幅, y:波長, z:角度, w:波のエッジ)
+//}
+//
+//// パーティクルパラメーターコンスタントバッファ
+//cbuffer CbParticleParam : register(b10)
+//{
+//	float		particleSize;
+//	float		particleLifeTime;
+//	float		particleVelocity;
+//	float		dummy;
+//
+//	float4		particleStartColor;
+//	float4		particleLerpColor;
+//}
+//
+//cbuffer CbToneMapParam : register(b11)
+//{
+//	float		keyValue;
+//	float		avgBrightness;
+//	float		targetAvgBrightness;
+//
+//	float		alpha;
+//}
+
+#endif

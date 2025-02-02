@@ -39,7 +39,7 @@ namespace Graphics
 
         bool Present();
 
-        bool CreateRootSignature(ComPtr<ID3D12RootSignature>& pRootSignature, ID3DBlob* pSignatureBlob = nullptr, D3D12_ROOT_SIGNATURE_DESC* rsDesc = nullptr);
+        bool CreateRootSignature(ComPtr<ID3D12RootSignature>& pRootSignature, ID3DBlob* pSignatureBlob = nullptr, D3D12_ROOT_SIGNATURE_DESC* pRootSignatureDesc = nullptr);
 
         bool CreateGraphicsPipelineState(ComPtr<ID3D12PipelineState>& pPipelineState, D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
 

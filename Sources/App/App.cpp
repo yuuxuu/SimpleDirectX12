@@ -1,11 +1,11 @@
 ﻿/**
- * @file main.cpp
+ * @file App.cpp
  * @brief
  * @author Yu Kimura
  * @date 2018/12/15
  */
 
-#include "main .h"
+#include "App/App.h"
 
 #include "Window/Winow.h"
 
@@ -57,9 +57,9 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
     auto windowHeight = window.GetWindowSize().h;
 
     std::unique_ptr<Graphics::IGraphics> graphics = std::make_unique<Graphics::DX12Graphics>();
-    if (!graphics->InitializeGraphics(window.GetHwnd(), windowWidth, windowHeight))
+    if (!graphics->Initialize(window.GetHwnd(), windowWidth, windowHeight))
     {
-        graphics->FinalizeGraphics();
+        graphics->Finalize();
         return -1;
     }
 
@@ -81,7 +81,7 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
         }
     }
 
-    graphics->FinalizeGraphics();
+    graphics->Finalize();
 
     FreeConsole();
 

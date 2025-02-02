@@ -15,11 +15,16 @@
 namespace Simple
 {
     class Camera;
+    class Mesh;
+
+    using MeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
 
     class Scene
     {
     private:
         std::unique_ptr<Camera>                 m_pCamera;
+
+        MeshVec                                 m_pMeshVec;
 
         Graphics::IGraphics*                    pGraphics;
 

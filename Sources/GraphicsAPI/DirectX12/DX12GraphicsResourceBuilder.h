@@ -34,6 +34,10 @@ namespace Graphics
         static void CreateDepthStencilView(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam, std::unique_ptr<IDX12Resouce>& pGraphicsResource);
 
         static void CreateConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam,std::unique_ptr<IDX12Resouce>& pGraphicsResource);
+
+        static void CreateVertexBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam,std::unique_ptr<IDX12Resouce>& pGraphicsResource);
+        
+        static void CreateIndexBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam,std::unique_ptr<IDX12Resouce>& pGraphicsResource);
         
         static void CreateShaderResourceView(DX12Device* pDX12Device, DX12Command* pDX12Command, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam, std::unique_ptr<IDX12Resouce>& pGraphicsResource);
     };

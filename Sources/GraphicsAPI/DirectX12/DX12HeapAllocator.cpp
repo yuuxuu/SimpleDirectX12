@@ -8,6 +8,7 @@
 #include "DX12HeapAllocator.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
+#include "GraphicsAPI/DirectX12/DX12Command.h"
 
 namespace Graphics
 {
@@ -31,6 +32,11 @@ namespace Graphics
         return true;
     }
 
+    void DX12HeapAllocator::SetDescriptorHeap(DX12Command* pDX12Command)
+    {
+        pDX12Command->SetDescriptorHeaps(m_descriptorHeap.Get());
+    }
+
     D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartCPUDescriptorHeapHandle()
     {
         return m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -44,6 +50,26 @@ namespace Graphics
             heapIndex = m_descriptorHeapDesc.NumDescriptors - 1;
 
         auto handle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        auto handleSize = pDX12Device->GetDescriptorHandleIncrementSize(m_descriptorHeapDesc.Type);
+
+        handle.ptr += (handleSize * heapIndex);
+
+        return handle;
+    }
+
+    D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartGPUDescriptorHeapHandle()
+    {
+        return m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+    }
+
+    D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetGPUDescriptorHeapHandle(UINT heapIndex)
+    {
+        if (heapIndex == 0)
+            return GetStartGPUDescriptorHeapHandle();
+        else if (heapIndex >= m_descriptorHeapDesc.NumDescriptors)
+            heapIndex = m_descriptorHeapDesc.NumDescriptors - 1;
+
+        auto handle = m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
         auto handleSize = pDX12Device->GetDescriptorHandleIncrementSize(m_descriptorHeapDesc.Type);
 
         handle.ptr += (handleSize * heapIndex);

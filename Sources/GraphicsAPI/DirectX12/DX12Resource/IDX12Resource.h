@@ -27,11 +27,11 @@ namespace Graphics
         IDX12Resouce(DX12Device* pDX12Device) {}
         virtual ~IDX12Resouce() {}
 
+        virtual void Initialize(CD3DX12_HEAP_PROPERTIES* prop, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) = 0;
+        
         virtual void CreateResource(CD3DX12_HEAP_PROPERTIES prop, D3D12_RESOURCE_DESC desc) = 0;
 
         virtual void CreateResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) = 0;
-
-        virtual void Initialize(CD3DX12_HEAP_PROPERTIES* prop, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) = 0;
     };
 
 } // namespace

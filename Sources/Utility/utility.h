@@ -1,7 +1,7 @@
 ﻿/**
  * @file utility.h
  * @brief
- * @author 木村優
+ * @author Yu Kimura
  * @date 2021/04/10
  */
 

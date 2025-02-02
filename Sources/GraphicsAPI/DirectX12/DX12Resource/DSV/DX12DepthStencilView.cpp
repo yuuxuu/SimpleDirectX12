@@ -17,7 +17,8 @@ namespace Graphics
         pDX12Device(pDX12Device),
         pDX12HeapAllocator(pDX12HeapAllocator),
         m_pDepthStencilViewDesc(depthStencilDesc),
-        m_descriptorHandle()
+        m_CPUDescriptorHandle(),
+        m_GPUDescriptorHandle()
     {}
 
     DX12DepthStencilView::~DX12DepthStencilView()
@@ -48,8 +49,12 @@ namespace Graphics
 
         if (m_pResource)
         {
-            m_descriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
-            CreateResourceView(m_descriptorHandle);
+            m_CPUDescriptorHandle = pDX12HeapAllocator->GetCPUDescriptorHeapHandle(heapIndex);
+
+            if (pDX12HeapAllocator->IsVisibleShader())
+                m_GPUDescriptorHandle = pDX12HeapAllocator->GetGPUDescriptorHeapHandle(heapIndex);
+            
+            CreateResourceView(m_CPUDescriptorHandle);
         }
     }
 
