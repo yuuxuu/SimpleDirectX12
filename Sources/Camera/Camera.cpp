@@ -16,7 +16,8 @@ namespace Simple
     constexpr float Z_FAR = 100000.0f;
 
     // コンストラクタ
-    Camera::Camera(const UINT windowWidth, const UINT windowHeight) :
+    Camera::Camera(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight) :
+        pGraphics(pGraphics),
         pGraphicsResource(),
         m_eye(0.0f, 0.0f, 5.0f),
         m_forcus(0.0f, 0.0f, 0.0f),
@@ -81,7 +82,7 @@ namespace Simple
         return VECTOR3(m_matView._13, m_matView._23, m_matView._33);
     }
 
-    void Camera::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Camera::InitializeGraphicsResource()
     {
         BufferParam param;
         param.byteWidth = sizeof(CameraBuffer);
@@ -112,7 +113,7 @@ namespace Simple
         pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &cameraBuffer, Graphics::GraphicsResourceType::CBV);
     }
 
-    void Camera::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Camera::SetGraphicsResource()
     {
         pGraphics->SetConstantBufferResource(1, pGraphicsResource);
     }

@@ -40,7 +40,7 @@ namespace Graphics
         void MapResouce();
 
     public:
-        DX12IndexBufferView(DX12Device* pDX12Device, Simple::IParam* pParam);
+        explicit DX12IndexBufferView(DX12Device* pDX12Device, Simple::IParam* pParam);
         ~DX12IndexBufferView();
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) override;

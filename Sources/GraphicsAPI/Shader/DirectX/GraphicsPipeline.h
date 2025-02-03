@@ -19,14 +19,13 @@ namespace Graphics
 
 namespace Shader
 { 
-    class Shader;
-
     class GraphicsPipeline
     {
     private:
-        DX12Device*                 pDX12Device;
-
         ComPtr<ID3D12PipelineState> m_pPipelineState;
+
+        DX12Device*                 pDX12Device;
+        DX12Command*                pDX12Command;
 
     private:
         GraphicsPipeline(const GraphicsPipeline&) = delete;
@@ -36,12 +35,12 @@ namespace Shader
         void SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
         void SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
     public:
-        GraphicsPipeline(DX12Device* pDX12Device);
+        explicit GraphicsPipeline(DX12Device* pDX12Device, DX12Command* pDX12Command);
         ~GraphicsPipeline();
 
         bool InitializePipeline(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
 
-        void SetPipeline(DX12Command* pDX12Command);
+        void SetPipeline();
     };
 } // namespace GraphicsPipeline
 } // namespace Graphics

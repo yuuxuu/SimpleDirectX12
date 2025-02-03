@@ -17,8 +17,9 @@ namespace Graphics
 namespace Shader
 {
     // コンストラクタ
-    GraphicsPipeline::GraphicsPipeline(DX12Device* pDX12Device) :
-        pDX12Device(pDX12Device)
+    GraphicsPipeline::GraphicsPipeline(DX12Device* pDX12Device,DX12Command* pDX12Command) :
+        pDX12Device(pDX12Device),
+        pDX12Command(pDX12Command)
     {}
 
     // デストラクタ
@@ -105,7 +106,7 @@ namespace Shader
         return true;
     }
 
-    void GraphicsPipeline::SetPipeline(DX12Command* pDX12Command)
+    void GraphicsPipeline::SetPipeline()
     {
         pDX12Command->SetPipelineState(m_pPipelineState.Get());
     }

@@ -24,7 +24,6 @@ namespace Graphics
     {
     public:
         IDX12Resouce() {}
-        IDX12Resouce(DX12Device* pDX12Device) {}
         virtual ~IDX12Resouce() {}
 
         virtual void Initialize(CD3DX12_HEAP_PROPERTIES* prop, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) = 0;

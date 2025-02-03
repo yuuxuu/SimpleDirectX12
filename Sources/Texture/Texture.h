@@ -21,13 +21,14 @@ namespace Simple
     class Texture 
     {
     private:
-        Graphics::IGraphicsResource*            pGraphicsResource;
-
         std::unique_ptr<TextureDataParam>       m_pTextureParam;
 
         std::unique_ptr<CubeTextureDataParam>   m_cubeTextureData;
 
         bool                                    m_isLoaded;
+
+        Graphics::IGraphics*                    pGraphics;
+        Graphics::IGraphicsResource*            pGraphicsResource;
 
     private:
         Texture(const Texture&) = delete;
@@ -35,14 +36,14 @@ namespace Simple
 
         void TextureConvertToCubeMapTexture();
     public:
-        Texture();
+        explicit Texture(Graphics::IGraphics* pGraphics);
         virtual ~Texture();
 
         bool LoadTexture(const std::string& filePath);
 
-        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+        void InitializeGraphicsResource();
 
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        void SetGraphicsResource();
 
         const TextureDataParam* GetParam() const { return m_pTextureParam.get(); }
     };

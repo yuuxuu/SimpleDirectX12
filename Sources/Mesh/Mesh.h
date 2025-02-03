@@ -47,29 +47,31 @@ namespace Simple
     class Mesh 
     {
     private:
+        std::unique_ptr<Texture>        m_pTexture;
+
+        std::vector<Vertex>             m_vertexVec;
+        std::vector<DWORD>              m_indexVec;
+
+        Graphics::IGraphics*            pGraphics;
         Graphics::IGraphicsResource*    pGraphicsResource;
 
         Graphics::IGraphicsResource*    pVertexBufferResource;
         Graphics::IGraphicsResource*    pIndexBufferResource;
 
-        std::unique_ptr<Texture>        m_pTexture;
-
-        std::vector<Vertex>             m_vertexVec;
-        std::vector<DWORD>              m_indexVec;
 
     private:
         Mesh(const Mesh&) = delete;
         Mesh operator=(const Mesh&) = delete;
 
     public:
-        Mesh();
+        explicit Mesh(Graphics::IGraphics* pGraphics);
         ~Mesh();
 
         void Initialize();
 
-        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+        void InitializeGraphicsResource();
 
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        void SetGraphicsResource();
     };
 
 } // namespace

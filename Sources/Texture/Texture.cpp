@@ -14,7 +14,8 @@
 namespace Simple {
 
     // コンストラクタ
-    Texture::Texture() :
+    Texture::Texture(Graphics::IGraphics* pGraphics) :
+        pGraphics(pGraphics),
         pGraphicsResource(),
         m_isLoaded(false)
     {}
@@ -59,12 +60,12 @@ namespace Simple {
         return m_isLoaded;
     }
 
-    void Texture::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Texture::InitializeGraphicsResource()
     {
         pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, m_pTextureParam.get(), Graphics::GraphicsResourceType::SRV);
     }
 
-    void Texture::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Texture::SetGraphicsResource()
     {
         pGraphics->SetShaderResource(6, pGraphicsResource);
     }

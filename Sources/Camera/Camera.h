@@ -20,8 +20,6 @@ namespace Simple
     class Camera 
     {
     private:
-        Graphics::IGraphicsResource*    pGraphicsResource;
-
         VECTOR3                         m_eye;
         VECTOR3                         m_forcus;
         VECTOR3                         m_up;
@@ -30,6 +28,10 @@ namespace Simple
         Matrix                          m_matProj;
 
         float                           m_speed;
+
+        Graphics::IGraphics*            pGraphics;
+        Graphics::IGraphicsResource*    pGraphicsResource;
+
 
     private:
         Camera(const Camera&) = delete;
@@ -44,12 +46,12 @@ namespace Simple
         VECTOR3 GetCameraForwardVector();
 
     public:
-        Camera(const UINT windowWidth, const UINT windowHeight);
+        explicit Camera(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight);
         ~Camera();
 
-        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+        void InitializeGraphicsResource();
 
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        void SetGraphicsResource();
     };
 
 } // namespace

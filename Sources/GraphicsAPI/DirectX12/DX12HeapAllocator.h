@@ -33,7 +33,7 @@ namespace Graphics
         DX12HeapAllocator& operator=(const DX12HeapAllocator) = delete;
 
     public:
-        DX12HeapAllocator(DX12Device* pDX12Device, D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc);
+        explicit DX12HeapAllocator(DX12Device* pDX12Device, D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc);
         ~DX12HeapAllocator();
 
         bool CreateDescriptorHeap();

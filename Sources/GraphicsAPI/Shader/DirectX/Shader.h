@@ -30,6 +30,7 @@ namespace Shader
         shadersMap                  m_pShadeMap;
 
         DX12Device*                 pDX12Device;
+        DX12Command*                pDX12Commnad;
 
     private:
         Shader(const Shader&) = delete;
@@ -37,12 +38,12 @@ namespace Shader
 
         void CompileShader(const std::string& shaderFilePath, const std::string& entryPoint, const std::string& shaderModel) override;
     public:
-        Shader(DX12Device* pDX12Device);
+        explicit Shader(DX12Device* pDX12Device, DX12Command* pDX12Commnad);
         ~Shader();
 
         bool Initialize(const std::string& shaderFilePath) override;
 
-        void SetRootSignature(DX12Command* pDX12Commnad);
+        void SetRootSignature();
 
         void SetGraphicsPipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
         void SetComputePipelineState(D3D12_COMPUTE_PIPELINE_STATE_DESC& computePipelineStateDesc);

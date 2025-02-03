@@ -44,7 +44,7 @@ namespace Graphics
         void UpdateSubresource();
 
     public:
-        DX12ShaderResourceView(DX12Device* pDX12Device, DX12Command* pDX12Command, DX12HeapAllocator* pDX12HeapAllocator, D3D12_SHADER_RESOURCE_VIEW_DESC* shaderResourceViewDesc, D3D12_SUBRESOURCE_DATA* subData);
+        explicit DX12ShaderResourceView(DX12Device* pDX12Device, DX12Command* pDX12Command, DX12HeapAllocator* pDX12HeapAllocator, D3D12_SHADER_RESOURCE_VIEW_DESC* shaderResourceViewDesc, D3D12_SUBRESOURCE_DATA* subData);
         ~DX12ShaderResourceView();
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex) override;

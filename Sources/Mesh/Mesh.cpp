@@ -18,7 +18,8 @@
 namespace Simple {
 
     // コンストラクタ
-    Mesh::Mesh() :
+    Mesh::Mesh(Graphics::IGraphics* pGraphics) :
+        pGraphics(pGraphics),
         pGraphicsResource(),
         pVertexBufferResource(),
         pIndexBufferResource(),
@@ -56,10 +57,10 @@ namespace Simple {
             1, 2, 3,
         };
 
-        m_pTexture = std::make_unique<Texture>();
+        m_pTexture = std::make_unique<Texture>(pGraphics);
     }
 
-    void Mesh::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Mesh::InitializeGraphicsResource()
     {
         BufferParam param;
         param.byteWidth = sizeof(WorldBuffer);
@@ -104,12 +105,12 @@ namespace Simple {
 
         auto itr = std::filesystem::recursive_directory_iterator("Resources/Texture");
         if (m_pTexture->LoadTexture(itr->path().string()))
-            m_pTexture->InitializeGraphicsResource(pGraphics);
+            m_pTexture->InitializeGraphicsResource();
     }
 
-    void Mesh::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    void Mesh::SetGraphicsResource()
     {
-        m_pTexture->SetGraphicsResource(pGraphics);
+        m_pTexture->SetGraphicsResource();
 
         pGraphics->SetConstantBufferResource(0, pGraphicsResource);
 

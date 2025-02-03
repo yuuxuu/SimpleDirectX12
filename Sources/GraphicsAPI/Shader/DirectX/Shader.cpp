@@ -17,8 +17,9 @@ namespace Graphics
 namespace Shader
 {
     // コンストラクタ
-    Shader::Shader(DX12Device* pDX12Device) :
+    Shader::Shader(DX12Device* pDX12Device, DX12Command* pDX12Commnad) :
         pDX12Device(pDX12Device),
+        pDX12Commnad(pDX12Commnad),
         m_pShadeMap(),
         m_pRootSignature()
     {}
@@ -105,7 +106,7 @@ namespace Shader
         return true;
     }
 
-    void Shader::SetRootSignature(DX12Command* pDX12Commnad)
+    void Shader::SetRootSignature()
     {
         pDX12Commnad->SetGraphicsRootSignature(m_pRootSignature.Get());
     }

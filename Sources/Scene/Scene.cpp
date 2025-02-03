@@ -22,12 +22,12 @@ namespace Simple
 
     void Scene::SetUpScene(const UINT windowWidth, const UINT windowHeight)
     {
-        m_pCamera = std::make_unique<Camera>(windowWidth, windowHeight);
-        m_pCamera->InitializeGraphicsResource(pGraphics);
+        m_pCamera = std::make_unique<Camera>(pGraphics, windowWidth, windowHeight);
+        m_pCamera->InitializeGraphicsResource();
 
-        auto pMesh = std::make_unique<Mesh>();
+        auto pMesh = std::make_unique<Mesh>(pGraphics);
         pMesh->Initialize();
-        pMesh->InitializeGraphicsResource(pGraphics);
+        pMesh->InitializeGraphicsResource();
 
         m_pMeshVec.push_back(std::move(pMesh));
     }
@@ -36,10 +36,10 @@ namespace Simple
     {
         pGraphics->Update(windowWidth, windowHeight);
 
-        m_pCamera->SetGraphicsResource(pGraphics);
+        m_pCamera->SetGraphicsResource();
 
         for (auto itr = m_pMeshVec.cbegin(); itr != m_pMeshVec.cend(); itr++)
-            itr->get()->SetGraphicsResource(pGraphics);
+            itr->get()->SetGraphicsResource();
 
         pGraphics->Finalize();
     }

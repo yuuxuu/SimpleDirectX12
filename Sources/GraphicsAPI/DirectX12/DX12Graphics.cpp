@@ -178,18 +178,19 @@ namespace Graphics
         auto itr = std::filesystem::recursive_directory_iterator("Resources/Shader/HLSL");
         for (const auto& file : itr)
         {
-            if (file.path().extension() != ".hlsl")
+            auto extension = file.path().extension();
+            if (extension != ".hlsl")
                 continue;
 
-            auto pShader = std::make_unique<Shader::Shader>(m_pDX12Device.get());
+            auto pShader = std::make_unique<Shader::Shader>(m_pDX12Device.get(), m_pDX12Command.get());
             if (!pShader->Initialize(file.path().generic_string().c_str()))
                 continue;
 
-            auto pPipeline = std::make_unique<Shader::GraphicsPipeline>(m_pDX12Device.get());
             D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 
             pShader->SetGraphicsPipelineState(graphicsPipelineStateDesc);
 
+            auto pPipeline = std::make_unique<Shader::GraphicsPipeline>(m_pDX12Device.get(), m_pDX12Command.get());
             if (pPipeline->InitializePipeline(graphicsPipelineStateDesc))
             {
                 m_pShaderVec.push_back(std::move(pShader));
@@ -209,9 +210,9 @@ namespace Graphics
         if (!pShader)
             return;
 
-        pShader->SetRootSignature(m_pDX12Command.get());
+        pShader->SetRootSignature();
 
-        pPipeline->SetPipeline(m_pDX12Command.get());
+        pPipeline->SetPipeline();
 
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())

@@ -18,13 +18,13 @@
 
 #include "Param/IParam.h"
 
-namespace Simple
-{
-    class Vertex;
-}
-
 namespace Graphics
 {
+    namespace Shader
+    {
+        class Shader;
+    }
+
     using HeapAllocatorMap = std::map<D3D12_DESCRIPTOR_HEAP_TYPE, std::unique_ptr<DX12HeapAllocator>>;
     using GraphicsPipelineVec = std::vector<std::unique_ptr<Shader::GraphicsPipeline>>;
     using ShaderVec = std::vector<std::unique_ptr<Shader::Shader>>;

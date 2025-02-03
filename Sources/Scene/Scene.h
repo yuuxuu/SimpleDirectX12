@@ -33,7 +33,7 @@ namespace Simple
         Scene operator=(const Scene&) = delete;
 
     public:
-        Scene(Graphics::IGraphics* graphics);
+        explicit Scene(Graphics::IGraphics* graphics);
         ~Scene();
 
         void SetUpScene(const UINT windowWidth, const UINT windowHeight);

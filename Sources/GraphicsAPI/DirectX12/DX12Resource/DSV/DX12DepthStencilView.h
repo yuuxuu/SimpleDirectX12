@@ -38,7 +38,7 @@ namespace Graphics
         void CreateResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) override;
 
     public:
-        DX12DepthStencilView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_DEPTH_STENCIL_VIEW_DESC* depthStencilDesc);
+        explicit DX12DepthStencilView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_DEPTH_STENCIL_VIEW_DESC* depthStencilDesc);
         ~DX12DepthStencilView();
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) override;
