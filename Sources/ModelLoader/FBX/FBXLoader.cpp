@@ -49,7 +49,7 @@ namespace ModelLoader
         if (vecUV.empty() && vecNormal.empty())
         {
             pMesh->Initialize(vertices, indices);
-            pModelMesh->RegisterMesh(pFbxMesh->GetName(), pMesh);
+            pModelMesh->RegisterMesh(pMesh);
             return;
         }
 
@@ -72,7 +72,7 @@ namespace ModelLoader
         }
         
         pMesh->Initialize(vecVertex, std::vector<DWORD>());
-        pModelMesh->RegisterMesh(pFbxMesh->GetName(), pMesh);
+        pModelMesh->RegisterMesh(pMesh);
     }
 
     void FBXLoader::ConvertVertex(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, std::vector<DWORD>& indices)
@@ -403,7 +403,7 @@ namespace ModelLoader
             pMaterial->Initialize(materialBuffer);
         }
 
-        pModelMesh->RegisterMaterial(pFbxMaterial->GetName(), pMaterial);
+        pModelMesh->RegisterMaterial(pMaterial);
 
         std::vector<std::string> properties =
         {
@@ -438,7 +438,7 @@ namespace ModelLoader
                 auto pTexture = std::make_unique<Simple::Texture>();
                 textureVec.push_back(pTexture.get());
 
-                pModelMesh->RegisterTexture(pFbxMaterial->GetName(), pFbxTexture->GetFileName(), pTexture);
+                pModelMesh->RegisterTexture(pFbxTexture->GetFileName(), pTexture);
             }
         }
 

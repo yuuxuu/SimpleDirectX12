@@ -14,7 +14,7 @@ namespace Simple {
     // コンストラクタ
     Material::Material() :
         m_MaterialBuffer(),
-        pConstantBufferResource()
+        pGraphicsResource(nullptr)
     {}
 
     // デストラクタ
@@ -31,14 +31,14 @@ namespace Simple {
         BufferParam materialBufferParam;
         materialBufferParam.byteWidth = sizeof(MaterialBuffer);
 
-        pGraphics->InitializeGraphicsBufferResource(pConstantBufferResource, &materialBufferParam, Graphics::GraphicsResourceType::CBV);
+        pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, &materialBufferParam, Graphics::GraphicsResourceType::CBV);
 
-        pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &m_MaterialBuffer, &materialBufferParam, Graphics::GraphicsResourceType::CBV);
+        pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &m_MaterialBuffer, &materialBufferParam, Graphics::GraphicsResourceType::CBV);
     }
 
     void Material::SetGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->SetConstantBufferResource(2, pConstantBufferResource);
+        pGraphics->SetConstantBufferResource(2, pGraphicsResource);
     }
 
 } // namespace
