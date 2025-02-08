@@ -95,10 +95,10 @@ namespace System
         m_pInput->UpdateInput();
 
         m_pCamera->Update(*m_pInput.get());
-        m_pCamera->SetGraphicsResource(pGraphics);
 
         pGraphics->Update();
 
+        m_pCamera->SetGraphicsResource(pGraphics);
         m_pScene->UpdateScene(pGraphics);
 
         pGraphics->Finalize();

@@ -83,8 +83,6 @@ namespace Simple {
         pGraphics->InitializeGraphicsBufferResource(pIndexBufferResource, &indexBufferParam, Graphics::GraphicsResourceType::IBV);
 
         pGraphics->UpdateGraphicsBufferResource(pIndexBufferResource, &m_indecies[0], &indexBufferParam, Graphics::GraphicsResourceType::IBV);
-
-        pGraphics->SetGraphicsPipeline();
     }
 
     void Mesh::SetGraphicsResource(Graphics::IGraphics* pGraphics)
@@ -93,8 +91,6 @@ namespace Simple {
             pGraphics->DrawInstancedVertexBuffer(pVertexBufferResource, (UINT)m_vertices.size());
         else
             pGraphics->DrawIndexedIndexBuffer(pVertexBufferResource, pIndexBufferResource, (UINT)m_indecies.size());
-
-        pGraphics->SetGraphicsPipeline();
     }
 
 } // namespace
