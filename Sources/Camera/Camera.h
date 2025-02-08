@@ -17,6 +17,8 @@
 
 namespace Simple 
 {
+    class Input;
+
     class Camera 
     {
     private:
@@ -29,13 +31,13 @@ namespace Simple
 
         float                           m_speed;
 
-        Graphics::IGraphics*            pGraphics;
         Graphics::IGraphicsResource*    pGraphicsResource;
-
 
     private:
         Camera(const Camera&) = delete;
         Camera operator=(const Camera&) = delete;
+
+        void UpdateSpeed(const Input& input);
 
         Matrix GetViewProjectionMatrix();
         Matrix GetInvViewMatrix();
@@ -46,12 +48,14 @@ namespace Simple
         VECTOR3 GetCameraForwardVector();
 
     public:
-        explicit Camera(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight);
+        explicit Camera(const UINT windowWidth, const UINT windowHeight);
         ~Camera();
 
-        void InitializeGraphicsResource();
+        void Update(const Input& input);
 
-        void SetGraphicsResource();
+        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+
+        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
     };
 
 } // namespace

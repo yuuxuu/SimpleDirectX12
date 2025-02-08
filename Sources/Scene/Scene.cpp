@@ -10,38 +10,38 @@
 #include "Camera/Camera.h"
 
 #include "Mesh/Mesh.h"
+#include "Mesh/ModelMesh.h"
 
 namespace Simple 
 {
-    Scene::Scene(Graphics::IGraphics* graphics) :
-        pGraphics(graphics)
+    Scene::Scene()
     {}
 
     Scene::~Scene()
     {}
 
-    void Scene::SetUpScene(const UINT windowWidth, const UINT windowHeight)
+    void Scene::SetUpScene(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight)
     {
-        m_pCamera = std::make_unique<Camera>(pGraphics, windowWidth, windowHeight);
-        m_pCamera->InitializeGraphicsResource();
+        auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/FBX");
+        for (auto path : itr)
+        {
+            auto extension = itr->path().extension().string();
+            std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+            if (extension != ".fbx")
+                continue;
 
-        auto pMesh = std::make_unique<Mesh>(pGraphics);
-        pMesh->Initialize();
-        pMesh->InitializeGraphicsResource();
+            auto pModelMesh = std::make_unique<ModelMesh>();
+            pModelMesh->LoadModel(itr->path().string());
+            pModelMesh->InitializeGraphicsResource(pGraphics);
 
-        m_pMeshVec.push_back(std::move(pMesh));
+            m_pModelMeshVec.push_back(std::move(pModelMesh));
+        }
     }
 
-    void Scene::UpdateScene(const UINT windowWidth, const UINT windowHeight)
+    void Scene::UpdateScene(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->Update(windowWidth, windowHeight);
-
-        m_pCamera->SetGraphicsResource();
-
-        for (auto itr = m_pMeshVec.cbegin(); itr != m_pMeshVec.cend(); itr++)
-            itr->get()->SetGraphicsResource();
-
-        pGraphics->Finalize();
+        for (auto itr = m_pModelMeshVec.cbegin(); itr != m_pModelMeshVec.cend(); itr++)
+            itr->get()->SetGraphicsResource(pGraphics);
     }
 
 } // Simple

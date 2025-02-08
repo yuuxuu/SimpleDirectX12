@@ -27,7 +27,7 @@ namespace Graphics
 
         void*                               m_pMappedBuffer;
 
-        Simple::BufferParam*                m_pParam;
+        Simple::BufferParam*                m_pBufferParam;
 
     private:
         DX12VertexBufferView(const DX12VertexBufferView&) = delete;
@@ -40,12 +40,12 @@ namespace Graphics
         void MapResouce();
 
     public:
-        explicit DX12VertexBufferView(DX12Device* pDX12Device, Simple::IParam* pParam);
+        explicit DX12VertexBufferView(DX12Device* pDX12Device, Simple::BufferParam* pParam);
         ~DX12VertexBufferView();
 
         void Initialize(CD3DX12_HEAP_PROPERTIES* heapProperties, D3D12_RESOURCE_DESC* resourceDesc, UINT heapIndex = 0) override;
 
-        void UpdateResourceBuffer(const void* updateSource);
+        void UpdateResourceBuffer(const void* updateSource, Simple::IParam* pParam);
 
         const ID3D12Resource* GetResource() const { return m_pResource.Get(); }
 

@@ -27,15 +27,15 @@ namespace Graphics
 
         virtual void Finalize() = 0;
 
-        virtual void Update(UINT width, UINT height) = 0;
+        virtual void Update() = 0;
 
         virtual void InitializeGraphicsPipeline() = 0;
 
         virtual void SetGraphicsPipeline() = 0;
 
-        virtual void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType GraphicsResourceType) = 0;
+        virtual void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType GraphicsResourceType) = 0;
 
-        virtual void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, GraphicsResourceType graphicsResourceType) = 0;
+        virtual void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) = 0;
 
         virtual void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) = 0;
 

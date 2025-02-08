@@ -33,6 +33,9 @@ namespace Graphics
 
     bool DX12Graphics::Initialize(HWND hwnd, UINT windowWidth, UINT windowHeight)
     {
+        m_windowWidth = windowWidth;
+        m_windowHeight = windowHeight;
+
         ComPtr<ID3D12CommandQueue> pDX12CommandQueue;
 
         m_pDX12Device = std::make_unique<DX12Device>();
@@ -113,7 +116,7 @@ namespace Graphics
         }
 
         {
-            const UINT numCBV_SRV_UAV = 100;
+            const UINT numCBV_SRV_UAV = 1000;
 
             D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc =
             {
@@ -149,8 +152,14 @@ namespace Graphics
         m_pDX12Device->Present();
     }
 
-    void DX12Graphics::Update(const UINT windowWidth, const UINT windowHeight)
+    void DX12Graphics::Update()
     {
+        if (m_windowWidth == 0 && m_windowHeight == 0)
+        {
+            MessageBoxA(NULL, "windowの幅と高さが0です。", "MessageBox", MB_OK);
+            return;
+        }
+
         auto index = m_pDX12Device->GetCurrentBackBufferIndex();
 
         auto renderTargetView = dynamic_cast<DX12RenderTargetView*>(m_pRenderTargetViews.at(index).get());
@@ -160,8 +169,8 @@ namespace Graphics
 
         m_pDX12Command->ResetCommandList();
 
-        m_pDX12Command->SetRect(windowWidth, windowHeight);
-        m_pDX12Command->SetViewPort(0, 0, windowWidth, windowHeight);
+        m_pDX12Command->SetRect(m_windowWidth, m_windowHeight);
+        m_pDX12Command->SetViewPort(0, 0, m_windowWidth, m_windowHeight);
 
         m_pDX12Command->SetResourceBarrier(renderTargetView->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
         m_pDX12Command->SetResourceBarrier(depthStencilView->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
@@ -259,7 +268,11 @@ namespace Graphics
         m_pGraphicsBufferResourceViews.push_back(std::move(pDX12Resource));
     }
 
-    void DX12Graphics::UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, GraphicsResourceType graphicsResourceType)
+    void DX12Graphics::UpdateGraphicsBufferResource(
+        IGraphicsResource* pGraphicsResource, 
+        const void* updateSource, 
+        Simple::IParam* pParam,
+        GraphicsResourceType graphicsResourceType)
     {
         switch (graphicsResourceType)
         {
@@ -272,9 +285,9 @@ namespace Graphics
                 return;
             }
 
-            pDX12ConstantBufferView->UpdateResourceBuffer(updateSource);
+            pDX12ConstantBufferView->UpdateResourceBuffer(updateSource, pParam);
         }
-            break;
+        break;
         case GraphicsResourceType::VBV:
         {
             auto pDX12VertexBufferView = dynamic_cast<DX12VertexBufferView*>(pGraphicsResource);
@@ -284,9 +297,9 @@ namespace Graphics
                 return;
             }
 
-            pDX12VertexBufferView->UpdateResourceBuffer(updateSource);
+            pDX12VertexBufferView->UpdateResourceBuffer(updateSource, pParam);
         }
-            break;
+        break;
         case GraphicsResourceType::IBV:
         {
             auto pDX12IndexBufferView = dynamic_cast<DX12IndexBufferView*>(pGraphicsResource);
@@ -296,9 +309,9 @@ namespace Graphics
                 return;
             }
 
-            pDX12IndexBufferView->UpdateResourceBuffer(updateSource);
+            pDX12IndexBufferView->UpdateResourceBuffer(updateSource, pParam);
         }
-            break;
+        break;
         }
     }
 
@@ -341,9 +354,8 @@ namespace Graphics
         m_pDX12Command->DrawInstanced(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numVerties);
     }
 
-    void DX12Graphics::DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndeies)
+    void DX12Graphics::DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndies)
     {
-
         auto pDX12VertexBufferView = dynamic_cast<DX12VertexBufferView*>(pVertexResource);
         if (pDX12VertexBufferView == nullptr)
         {
@@ -360,7 +372,7 @@ namespace Graphics
 
         m_pDX12Command->SetBuffer(pVertexBufferView, pIndexBufferview);
 
-        m_pDX12Command->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numIndeies);
+        m_pDX12Command->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numIndies);
     }
 
 } // namespace

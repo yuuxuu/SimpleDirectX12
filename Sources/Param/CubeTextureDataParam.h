@@ -31,16 +31,6 @@ namespace Simple
         UINT        Height;
 
         DXGI_FORMAT Format;
-
-        CubeTextureDataParam() :
-            pDatas(),
-            PixelsSize(),
-            RowPitch(),
-            SlicePitch(),
-            Width(),
-            Height(),
-            Format()
-        {}
     };
 } // namespace
 

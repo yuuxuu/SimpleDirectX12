@@ -14,9 +14,10 @@
 namespace Simple {
 
     // コンストラクタ
-    Texture::Texture(Graphics::IGraphics* pGraphics) :
-        pGraphics(pGraphics),
+    Texture::Texture() :
         pGraphicsResource(),
+        m_pTextureParam(),
+        m_cubeTextureData(),
         m_isLoaded(false)
     {}
 
@@ -29,6 +30,7 @@ namespace Simple {
         if (m_isLoaded) return true;
 
         std::wstring loadName;
+
         Simple::StringConvertToWchar(filePath, loadName);
         
         DirectX::ScratchImage sImage;
@@ -60,14 +62,14 @@ namespace Simple {
         return m_isLoaded;
     }
 
-    void Texture::InitializeGraphicsResource()
+    void Texture::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
         pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, m_pTextureParam.get(), Graphics::GraphicsResourceType::SRV);
     }
 
-    void Texture::SetGraphicsResource()
+    void Texture::SetGraphicsResource(const UINT index, Graphics::IGraphics* pGraphics)
     {
-        pGraphics->SetShaderResource(6, pGraphicsResource);
+        pGraphics->SetShaderResource(6 + index, pGraphicsResource);
     }
 
     // テクスチャをキューブマップテクスチャに変換

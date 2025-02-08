@@ -10,8 +10,8 @@
 
 // テクスチャ
 Texture2D           diffuseTex      : register(t0);
-Texture2D           specularTex     : register(t1);
-Texture2D           normalTex       : register(t2);
+Texture2D           normalTex       : register(t1);
+Texture2D           specularTex     : register(t2);
 Texture2D           posTex          : register(t3);
 TextureCube	        cubeTex	        : register(t4);
 Texture2D<float>    depthTex        : register(t5);

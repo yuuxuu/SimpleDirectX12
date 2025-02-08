@@ -15,11 +15,11 @@
 
 namespace Graphics
 {
-    DX12VertexBufferView::DX12VertexBufferView(DX12Device* pDX12Device, Simple::IParam* pParam) :
+    DX12VertexBufferView::DX12VertexBufferView(DX12Device* pDX12Device, Simple::BufferParam* pParam) :
         pDX12Device(pDX12Device),
         m_VertexBufferView(),
         m_pMappedBuffer(),
-        m_pParam(dynamic_cast<Simple::BufferParam*>(pParam))
+        m_pBufferParam(pParam)
     {}
 
     DX12VertexBufferView::~DX12VertexBufferView()
@@ -63,14 +63,21 @@ namespace Graphics
             MapResouce();
 
             m_VertexBufferView.BufferLocation = m_pResource->GetGPUVirtualAddress();
-            m_VertexBufferView.SizeInBytes = m_pParam->byteWidth;
-            m_VertexBufferView.StrideInBytes = m_pParam->byteWidthStride;
+            m_VertexBufferView.SizeInBytes = m_pBufferParam->byteWidth;
+            m_VertexBufferView.StrideInBytes = m_pBufferParam->byteWidthStride;
         }
     }
 
-    void DX12VertexBufferView::UpdateResourceBuffer(const void* pSource)
+    void DX12VertexBufferView::UpdateResourceBuffer(const void* pSource, Simple::IParam* pParam)
     {
-        memcpy(m_pMappedBuffer, pSource, m_pParam->byteWidth);
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
+        {
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        memcpy(m_pMappedBuffer, pSource, pBufferParam->byteWidth);
     }
 
 } // namespace

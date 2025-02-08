@@ -9,7 +9,7 @@
 
 #include "Window/Winow.h"
 
-#include "Scene/Scene.h"
+#include "System/GameSystem.h"
 
 #include "GraphicsAPI/DirectX12/DX12Graphics.h"
 
@@ -56,15 +56,20 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
     auto windowWidth = window.GetWindowSize().w;
     auto windowHeight = window.GetWindowSize().h;
 
-    std::unique_ptr<Graphics::IGraphics> graphics = std::make_unique<Graphics::DX12Graphics>();
-    if (!graphics->Initialize(window.GetHwnd(), windowWidth, windowHeight))
+    Graphics::DX12Graphics pGraphics;
+    if (!pGraphics.Initialize(window.GetHwnd(), windowWidth, windowHeight))
     {
-        graphics->Finalize();
+        MessageBoxA(NULL, "グラフィックデバイス初期化：失敗", "MessageBox", MB_OK);
+        pGraphics.Finalize();
         return -1;
     }
 
-    Simple::Scene scene(graphics.get());
-    scene.SetUpScene(windowWidth, windowHeight);
+    Simple::System::GameSystem gameSystem(&pGraphics);
+    if (!gameSystem.Initialize(window.GetHwnd(), windowWidth, windowHeight))
+    {
+        MessageBoxA(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
+        return -1;
+    }
 
     MSG	msg;
     while (1) {
@@ -76,12 +81,10 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
             TranslateMessage(&msg);
             // メッセージをWndProcへ送る
             DispatchMessage(&msg);
-
-            scene.UpdateScene(windowWidth, windowHeight);
         }
     }
 
-    graphics->Finalize();
+    gameSystem.Finalize();
 
     FreeConsole();
 

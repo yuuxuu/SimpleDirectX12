@@ -27,16 +27,6 @@ namespace Simple
         UINT                        Height;
 
         DXGI_FORMAT                 Format;
-
-        TextureDataParam() :
-            pData(nullptr),
-            PixelsSize(0),
-            RowPitch(0),
-            SlicePitch(0),
-            Width(0),
-            Height(0),
-            Format(DXGI_FORMAT_UNKNOWN)
-        { }
     };
 } // namespace
 
