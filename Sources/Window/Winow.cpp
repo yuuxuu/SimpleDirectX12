@@ -7,19 +7,14 @@
 
 #include "Winow.h"
 
-namespace Simple {
-
-    UINT g_screenShotCount = 0;
-
-    constexpr UINT screenWitdh = 1280;
-    constexpr UINT screenHeight = 720;
-
+namespace Simple 
+{
     // コンストラクタ
-    Window::Window() :
+    Window::Window(RECT windowRect) :
         m_hwnd(nullptr),
         m_hInstance(nullptr),
         m_className(),
-        m_windowSize(screenWitdh, screenHeight),
+        m_windowSize(windowRect.w, windowRect.h),
         m_clientSize(0, 0)
     {}
 

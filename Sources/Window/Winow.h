@@ -29,7 +29,7 @@ namespace Simple {
         void ChangeSizeWindow(const int posx, const int posy, const int width, const int height);
 
     public:
-        Window();
+        Window(RECT windowRect);
         ~Window();
 
         bool Initialize(HINSTANCE hInstance, const char* className, const char* titleName);

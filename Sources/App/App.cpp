@@ -46,7 +46,7 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
 {
     Simple::CallConsole();
 
-    Simple::Window window;
+    Simple::Window window(Simple::RECT(1280, 720));
     if (!window.Initialize(hInstance, "SimpleDirectX12", "SimpleDirectX12"))
     {
         MessageBoxA(NULL, "ウィンドウ初期化：失敗", "MessageBox", MB_OK);
