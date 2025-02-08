@@ -49,6 +49,9 @@ namespace Graphics
 
         std::vector<std::unique_ptr<IDX12Resouce>>      m_pGraphicsBufferResourceViews;
 
+        UINT                                            m_windowWidth;
+        UINT                                            m_windowHeight;
+
     private:
         DX12Graphics(const DX12Graphics&) = delete;
         DX12Graphics& operator=(const DX12Graphics) = delete;
@@ -61,15 +64,15 @@ namespace Graphics
 
         void Finalize() override;
 
-        void Update(const UINT windowWidth, const UINT windowHeight) override;
+        void Update() override;
 
         void InitializeGraphicsPipeline() override;
 
         void SetGraphicsPipeline() override;
 
-        void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) override;
+        void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
 
-        void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, GraphicsResourceType graphicsResourceType) override;
+        void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) override;
 
         void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) override;
 
@@ -77,7 +80,7 @@ namespace Graphics
 
         void DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties) override;
 
-        void DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndeies) override;
+        void DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndies) override;
     };
 } // namespace
 

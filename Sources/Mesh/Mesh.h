@@ -17,17 +17,9 @@
 
 namespace Simple 
 {
-    class Texture;
+    class Material;
 
-    struct Vertex 
-    {
-        VECTOR3	vertex;
-        VECTOR4	color;
-        VECTOR2	uv;
-        VECTOR3	normal;
-        VECTOR3	tangent;
-        VECTOR3	binormal;
-    };
+    struct VertexBuffer;
 
     struct MeshInfo 
     {
@@ -47,31 +39,28 @@ namespace Simple
     class Mesh 
     {
     private:
-        std::unique_ptr<Texture>        m_pTexture;
+        std::vector<VertexBuffer>       m_vertices;
+        std::vector<DWORD>              m_indecies;
 
-        std::vector<Vertex>             m_vertexVec;
-        std::vector<DWORD>              m_indexVec;
-
-        Graphics::IGraphics*            pGraphics;
-        Graphics::IGraphicsResource*    pGraphicsResource;
-
+        Graphics::IGraphicsResource*    pConstantBufferResource;
         Graphics::IGraphicsResource*    pVertexBufferResource;
         Graphics::IGraphicsResource*    pIndexBufferResource;
-
 
     private:
         Mesh(const Mesh&) = delete;
         Mesh operator=(const Mesh&) = delete;
 
+        void Initialize(Graphics::IGraphics* pGraphics);
+
     public:
-        explicit Mesh(Graphics::IGraphics* pGraphics);
+        Mesh();
         ~Mesh();
 
-        void Initialize();
+        void Initialize(const std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indecies);
 
-        void InitializeGraphicsResource();
+        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void SetGraphicsResource();
+        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
     };
 
 } // namespace

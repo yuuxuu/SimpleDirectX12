@@ -15,11 +15,11 @@
 
 namespace Graphics
 {
-    DX12IndexBufferView::DX12IndexBufferView(DX12Device* pDX12Device, Simple::IParam* pParam) :
+    DX12IndexBufferView::DX12IndexBufferView(DX12Device* pDX12Device, Simple::BufferParam* pParam) :
         pDX12Device(pDX12Device),
         m_IndexBufferView(),
         m_pMappedBuffer(),
-        m_pParam(dynamic_cast<Simple::BufferParam*>(pParam))
+        m_pBufferParam(pParam)
     {}
 
     DX12IndexBufferView::~DX12IndexBufferView()
@@ -63,14 +63,21 @@ namespace Graphics
             MapResouce();
 
             m_IndexBufferView.BufferLocation = m_pResource->GetGPUVirtualAddress();
-            m_IndexBufferView.SizeInBytes = m_pParam->byteWidth;
+            m_IndexBufferView.SizeInBytes = m_pBufferParam->byteWidth;
             m_IndexBufferView.Format = DXGI_FORMAT_R32_UINT;
         }
     }
 
-    void DX12IndexBufferView::UpdateResourceBuffer(const void* pSource)
+    void DX12IndexBufferView::UpdateResourceBuffer(const void* pSource, Simple::IParam* pParam)
     {
-        memcpy(m_pMappedBuffer, pSource, m_pParam->byteWidth);
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
+        {
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        memcpy(m_pMappedBuffer, pSource, pBufferParam->byteWidth);
     }
 
 } // namespace

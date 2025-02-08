@@ -14,31 +14,26 @@
 
 namespace Simple
 {
-    class Camera;
-    class Mesh;
+    class ModelMesh;
 
-    using MeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
+    using ModelMeshVec = std::vector<std::unique_ptr<Simple::ModelMesh>>;
 
     class Scene
     {
     private:
-        std::unique_ptr<Camera>                 m_pCamera;
-
-        MeshVec                                 m_pMeshVec;
-
-        Graphics::IGraphics*                    pGraphics;
+        ModelMeshVec                            m_pModelMeshVec;
 
     private:
         Scene(const Scene&) = delete;
         Scene operator=(const Scene&) = delete;
 
     public:
-        explicit Scene(Graphics::IGraphics* graphics);
+        Scene();
         ~Scene();
 
-        void SetUpScene(const UINT windowWidth, const UINT windowHeight);
+        void SetUpScene(Graphics::IGraphics* graphics, const UINT windowWidth, const UINT windowHeight);
 
-        void UpdateScene(const UINT windowWidth, const UINT windowHeight);
+        void UpdateScene(Graphics::IGraphics* graphics);
     };
 } // namespace Simple
 

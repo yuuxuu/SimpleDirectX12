@@ -6,9 +6,12 @@
  */
 
 #include "Camera.h"
+
 #include "Buffer/CameraBuffer.h"
 
 #include "Param/BufferParam.h"
+
+#include "Input/Input.h"
 
 namespace Simple 
 {
@@ -16,13 +19,12 @@ namespace Simple
     constexpr float Z_FAR = 100000.0f;
 
     // コンストラクタ
-    Camera::Camera(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight) :
-        pGraphics(pGraphics),
+    Camera::Camera(const UINT windowWidth, const UINT windowHeight) :
         pGraphicsResource(),
-        m_eye(0.0f, 0.0f, 5.0f),
+        m_eye(0.0f, 0.0f, 1000.0f),
         m_forcus(0.0f, 0.0f, 0.0f),
         m_up(0.0f, 1.0f, 0.0f),
-        m_speed(1.0f)
+        m_speed(100.0f)
     {
         m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
             DegreeToRadian(90.0f),
@@ -82,12 +84,97 @@ namespace Simple
         return VECTOR3(m_matView._13, m_matView._23, m_matView._33);
     }
 
-    void Camera::InitializeGraphicsResource()
+    void Camera::UpdateSpeed(const Input& input)
+    {
+        float ratio = input.GetMousePosZ();
+        if (ratio < 0.1f && ratio > -0.1f)
+            return;
+
+        ratio = (ratio / std::fabsf(ratio));
+        m_speed += ratio;
+
+        const float minSpeed = 1.0f;
+        const float maxSpeed = 100.0f;
+
+        if (m_speed < minSpeed) 
+            m_speed = minSpeed;
+        else if (m_speed > maxSpeed) 
+            m_speed = maxSpeed;
+    }
+
+    void Camera::Update(const Input& input)
+    {
+        UpdateSpeed(input);
+
+        VECTOR3 forwardVector = GetCameraForwardVector();
+        VECTOR3 rightVector = GetCameraRightVector();
+        VECTOR3 upVector = GetCameraUpVector();
+
+        if (input.IsPressKey(DIK_W)) 
+        {
+            m_eye += forwardVector * m_speed;
+            m_forcus += forwardVector * m_speed;
+        }
+        if (input.IsPressKey(DIK_S)) 
+        {
+            m_eye -= forwardVector * m_speed;
+            m_forcus -= forwardVector * m_speed;
+        }
+        if (input.IsPressKey(DIK_A)) 
+        {
+            m_eye -= rightVector * m_speed;
+            m_forcus -= rightVector * m_speed;
+        }
+        if (input.IsPressKey(DIK_D)) 
+        {
+            m_eye += rightVector * m_speed;
+            m_forcus += rightVector * m_speed;
+        }
+
+        if (input.IsTriggerLeftMouse()) 
+        {
+            m_forcus += rightVector * input.GetMousePosX();
+            m_forcus += upVector * input.GetMousePosY();
+        }
+        if (input.IsTriggerRightMouse()) 
+        {
+            //float r = Vec3Lenght(m_forcus - m_eye);
+            //
+            //float theta = rotate.y + input.GetMousePosY() * speed;
+            //float phi = rotate.x + input.GetMousePosX() * speed;
+            //
+            //VECTOR3 pos;
+            //pos.x = r * sinf(theta) * cosf(phi);
+            //pos.y = r * cosf(theta);
+            //pos.z = r * sinf(theta) * sinf(phi);
+            //
+            //m_eye = m_forcus + pos;
+            //
+            //rotate.x = phi;
+            //rotate.y = theta;
+        }
+
+        DirectX::XMVECTOR eye = { m_eye.x, m_eye.y, m_eye.z };
+        DirectX::XMVECTOR forcus = { m_forcus.x, m_forcus.y, m_forcus.z };
+        DirectX::XMVECTOR up = { m_up.x, m_up.y, m_up.z };
+
+        m_matView.dx_m = DirectX::XMMatrixLookAtLH(eye, forcus, up);
+    }
+
+    void Camera::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
         BufferParam param;
         param.byteWidth = sizeof(CameraBuffer);
+        param.byteWidthStride = sizeof(CameraBuffer);
 
         pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, &param, Graphics::GraphicsResourceType::CBV);
+    }
+
+    void Camera::SetGraphicsResource(Graphics::IGraphics* pGraphics)
+    {
+        BufferParam param;
+        param.byteWidth = sizeof(CameraBuffer);
+        param.byteWidthStride = sizeof(CameraBuffer);
 
         Matrix matVP = GetViewProjectionMatrix();
         matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);
@@ -100,7 +187,7 @@ namespace Simple
 
         Matrix invMatProj = GetInvProjectionMatrix();
 
-        CameraBuffer cameraBuffer = 
+        CameraBuffer cameraBuffer =
         {
             matVP,
             m_eye,
@@ -110,11 +197,8 @@ namespace Simple
             invMatProj,
         };
 
-        pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &cameraBuffer, Graphics::GraphicsResourceType::CBV);
-    }
+        pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &cameraBuffer, &param, Graphics::GraphicsResourceType::CBV);
 
-    void Camera::SetGraphicsResource()
-    {
         pGraphics->SetConstantBufferResource(1, pGraphicsResource);
     }
 

@@ -62,8 +62,8 @@
 #pragma comment(lib, "DirectXTex.lib")
 
 // FBXSDK
-//#include <fbxsdk.h>
-//#pragma comment(lib, "libfbxsdk-mt.lib")
+#include <fbxsdk.h>
+#pragma comment(lib, "libfbxsdk-mt.lib")
 
 // input
 #include <dinput.h>
@@ -74,5 +74,5 @@
 #pragma comment(lib, "Rpcrt4.lib")
 
 
-//#include <wrl/client.h>
-//#pragma comment(lib, "winmm.lib")
+#include <wrl/client.h>
+#pragma comment(lib, "winmm.lib")

@@ -53,10 +53,8 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="Shared"></ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -111,7 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sources;$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sources;$(SolutionDir)Includes;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>"stdafx.h"</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -119,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,7 +129,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sources;$(SolutionDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sources;$(SolutionDir)Includes;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>"stdafx.h"</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -141,7 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\x64\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -165,9 +163,14 @@
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\Shader.cpp" />
-    <ClCompile Include="Sources\Math\math.cpp" />
+    <ClCompile Include="Sources\Input\Input.cpp" />
+    <ClCompile Include="Sources\Material\Material.cpp" />
+    <ClCompile Include="Sources\math\math.cpp" />
     <ClCompile Include="Sources\Mesh\Mesh.cpp" />
+    <ClCompile Include="Sources\Mesh\ModelMesh.cpp" />
+    <ClCompile Include="Sources\ModelLoader\FBX\FBXLoader.cpp" />
     <ClCompile Include="Sources\Scene\Scene.cpp" />
+    <ClCompile Include="Sources\System\GameSystem.cpp" />
     <ClCompile Include="Sources\Texture\Texture.cpp" />
     <ClCompile Include="Sources\Utility\utility.cpp" />
     <ClCompile Include="Sources\Window\Winow.cpp" />
@@ -176,6 +179,8 @@
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\App\App.h" />
     <ClInclude Include="Sources\Buffer\CameraBuffer.h" />
+    <ClInclude Include="Sources\Buffer\MaterialBuffer.h" />
+    <ClInclude Include="Sources\Buffer\VertexBuffer.h" />
     <ClInclude Include="Sources\Buffer\WorldBuffer.h" />
     <ClInclude Include="Sources\Camera\Camera.h" />
     <ClInclude Include="Sources\GraphicsAPI\GraphicsResourceType.h" />
@@ -197,18 +202,23 @@
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.h" />
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.h" />
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\Shader.h" />
-    <ClInclude Include="Sources\Math\math.h" />
+    <ClInclude Include="Sources\Input\Input.h" />
+    <ClInclude Include="Sources\Material\Material.h" />
+    <ClInclude Include="Sources\math\math.h" />
     <ClInclude Include="Sources\Mesh\Mesh.h" />
+    <ClInclude Include="Sources\Mesh\ModelMesh.h" />
+    <ClInclude Include="Sources\ModelLoader\FBX\FBXLoader.h" />
     <ClInclude Include="Sources\Param\BufferParam.h" />
     <ClInclude Include="Sources\Param\CubeTextureDataParam.h" />
     <ClInclude Include="Sources\Param\IParam.h" />
+    <ClInclude Include="Sources\Param\ModelDrawInfoParam.h" />
     <ClInclude Include="Sources\Param\TextureDataParam.h" />
     <ClInclude Include="Sources\Scene\Scene.h" />
+    <ClInclude Include="Sources\System\GameSystem.h" />
     <ClInclude Include="Sources\Texture\Texture.h" />
     <ClInclude Include="Sources\Utility\utility.h" />
     <ClInclude Include="Sources\Window\Winow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>

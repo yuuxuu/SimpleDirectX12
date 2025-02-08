@@ -112,7 +112,7 @@ namespace Graphics
 
         auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
-        auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc, pParam);
+        auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc);
         pConstantBufferView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
 
         pHeapAllocator->AddHeapIndex();
@@ -146,7 +146,7 @@ namespace Graphics
 
         auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
-        auto pVertexBufferView = std::make_unique<DX12VertexBufferView>(pDX12Device, pParam);
+        auto pVertexBufferView = std::make_unique<DX12VertexBufferView>(pDX12Device, pBufferParam);
         pVertexBufferView->Initialize(&prop, &resourceDesc);
 
         pDX12Resource = std::move(pVertexBufferView);
@@ -178,7 +178,7 @@ namespace Graphics
 
         auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 
-        auto pIndexBufferView = std::make_unique<DX12IndexBufferView>(pDX12Device, pParam);
+        auto pIndexBufferView = std::make_unique<DX12IndexBufferView>(pDX12Device, pBufferParam);
         pIndexBufferView->Initialize(&prop, &resourceDesc);
 
         pDX12Resource = std::move(pIndexBufferView);

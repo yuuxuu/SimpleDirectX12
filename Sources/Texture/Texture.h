@@ -27,7 +27,6 @@ namespace Simple
 
         bool                                    m_isLoaded;
 
-        Graphics::IGraphics*                    pGraphics;
         Graphics::IGraphicsResource*            pGraphicsResource;
 
     private:
@@ -36,14 +35,14 @@ namespace Simple
 
         void TextureConvertToCubeMapTexture();
     public:
-        explicit Texture(Graphics::IGraphics* pGraphics);
+        Texture();
         virtual ~Texture();
 
         bool LoadTexture(const std::string& filePath);
 
-        void InitializeGraphicsResource();
+        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void SetGraphicsResource();
+        void SetGraphicsResource(const UINT index, Graphics::IGraphics* pGraphics);
 
         const TextureDataParam* GetParam() const { return m_pTextureParam.get(); }
     };

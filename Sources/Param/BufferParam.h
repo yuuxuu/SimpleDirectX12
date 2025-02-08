@@ -18,11 +18,6 @@ namespace Simple
     {
         UINT byteWidth;
         UINT byteWidthStride;
-
-        BufferParam() :
-            byteWidth(),
-            byteWidthStride()
-        { }
     };
 } // namespace
 

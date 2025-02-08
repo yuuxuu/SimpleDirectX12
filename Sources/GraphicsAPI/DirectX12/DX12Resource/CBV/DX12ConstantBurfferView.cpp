@@ -13,11 +13,10 @@
 
 namespace Graphics
 {
-    DX12ConstantBufferView::DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc, Simple::IParam* pParam) :
+    DX12ConstantBufferView::DX12ConstantBufferView(DX12Device* pDX12Device, DX12HeapAllocator* pDX12HeapAllocator, D3D12_CONSTANT_BUFFER_VIEW_DESC* constantBufferViewDesc) :
         pDX12Device(pDX12Device),
         pDX12HeapAllocator(pDX12HeapAllocator),
         m_pConstantBufferViewDesc(constantBufferViewDesc),
-        m_pParam(dynamic_cast<Simple::BufferParam*>(pParam)),
         m_CPUDescriptorHandle(),
         m_GPUDescriptorHandle(),
         m_pMappedBuffer()
@@ -77,9 +76,16 @@ namespace Graphics
         }
     }
 
-    void DX12ConstantBufferView::UpdateResourceBuffer(const void* pSource)
+    void DX12ConstantBufferView::UpdateResourceBuffer(const void* pSource, Simple::IParam* pParam)
     {
-        memcpy(m_pMappedBuffer, pSource, m_pParam->byteWidth);
+        auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
+        if (!pBufferParam)
+        {
+            MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        memcpy(m_pMappedBuffer, pSource, pBufferParam->byteWidth);
     }
 
 } // namespace
