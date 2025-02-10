@@ -2,7 +2,7 @@
 //!	@file	Model.hlsl
 //!	@brief	
 //!	@note	
-//!	@author	2020/09/16 çÏê¨ÅFñÿë∫óD
+//!	@author	2020/09/16 ‰ΩúÊàêÔºöYu Kimura
 //*****************************************************************************
 
 #include "../ConstantBuffer.hlsli"
@@ -50,28 +50,29 @@ PS_OUT PS_main(PS_IN input) {
 
     output.color = diffuseTex.Sample(sampleState, input.uv);
 
-    output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
+    //output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
+    
+    float3 l = normalize(directionalLight.pos.xyz);
+    float3 n = normalize(input.normal);
+    float d = HalfLambert(n, l);
+    float4 dLight = directionalLight.diffuse * d;
 
-    //float3 l = normalize(directionalLight.pos.xyz);
-    //float3 n = normalize(input.normal);
-    //float d = Lambert(n, l);
-    //float4 dLight = directionalLight.diffuse * d;
-    //
-    //float4 pLight;
-    //for (int i = 0; i < numPointLight; ++i) {
-    //    float3 l = pointLights[i].pos - input.posw.xyz;
-    //    float len = length(l);
-    //
-    //    l = normalize(l);
-    //    // åıåπÇ∆ñ@ê¸ÇÃì‡êœÇåvéZ
-    //    float d = Lambert(n, l);
-    //    // å∏êä
-    //    float4 att = saturate(1.0f / (pointLights[i].attenuation.x + pointLights[i].attenuation.y * len + pointLights[i].attenuation.z * len * len));
-    //
-    //    pLight += (pointLights[i].diffuse * d) * att;
-    //}
-    //
-    //output.color *= dLight + pLight;
+    float4 pLight;
+    for (int i = 0; i < numPointLight; ++i) 
+    {
+        float3 l = pointLights[i].pos - input.posw.xyz;
+        float len = length(l);
+    
+        l = normalize(l);
+        // ÂÖâÊ∫ê„Å®Ê≥ïÁ∑ö„ÅÆÂÜÖÁ©ç„ÇíË®àÁÆó
+        float d = HalfLambert(n, l);
+        // Ê∏õË°∞
+        float4 att = saturate(1.0f / (pointLights[i].attenuation.x + pointLights[i].attenuation.y * len + pointLights[i].attenuation.z * len * len));
+    
+        pLight += (pointLights[i].diffuse * d) * att;
+    }
+    
+    output.color *= dLight + pLight;
 
     return output;
 }

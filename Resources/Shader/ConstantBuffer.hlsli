@@ -72,6 +72,7 @@ struct DirectionalLight {
     float4 pos;
     float4 diffuse;
     float4 specular;
+    float intensity;
 };
 
 // ディレクショナルライト
