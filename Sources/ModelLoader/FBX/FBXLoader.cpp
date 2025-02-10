@@ -7,14 +7,18 @@
 
 #include "FBXLoader.h"
 
-#include "Math/math.h"
+#include "math/math.h"
 
 #include "Mesh/Mesh.h"
 #include "Mesh/ModelMesh.h"
 
 #include "Material/Material.h"
 
+#include "Texture/Texture.h"
+
 #include "Buffer/VertexBuffer.h"
+
+#include "Param/ModelDrawInfoParam.h"
 
 namespace Simple 
 {
@@ -432,8 +436,7 @@ namespace ModelLoader
 
                 _splitpath_s(pFbxTexture->GetRelativeFileName(), drive, dir, name, extension);
 
-                std::string filename(name);
-                filename += extension;
+                auto path = std::string(drive) + std::string(dir) + std::string(name) + std::string(extension);
 
                 auto pTexture = std::make_unique<Simple::Texture>();
                 textureVec.push_back(pTexture.get());
@@ -442,7 +445,7 @@ namespace ModelLoader
             }
         }
 
-        pParam->pMaterialVec[pMat] = textureVec;
+        pParam->pMaterialTexturesMap[pMat] = textureVec;
     }
 
     // FbxNodeを再帰的に検索

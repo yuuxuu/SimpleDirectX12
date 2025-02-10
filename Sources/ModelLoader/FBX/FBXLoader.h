@@ -12,6 +12,8 @@
 
 #include "math/math.h"
 
+#include "ModelLoader/IModelLoader.h"
+
 namespace Simple 
 {
     class Mesh;
@@ -23,7 +25,7 @@ namespace Simple
 
 namespace ModelLoader
 {
-    class FBXLoader
+    class FBXLoader : public IModelLoader
     {
     private:
         FBXLoader(const FBXLoader&) = delete;
@@ -43,7 +45,7 @@ namespace ModelLoader
         FBXLoader();
         ~FBXLoader();
 
-        bool LoadModel(const std::string& filePath, Simple::ModelMesh* pModelMesh);
+        bool LoadModel(const std::string& filePath, Simple::ModelMesh* pModelMesh) override;
     };
 } // namespace ModelLoader
 } // namespacce Simple

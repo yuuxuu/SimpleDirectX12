@@ -10,17 +10,24 @@
 #ifndef _MODEL_MESH_H_
 #define _MODEL_MESH_H_
 
-#include "Mesh/Mesh.h"
-#include "Material/Material.h"
-#include "Texture/Texture.h"
+#include "ModelLoader/IModelLoader.h"
 
-#include "Param/ModelDrawInfoParam.h"
+#include "GraphicsAPI/IGraphics.h"
+#include "GraphicsAPI/IGraphicsResource.h"
+
+#include "ModelLoader/IModelLoader.h"
 
 namespace Simple 
 {
-    using RegisterMeshVec = std::vector<std::unique_ptr<Mesh>>;
-    using RegisterMaterialVec = std::vector<std::unique_ptr<Material>>;
-    using RegisterTextureMap = std::map<std::string, std::unique_ptr<Texture>>;
+    class Mesh;
+    class Material;
+    class Texture;
+
+    struct ModelDrawInfoParam;
+
+    using RegisterMeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
+    using RegisterMaterialVec = std::vector<std::unique_ptr<Simple::Material>>;
+    using RegisterTextureMap = std::map<std::string, std::unique_ptr<Simple::Texture>>;
 
     class ModelMesh 
     {
@@ -40,8 +47,6 @@ namespace Simple
     public:
         explicit ModelMesh();
         ~ModelMesh();
-
-        void LoadModel(const std::string& modelFilePath);
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
