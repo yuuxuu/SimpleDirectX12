@@ -33,6 +33,9 @@ namespace System
         Graphics::IGraphics*                pGraphics;
 
     private:
+        GameSystem(const GameSystem&) = delete;
+        GameSystem operator=(const GameSystem&) = delete;
+
         void Loop();
         void Update();
 

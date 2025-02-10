@@ -14,14 +14,26 @@
 
 namespace Simple
 {
+    namespace Light
+    {
+        class DirectionalLight;
+        class PointLight;
+    }
+
     class ModelMesh;
 
-    using ModelMeshVec = std::vector<std::unique_ptr<Simple::ModelMesh>>;
+    using ModelMeshVec = std::vector<std::unique_ptr<ModelMesh>>;
+    using DirectionalLight = std::unique_ptr<Light::DirectionalLight>;
+    using PointLightVec = std::vector<std::unique_ptr<Light::PointLight>>;
 
     class Scene
     {
     private:
-        ModelMeshVec                            m_pModelMeshVec;
+        ModelMeshVec        m_pModelMeshVec;
+        DirectionalLight    m_pDirectionalLight;
+        PointLightVec       m_pPointLightVec;
+
+        Graphics::IGraphicsResource* pConstantBufferResource;
 
     private:
         Scene(const Scene&) = delete;
@@ -34,6 +46,8 @@ namespace Simple
         void SetUpScene(Graphics::IGraphics* graphics, const UINT windowWidth, const UINT windowHeight);
 
         void UpdateScene(Graphics::IGraphics* graphics);
+
+        void DrawScene(Graphics::IGraphics* graphics);
     };
 } // namespace Simple
 

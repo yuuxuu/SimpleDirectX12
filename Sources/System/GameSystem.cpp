@@ -96,10 +96,12 @@ namespace System
 
         m_pCamera->Update(*m_pInput.get());
 
+        m_pScene->UpdateScene(pGraphics);
+
         pGraphics->Update();
 
         m_pCamera->SetGraphicsResource(pGraphics);
-        m_pScene->UpdateScene(pGraphics);
+        m_pScene->DrawScene(pGraphics);
 
         pGraphics->Finalize();
     }
