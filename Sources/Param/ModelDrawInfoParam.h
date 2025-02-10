@@ -23,7 +23,7 @@ namespace Simple
     struct ModelDrawInfoParam : public IParam
     {
         Mesh*                 pMesh;
-        MaterialTexturesMap   pMaterialVec;
+        MaterialTexturesMap   pMaterialTexturesMap;
     };
 } // namespace
 

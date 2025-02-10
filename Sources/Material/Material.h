@@ -20,9 +20,9 @@ namespace Simple
     class Material 
     {
     private:
-        MaterialBuffer                      m_MaterialBuffer;
+        MaterialBuffer                  m_MaterialBuffer;
 
-        Graphics::IGraphicsResource*        pConstantBufferResource;
+        Graphics::IGraphicsResource*    pGraphicsResource;
 
     private:
         Material(const Material&) = delete;

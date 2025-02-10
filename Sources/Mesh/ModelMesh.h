@@ -10,25 +10,32 @@
 #ifndef _MODEL_MESH_H_
 #define _MODEL_MESH_H_
 
-#include "Mesh/Mesh.h"
-#include "Material/Material.h"
-#include "Texture/Texture.h"
+#include "ModelLoader/IModelLoader.h"
 
-#include "Param/ModelDrawInfoParam.h"
+#include "GraphicsAPI/IGraphics.h"
+#include "GraphicsAPI/IGraphicsResource.h"
+
+#include "ModelLoader/IModelLoader.h"
 
 namespace Simple 
 {
-    using RegisterMeshMap = std::map<std::string, std::unique_ptr<Mesh>>;
-    using RegisterMaterialMap = std::map<std::string, std::unique_ptr<Material>>;
-    using RegisterTextureMap = std::map<std::string, std::unique_ptr<Texture>>;
+    class Mesh;
+    class Material;
+    class Texture;
+
+    struct ModelDrawInfoParam;
+
+    using RegisterMeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
+    using RegisterMaterialVec = std::vector<std::unique_ptr<Simple::Material>>;
+    using RegisterTextureMap = std::map<std::string, std::unique_ptr<Simple::Texture>>;
 
     class ModelMesh 
     {
     private:
         std::vector<ModelDrawInfoParam> m_ModelDrawInfoParamVec;
 
-        RegisterMeshMap                 m_registerMeshMap;
-        RegisterMaterialMap             m_registerMaterialMap;
+        RegisterMeshVec                 m_registerMeshVec;
+        RegisterMaterialVec             m_registerMaterialVec;
         RegisterTextureMap              m_registerTextureMap;
 
         Graphics::IGraphicsResource*    pConstantBufferResource;
@@ -41,15 +48,13 @@ namespace Simple
         explicit ModelMesh();
         ~ModelMesh();
 
-        void LoadModel(const std::string& modelFilePath);
-
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
         void SetGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void RegisterMesh(const std::string& meshName, std::unique_ptr<Mesh>& pMesh);
-        void RegisterMaterial(const std::string materialName, std::unique_ptr<Material>& pMaterial);
-        void RegisterTexture(const std::string& meshName,const std::string& texturePath, std::unique_ptr<Texture>& pTexture);
+        void RegisterMesh(std::unique_ptr<Mesh>& pMesh);
+        void RegisterMaterial(std::unique_ptr<Material>& pMaterial);
+        void RegisterTexture(const std::string& texturePath, std::unique_ptr<Texture>& pTexture);
 
         void AddModelDrawInfoParam(const ModelDrawInfoParam& param);
     };
