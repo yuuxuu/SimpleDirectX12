@@ -2,92 +2,92 @@
 <Project ToolsVersion="4.0">
   <ItemGroup>
     <Filter Include="Sources">
-      <UniqueIdentifier>{685cfeba-05b3-4b9d-840f-2d3a4fc7a2d2}</UniqueIdentifier>
+      <UniqueIdentifier>{2ea5fd82-b95b-4725-9c8b-dc4964a01871}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Sources\App">
-      <UniqueIdentifier>{3026e7ca-be67-4015-aee4-2905b4e62496}</UniqueIdentifier>
+      <UniqueIdentifier>{ce2a2488-4445-4d36-9557-6b8f1ef7a7d1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Buffer">
-      <UniqueIdentifier>{7cb2a2af-2782-4568-b437-2f4a976a3edb}</UniqueIdentifier>
+      <UniqueIdentifier>{cc932c38-faa2-492f-8cc0-bad1e7f7376b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Camera">
-      <UniqueIdentifier>{94af3ff4-ca8e-4572-a064-2ef6a8aa7dba}</UniqueIdentifier>
+      <UniqueIdentifier>{102f7c39-e2b2-46e5-bc78-a5529bd4432a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI">
-      <UniqueIdentifier>{d2ae2751-500e-426c-87f7-90fb8adeb9ee}</UniqueIdentifier>
+      <UniqueIdentifier>{46c9e5d5-d5c7-4dc8-8d98-c4a8cbe8e3e1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Input">
-      <UniqueIdentifier>{0a1746ce-b3e6-41a5-a901-bbf6bdab5ee7}</UniqueIdentifier>
+      <UniqueIdentifier>{00e0b561-f1c0-4c0c-9b08-b069b98002e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Light">
-      <UniqueIdentifier>{8b8feef3-f977-4a2b-9c29-b856b4a269ea}</UniqueIdentifier>
+      <UniqueIdentifier>{bee06852-5e1f-4bd6-94aa-79f63a849baa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Material">
-      <UniqueIdentifier>{6db7373b-5844-48e1-815c-14d7fdc213b9}</UniqueIdentifier>
+      <UniqueIdentifier>{32e047d6-d221-4100-b2d2-1abe4a33fc1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\math">
-      <UniqueIdentifier>{bd9849c3-7877-4512-b3ae-f21ba1803f30}</UniqueIdentifier>
+      <UniqueIdentifier>{89e4bd8a-b4a4-4b23-8ca1-8d9891f956e1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Mesh">
-      <UniqueIdentifier>{3da6a4b3-cda5-490d-838c-1eb4942ad03a}</UniqueIdentifier>
+      <UniqueIdentifier>{52f3e40e-91f1-42f2-8f0d-70d5e22eb5cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader">
-      <UniqueIdentifier>{7230d53e-8874-4bae-abeb-15025a064502}</UniqueIdentifier>
+      <UniqueIdentifier>{845e934e-29f7-4be2-b958-36e44d09390e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Param">
-      <UniqueIdentifier>{c5c97d19-5ccc-4107-acb5-020af8312af1}</UniqueIdentifier>
+      <UniqueIdentifier>{35a2d35a-d330-450d-a7e4-c7a35ebef28b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scene">
-      <UniqueIdentifier>{c2022d3d-f8c5-47bf-a730-77ee346e2747}</UniqueIdentifier>
+      <UniqueIdentifier>{48a0b079-59d1-42be-98b2-d954342dcee0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\System">
-      <UniqueIdentifier>{874c1ee1-f60e-43a3-9e2d-4db51346f1b1}</UniqueIdentifier>
+      <UniqueIdentifier>{d2c22b1d-e99e-498d-bd4f-cd22a47b08ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Texture">
-      <UniqueIdentifier>{fb021b2a-9877-46bd-a283-f5c9af6565c4}</UniqueIdentifier>
+      <UniqueIdentifier>{b698468e-7b9e-4f61-a928-874f131bc8e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Utility">
-      <UniqueIdentifier>{01670d9b-0b87-4403-9d19-e94068ce0fac}</UniqueIdentifier>
+      <UniqueIdentifier>{b578761d-3099-4e53-90e6-577a7948458d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Window">
-      <UniqueIdentifier>{c899e839-4b08-45fd-b64b-eea42a7ff99c}</UniqueIdentifier>
+      <UniqueIdentifier>{49cbf62e-cba7-4ab6-8bfd-5b3e4efa7f23}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12">
-      <UniqueIdentifier>{382ac127-254c-4d10-9c6f-ff9d43be133e}</UniqueIdentifier>
+      <UniqueIdentifier>{62d1086a-7a20-47f0-90a2-4826c7179d6b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\Shader">
-      <UniqueIdentifier>{ecab276b-dace-42e7-a886-356a0511b18d}</UniqueIdentifier>
+      <UniqueIdentifier>{57e9d7a1-a299-46ad-b5bd-3a346c836ed5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource">
-      <UniqueIdentifier>{0da7efb2-f187-4fdf-b6ea-a9dc5d59df6e}</UniqueIdentifier>
+      <UniqueIdentifier>{678e6c9d-67e2-45b5-a6d0-63b7a5adfe0d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV">
-      <UniqueIdentifier>{b8e4d526-a678-4d04-be77-9a4047905942}</UniqueIdentifier>
+      <UniqueIdentifier>{c3144392-bf9c-4b1d-bee0-cea6d3eb752b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV">
-      <UniqueIdentifier>{8dab3013-5274-480c-b1c7-fdc03b2f5f09}</UniqueIdentifier>
+      <UniqueIdentifier>{f0754cee-7de7-40a0-9c9d-0d709fc65010}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV">
-      <UniqueIdentifier>{c7a7c638-242c-4c25-97e5-93ae430bdad3}</UniqueIdentifier>
+      <UniqueIdentifier>{ea95a402-f0ef-4aa1-97c4-ec588dd4081c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV">
-      <UniqueIdentifier>{201979be-3e0d-4ffa-88a2-63526a5035cf}</UniqueIdentifier>
+      <UniqueIdentifier>{eaaa71c1-5ded-45d8-a672-ea88e48e3e57}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV">
-      <UniqueIdentifier>{2153a206-880c-412c-be22-10f4c3b68ca0}</UniqueIdentifier>
+      <UniqueIdentifier>{eeed9e77-8ff6-4236-8c0f-5cfa49bc62cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV">
-      <UniqueIdentifier>{48dfda74-2891-48ce-9802-325a20f4ac56}</UniqueIdentifier>
+      <UniqueIdentifier>{f4b9cb37-618b-4445-96f2-430daf4daf32}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\Shader\DirectX">
-      <UniqueIdentifier>{042965a1-af74-4843-aff4-677c9312fcf7}</UniqueIdentifier>
+      <UniqueIdentifier>{3176960a-bb5a-4d4a-b7f4-6963064183d1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader\FBX">
-      <UniqueIdentifier>{67ad5691-9810-4a77-8f1c-640451c9674b}</UniqueIdentifier>
+      <UniqueIdentifier>{0868aeca-8e2d-4083-a886-154b234d4881}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader\OBJ">
-      <UniqueIdentifier>{f2fd96b9-d8c2-4398-9b65-0d970d163714}</UniqueIdentifier>
+      <UniqueIdentifier>{fb46023a-4fd2-4eeb-9161-83b8ae9d7019}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

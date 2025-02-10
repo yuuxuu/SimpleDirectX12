@@ -17,6 +17,9 @@
 #include "Light/DirectionalLight.h"
 #include "Light/PointLight.h"
 
+#include "ModelLoader/FBX/FBXLoader.h"
+#include "ModelLoader/OBJ/OBJLoader.h"
+
 #include "System/ThreadPoolSystem.h"
 
 namespace Simple 
@@ -38,7 +41,7 @@ namespace Simple
         auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/");
         for (auto path : itr)
         {
-            auto extension = itr->path().extension().string();
+            auto extension = path.path().extension().string();
             std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
             if (extension.empty())
                 continue;
@@ -46,7 +49,19 @@ namespace Simple
             System::ThreadPoolSystem::GetThreadPoolSystem().AddTask(
                 [=]() 
                 {
+                    std::unique_ptr<ModelLoader::IModelLoader> pModelLoader = nullptr;
+
+                    if (extension == ".fbx")
+                        pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
+                    else if(extension == ".obj")
+                        pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
+
+                    if (!pModelLoader)
+                        return;
+
                     auto pModelMesh = std::make_unique<ModelMesh>();
+
+                    pModelLoader->LoadModel(path.path().string(), pModelMesh.get());
 
                     pModelMesh->InitializeGraphicsResource(pGraphics);
 
