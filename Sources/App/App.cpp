@@ -11,6 +11,8 @@
 
 #include "System/GameSystem.h"
 
+#include "System/ThreadPoolSystem.h"
+
 #include "GraphicsAPI/DirectX12/DX12Graphics.h"
 
 namespace Simple {
@@ -52,6 +54,8 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
         MessageBoxA(NULL, "ウィンドウ初期化：失敗", "MessageBox", MB_OK);
         return -1;
     }
+
+    Simple::System::ThreadPoolSystem::GetThreadPoolSystem().Initialize(3);
 
     auto windowWidth = window.GetWindowSize().w;
     auto windowHeight = window.GetWindowSize().h;
