@@ -87,9 +87,12 @@ namespace ModelLoader
                     std::vector<VertexBuffer> vecVertexBuffer(numIndex);
                     for (auto i = 0; i < numIndex; ++i)
                     {
-                        vecVertexBuffer[i].vertex = vertices[indices[i]];
-                        vecVertexBuffer[i].normal = normals[normalIndices[i]];
-                        vecVertexBuffer[i].uv = uvs[uvIndices[i]];
+                        if (!indices.empty())
+                            vecVertexBuffer[i].vertex = vertices[indices[i]];
+                        if(!normalIndices.empty())
+                            vecVertexBuffer[i].normal = normals[normalIndices[i]];
+                        if (!uvIndices.empty())
+                            vecVertexBuffer[i].uv = uvs[uvIndices[i]];
                     }
 
                     indices.clear();
@@ -254,9 +257,12 @@ namespace ModelLoader
             std::vector<VertexBuffer> vecVertexBuffer(numIndex);
             for (auto i = 0; i < numIndex; ++i)
             {
-                vecVertexBuffer[i].vertex = vertices[indices[i]];
-                vecVertexBuffer[i].normal = normals[normalIndices[i]];
-                vecVertexBuffer[i].uv = uvs[uvIndices[i]];
+                if (!indices.empty())
+                    vecVertexBuffer[i].vertex = vertices[indices[i]];
+                if (!normalIndices.empty())
+                    vecVertexBuffer[i].normal = normals[normalIndices[i]];
+                if (!uvIndices.empty())
+                    vecVertexBuffer[i].uv = uvs[uvIndices[i]];
             }
 
             auto pMesh = std::make_unique<Mesh>();
@@ -338,6 +344,9 @@ namespace ModelLoader
 
                 std::string textureFileName;
                 while (std::getline(ss, textureFileName, '\\')) {}
+
+                ss = std::stringstream(textureFileName);
+                while (std::getline(ss, textureFileName, ' ')) {}
 
                 const auto charSize = 128;
 
