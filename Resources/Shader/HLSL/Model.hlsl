@@ -52,22 +52,22 @@ PS_OUT PS_main(PS_IN input) {
 
     //output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
     
-    float3 l = normalize(directionalLight.pos.xyz);
+    float3 dir = normalize(-directionalLight.pos.xyz);
     float3 n = normalize(input.normal);
-    float d = HalfLambert(n, l);
+    float d = HalfLambert(n, dir);
     float4 dLight = directionalLight.diffuse * d;
 
     float4 pLight;
     for (int i = 0; i < numPointLight; ++i) 
     {
-        float3 l = pointLights[i].pos - input.posw.xyz;
-        float len = length(l);
+        float3 dir = pointLights[i].pos - input.posw.xyz;
+        float len = length(dir);
     
-        l = normalize(l);
+        dir = normalize(dir);
         // 光源と法線の内積を計算
-        float d = HalfLambert(n, l);
+        float d = Lambert(n, dir);
         // 減衰
-        float4 att = saturate(1.0f / (pointLights[i].attenuation.x + pointLights[i].attenuation.y * len + pointLights[i].attenuation.z * len * len));
+        float att = Attenuation(pointLights[i].attenuation.xyz, len);
     
         pLight += (pointLights[i].diffuse * d) * att;
     }

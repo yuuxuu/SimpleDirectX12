@@ -15,8 +15,6 @@
 #include "GraphicsAPI/IGraphics.h"
 #include "GraphicsAPI/IGraphicsResource.h"
 
-#include "ModelLoader/IModelLoader.h"
-
 namespace Simple 
 {
     class Mesh;
@@ -24,6 +22,7 @@ namespace Simple
     class Texture;
 
     struct ModelDrawInfoParam;
+    struct WorldBuffer;
 
     using RegisterMeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
     using RegisterMaterialVec = std::vector<std::unique_ptr<Simple::Material>>;
@@ -50,6 +49,7 @@ namespace Simple
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
+        void UpdateGraphicsResource(Graphics::IGraphics* pGraphics, Simple::WorldBuffer& worldBuffer);
         void SetGraphicsResource(Graphics::IGraphics* pGraphics);
 
         void RegisterMesh(std::unique_ptr<Mesh>& pMesh);

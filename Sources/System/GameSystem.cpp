@@ -101,6 +101,7 @@ namespace System
         pGraphics->Update();
 
         m_pCamera->SetGraphicsResource(pGraphics);
+
         m_pScene->DrawScene(pGraphics);
 
         pGraphics->Finalize();

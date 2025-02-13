@@ -31,7 +31,7 @@ namespace Simple
         VECTOR4 attenuation;
     };
 
-    constexpr UINT LIGHT_MAX = 1000;
+    constexpr UINT LIGHT_MAX = 100;
 
     struct PointLightConstantBuffer
     {

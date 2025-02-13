@@ -50,8 +50,6 @@ namespace Simple
         Mesh(const Mesh&) = delete;
         Mesh operator=(const Mesh&) = delete;
 
-        void Initialize(Graphics::IGraphics* pGraphics);
-
     public:
         Mesh();
         ~Mesh();

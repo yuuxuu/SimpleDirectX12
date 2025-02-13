@@ -35,28 +35,6 @@ namespace Simple {
         VecClear(m_indecies);
     }
 
-    void Mesh::Initialize(Graphics::IGraphics* pGraphics)
-    {
-        const float r = 0.5f;
-
-        m_vertices.reserve(4);
-        m_vertices = 
-        {
-            // vertex               // color                         // uv                // normal
-            { VECTOR3(-r, r, 0.0f), VECTOR4(1.0f, 0.0f, 0.0f, 1.0f), VECTOR2(0.0f, 0.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
-            { VECTOR3( r, r, 0.0f), VECTOR4(0.0f, 1.0f, 0.0f, 1.0f), VECTOR2(1.0f, 0.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
-            { VECTOR3(-r,-r, 0.0f), VECTOR4(0.0f, 0.0f, 1.0f, 1.0f), VECTOR2(0.0f, 1.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
-            { VECTOR3( r,-r, 0.0f), VECTOR4(1.0f, 1.0f, 1.0f, 1.0f), VECTOR2(1.0f, 1.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
-        };
-
-        m_indecies.reserve(6);
-        m_indecies = 
-        {
-            0, 1, 2,
-            1, 2, 3,
-        };
-    }
-
     void Mesh::Initialize(const std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indecies)
     {
         m_vertices = vertices;

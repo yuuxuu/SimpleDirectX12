@@ -48,7 +48,7 @@ namespace Simple {
         pGraphics->InitializeGraphicsBufferResource(pConstantBufferResource, &param, Graphics::GraphicsResourceType::CBV);
 
         Matrix matScale;
-        auto scale = 5.0f;
+        auto scale = 1.0f;
         matScale.dx_m = DirectX::XMMatrixScaling(scale, scale, scale);
 
         Matrix matRotate;
@@ -78,6 +78,15 @@ namespace Simple {
 
             itr->second->InitializeGraphicsResource(pGraphics);
         }
+    }
+
+    void ModelMesh::UpdateGraphicsResource(Graphics::IGraphics* pGraphics, Simple::WorldBuffer& worldBuffer)
+    {
+        BufferParam param;
+        param.byteWidth = sizeof(WorldBuffer);
+        param.byteWidthStride = sizeof(WorldBuffer);
+
+        pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &worldBuffer, &param, Graphics::GraphicsResourceType::CBV);
     }
 
     void ModelMesh::SetGraphicsResource(Graphics::IGraphics* pGraphics)

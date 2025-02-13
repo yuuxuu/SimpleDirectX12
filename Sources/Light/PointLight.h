@@ -17,13 +17,16 @@
 
 namespace Simple 
 {
+    class ModelMesh;
+
 namespace Light
 {
     class PointLight
     {
     private:
-        Simple::PointLightBuffer m_pointLightBuffer;
+        Simple::PointLightBuffer            m_pointLightBuffer;
 
+        std::unique_ptr<Simple::ModelMesh>  pModelMesh;
     private:
         PointLight(const PointLight&) = delete;
         PointLight operator=(const PointLight&) = delete;
@@ -31,6 +34,10 @@ namespace Light
     public:
         explicit PointLight(const Simple::PointLightBuffer& pointLightBuffer);
         ~PointLight();
+
+        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
+
+        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
 
         void SetPointLightBuffer(const Simple::PointLightBuffer& pointLightBuffer);
         const Simple::PointLightBuffer& GetPointLightBuffer() { return m_pointLightBuffer; }

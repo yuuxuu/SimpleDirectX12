@@ -89,7 +89,7 @@ struct PointLight {
     float4  attenuation;
 };
 
-#define LIGHT_MAX 1000
+#define LIGHT_MAX 100
 
 cbuffer CbPointLight : register(b4)
 {

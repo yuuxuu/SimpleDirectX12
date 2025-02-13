@@ -25,7 +25,9 @@
 
 namespace Graphics
 {
-    DX12Graphics::DX12Graphics()
+    DX12Graphics::DX12Graphics() :
+        m_windowHeight(0),
+        m_windowWidth(0)
     {}
 
     DX12Graphics::~DX12Graphics()
