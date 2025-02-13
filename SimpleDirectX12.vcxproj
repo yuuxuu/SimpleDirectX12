@@ -169,6 +169,7 @@
     <ClCompile Include="Sources\Mesh\Mesh.cpp" />
     <ClCompile Include="Sources\Mesh\ModelMesh.cpp" />
     <ClCompile Include="Sources\ModelLoader\FBX\FBXLoader.cpp" />
+    <ClCompile Include="Sources\ModelLoader\OBJ\OBJLoader.cpp" />
     <ClCompile Include="Sources\Scene\Scene.cpp" />
     <ClCompile Include="Sources\System\GameSystem.cpp" />
     <ClCompile Include="Sources\Texture\Texture.cpp" />
@@ -207,7 +208,9 @@
     <ClInclude Include="Sources\math\math.h" />
     <ClInclude Include="Sources\Mesh\Mesh.h" />
     <ClInclude Include="Sources\Mesh\ModelMesh.h" />
+    <ClInclude Include="Sources\ModelLoader\IModelLoader.h" />
     <ClInclude Include="Sources\ModelLoader\FBX\FBXLoader.h" />
+    <ClInclude Include="Sources\ModelLoader\OBJ\OBJLoader.h" />
     <ClInclude Include="Sources\Param\BufferParam.h" />
     <ClInclude Include="Sources\Param\CubeTextureDataParam.h" />
     <ClInclude Include="Sources\Param\IParam.h" />
