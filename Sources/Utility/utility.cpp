@@ -9,8 +9,8 @@
 
 namespace Simple {
     // BMPファイルの保存
-    void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, const char* fileName) {
-
+    void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, const char* fileName) 
+    {
         HANDLE handle = CreateFile(fileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (handle != INVALID_HANDLE_VALUE) {
 
@@ -33,22 +33,22 @@ namespace Simple {
     }
 
     // char型からwstring型に変換
-    void StringConvertToWchar(const std::string& str, std::wstring& destStr) {
-        const char* srcStr = str.c_str();
-
-        size_t size = strlen(srcStr) + 1;
+    void StringConvertToWchar(const std::string& srcStr, std::wstring& destStr) 
+    {
+        size_t size = srcStr.size() + 1;
         destStr.reserve(size);
 
         std::wstring outStr;
         outStr.reserve(size);
 
-        mbstowcs_s(&size, outStr.data(), size, srcStr, _TRUNCATE);
+        mbstowcs_s(&size, outStr.data(), size, srcStr.c_str(), _TRUNCATE);
 
         destStr = outStr.c_str();
     }
 
     // wstring型からstring型に変換
-    void WStringConvertToStrig(const std::wstring& srcStr, std::string& destStr) {
+    void WStringConvertToStrig(const std::wstring& srcStr, std::string& destStr) 
+    {
         size_t size = srcStr.size() + 1;
         destStr.reserve(size);
 
@@ -58,6 +58,33 @@ namespace Simple {
         wcstombs_s(&size, outStr.data(), size, srcStr.c_str(), _TRUNCATE);
 
         destStr = outStr.c_str();
+    }
+
+    // UTF16(一文字2byte)→UTF8(一文字1byte)に変換
+    void UTF16ConvertToUTF8(const std::wstring& srcWstr, std::string& destStr) 
+    {
+        size_t size = srcWstr.size() + 1;
+        destStr.reserve(size);
+
+        std::string outStr;
+        outStr.reserve(size);
+
+        _wcstombs_s_l(&size, outStr.data(), size, srcWstr.data(), _TRUNCATE, _create_locale(LC_ALL, "jpn"));
+
+        destStr = outStr.c_str();
+    }
+
+    // UTF8(一文字1byte)→UTF16(一文字2byte)に変換
+    void UTF8ConvertToUTF16(const std::string& srcStr, std::wstring& destWstr)
+    {
+        size_t size = srcStr.size() + 1;
+
+        std::wstring outStr;
+        outStr.reserve(size);
+
+        _mbstowcs_s_l(&size, outStr.data(), size, srcStr.c_str(), _TRUNCATE, _create_locale(LC_ALL, "jpn"));
+
+        destWstr = outStr.c_str();
     }
 
     // GUIDからstring型に変換

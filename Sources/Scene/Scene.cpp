@@ -27,6 +27,7 @@
 
 #include "ModelLoader/FBX/FBXLoader.h"
 #include "ModelLoader/OBJ/OBJLoader.h"
+#include "ModelLoader/PMX/PMXLoader.h"
 
 #include "System/ThreadPoolSystem.h"
 
@@ -55,6 +56,8 @@ namespace Simple
                 pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
             else if (extension == ".obj")
                 pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
+            else if (extension == ".pmx")
+                pModelLoader = std::make_unique<ModelLoader::PMXLoader>();
 
             if (!pModelLoader)
                 continue;
@@ -126,42 +129,43 @@ namespace Simple
             m_pModelMeshVec.push_back(std::move(pModelMesh));
         }
 
-        m_pDirectionalLight = std::make_unique<Light::DirectionalLight>();
-        m_pDirectionalLight->InitializeGraphicsResource(pGraphics);
-
-        std::random_device rd;
-        std::mt19937 mt(rd());
-        std::uniform_real_distribution<float> randPos(-500.0f, 500.0f);
-        std::uniform_real_distribution<float> randColor(0.1f, 1.0f);
-
-        PointLightConstantBuffer pointLightConstantBuffer;
-
-        auto numLight = 100;
-        for (auto i = 0; i < numLight; ++i)
         {
-            PointLightBuffer pointLightBuffer;
+            m_pDirectionalLight = std::make_unique<Light::DirectionalLight>();
+            m_pDirectionalLight->InitializeGraphicsResource(pGraphics);
 
-            pointLightBuffer.pos = VECTOR3(randPos(mt), 10.0f, randPos(mt));
-            pointLightBuffer.diffuse = VECTOR4(randColor(mt), randColor(mt), randColor(mt), 1.0f);
-            pointLightBuffer.attenuation = VECTOR4(0.1f, 0.1f, 0.0f, 1.0f);
-            pointLightBuffer.radius = 50.0f;
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_real_distribution<float> randPos(-500.0f, 500.0f);
+            std::uniform_real_distribution<float> randColor(0.1f, 1.0f);
 
-            pointLightConstantBuffer.pointLightBuffers[i] = pointLightBuffer;
+            PointLightConstantBuffer pointLightConstantBuffer;
 
-            auto pPointLight = std::make_unique<Light::PointLight>(pointLightBuffer);
-            pPointLight->InitializeGraphicsResource(pGraphics);
-            m_pPointLightVec.push_back(std::move(pPointLight));
+            auto numLight = 100;
+            for (auto i = 0; i < numLight; ++i)
+            {
+                PointLightBuffer pointLightBuffer;
+
+                pointLightBuffer.pos = VECTOR3(randPos(mt), 10.0f, randPos(mt));
+                pointLightBuffer.diffuse = VECTOR4(randColor(mt), randColor(mt), randColor(mt), 1.0f);
+                pointLightBuffer.attenuation = VECTOR4(0.1f, 0.1f, 0.0f, 1.0f);
+                pointLightBuffer.radius = 50.0f;
+
+                pointLightConstantBuffer.pointLightBuffers[i] = pointLightBuffer;
+
+                auto pPointLight = std::make_unique<Light::PointLight>(pointLightBuffer);
+                m_pPointLightVec.push_back(std::move(pPointLight));
+            }
+
+            pointLightConstantBuffer.numPointLight = numLight;
+
+            BufferParam param;
+            param.byteWidth = sizeof(PointLightConstantBuffer);
+            param.byteWidthStride = sizeof(PointLightConstantBuffer);
+
+            pGraphics->InitializeGraphicsBufferResource(pConstantBufferResource, &param, Graphics::GraphicsResourceType::CBV);
+
+            pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &pointLightConstantBuffer, &param, Graphics::GraphicsResourceType::CBV);
         }
-
-        pointLightConstantBuffer.numPointLight = numLight;
-
-        BufferParam param;
-        param.byteWidth = sizeof(PointLightConstantBuffer);
-        param.byteWidthStride = sizeof(PointLightConstantBuffer);
-
-        pGraphics->InitializeGraphicsBufferResource(pConstantBufferResource, &param, Graphics::GraphicsResourceType::CBV);
-
-        pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource,&pointLightConstantBuffer, &param, Graphics::GraphicsResourceType::CBV);
     }
 
     void Scene::UpdateScene(Graphics::IGraphics* pGraphics)
@@ -175,8 +179,8 @@ namespace Simple
 
         pGraphics->SetConstantBufferResource(4, pConstantBufferResource);
 
-        for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
-            itr->get()->SetGraphicsResource(pGraphics);
+        //for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
+        //    itr->get()->SetGraphicsResource(pGraphics);
 
         for (auto itr = m_pModelMeshVec.cbegin(); itr != m_pModelMeshVec.cend(); itr++)
             itr->get()->SetGraphicsResource(pGraphics);

@@ -30,9 +30,8 @@ namespace Simple {
         if (m_isLoaded) return true;
 
         std::wstring loadName;
+        Simple::UTF8ConvertToUTF16(filePath, loadName);
 
-        Simple::StringConvertToWchar(filePath, loadName);
-        
         DirectX::ScratchImage sImage;
         HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
         if (FAILED(hr)) {

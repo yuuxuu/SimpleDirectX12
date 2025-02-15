@@ -38,6 +38,10 @@ namespace Simple {
 
     void WStringConvertToStrig(const std::wstring& srcStr, std::string& destStr);
 
+    void UTF16ConvertToUTF8(const std::wstring& srcWstr, std::string& destStr);
+
+    void UTF8ConvertToUTF16(const std::string& srcStr, std::wstring& destWstr);
+
     void GuidConvertToString(const GUID guid, std::string& destStr);
 
     void StringConvertToGuid(const std::string& str, GUID destGuid);
