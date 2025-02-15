@@ -10,44 +10,52 @@
 namespace Simple {
 
     // ラジアンから度数へ変換
-    float DegreeToRadian(float degree) { 
+    float DegreeToRadian(float degree) 
+    { 
         return degree * (PI / 180.0f); 
     }
 
     // 度数からラジアンへ変換
-    float RadianToDegree(float radian) { 
+    float RadianToDegree(float radian) 
+    { 
         return radian * (180.0f / PI); 
     }
 
     // VECTOR2の長さを取得
-    float Vec2Length(VECTOR2 vec) {
+    float Vec2Length(VECTOR2 vec) 
+    {
         return std::sqrt(vec.x * vec.x + vec.y * vec.y);
     }
 
     // VECTOR3の長さを取得
-    float Vec3Lenght(VECTOR3 vec) {
+    float Vec3Lenght(VECTOR3 vec) 
+    {
         return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
     }
 
     // VECTOR3を正規化
-    VECTOR3 Vec3Normalize(VECTOR3 vec) {
+    VECTOR3 Vec3Normalize(VECTOR3 vec) 
+    {
         float len = Vec3Lenght(vec);
 
         return VECTOR3(vec.x / len, vec.y /len, vec.z / len);
     }
 
     // VECTOR3同士の内積
-    float Vec3Dot(VECTOR3 vec1, VECTOR3 vec2) {
+    float Vec3Dot(VECTOR3 vec1, VECTOR3 vec2) 
+    {
         return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
     }
 
     // VECTOR3同士の外積
-    VECTOR3 Vec3Cross(VECTOR3 vec1, VECTOR3 vec2) {
+    VECTOR3 Vec3Cross(VECTOR3 vec1, VECTOR3 vec2) 
+    {
         return VECTOR3(vec1.y * vec2.z - vec1.z * vec2.y, vec1.z * vec2.x - vec1.x * vec2.z, vec1.x * vec2.y - vec1.y * vec2.x);
     }
 
     // VECTOR3と行列を計算
-    VECTOR3 Vec3TransformCoord(VECTOR3 vec, Matrix matrix) {
+    VECTOR3 Vec3TransformCoord(VECTOR3 vec, Matrix matrix) 
+    {
         VECTOR3 outVec;
 
         outVec.x = vec.x * matrix._11 + vec.y * matrix._21 + vec.z * matrix._31 + matrix._41;
@@ -65,7 +73,8 @@ namespace Simple {
     }
 
     // 視線方向に向いた回転行列を取得
-    Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up) {
+    Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up) 
+    {
         VECTOR3 z = look - pos;
         z = Vec3Normalize(z);
 
@@ -84,7 +93,8 @@ namespace Simple {
     }
 
     // ビューポート行列を取得
-    Matrix GetViewPortMatrix(float screenWidth, float screenHeight) {
+    Matrix GetViewPortMatrix(float screenWidth, float screenHeight) 
+    {
         
         float w = screenWidth * 0.5f;
         float h = screenHeight * 0.5f;

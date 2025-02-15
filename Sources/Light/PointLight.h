@@ -27,6 +27,9 @@ namespace Light
         Simple::PointLightBuffer            m_pointLightBuffer;
 
         std::unique_ptr<Simple::ModelMesh>  pModelMesh;
+
+        float                               m_degree;
+        float                               m_moveSpeed;
     private:
         PointLight(const PointLight&) = delete;
         PointLight operator=(const PointLight&) = delete;
@@ -35,9 +38,7 @@ namespace Light
         explicit PointLight(const Simple::PointLightBuffer& pointLightBuffer);
         ~PointLight();
 
-        void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
-
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        void UpdateRotation();
 
         void SetPointLightBuffer(const Simple::PointLightBuffer& pointLightBuffer);
         const Simple::PointLightBuffer& GetPointLightBuffer() { return m_pointLightBuffer; }

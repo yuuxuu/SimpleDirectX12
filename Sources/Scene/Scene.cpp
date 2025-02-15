@@ -85,7 +85,7 @@ namespace Simple
             auto pMesh = std::make_unique<Mesh>();
             param.pMesh = pMesh.get();
 
-            const float r = 500.0f;
+            const float r = 700.0f;
 
             std::vector<VertexBuffer> vertices =
             {
@@ -138,9 +138,9 @@ namespace Simple
             std::uniform_real_distribution<float> randPos(-500.0f, 500.0f);
             std::uniform_real_distribution<float> randColor(0.1f, 1.0f);
 
-            PointLightConstantBuffer pointLightConstantBuffer;
-
             auto numLight = 100;
+
+            PointLightConstantBuffer pointLightConstantBuffer;
             for (auto i = 0; i < numLight; ++i)
             {
                 PointLightBuffer pointLightBuffer;
@@ -170,7 +170,21 @@ namespace Simple
 
     void Scene::UpdateScene(Graphics::IGraphics* pGraphics)
     {
-        
+        {
+            PointLightConstantBuffer pointLightConstantBuffer;
+            for (auto i = 0; i < m_pPointLightVec.size(); ++i)
+            {
+                m_pPointLightVec[i]->UpdateRotation();
+                pointLightConstantBuffer.pointLightBuffers[i] = m_pPointLightVec[i]->GetPointLightBuffer();
+            }
+
+            pointLightConstantBuffer.numPointLight = static_cast<int>(m_pPointLightVec.size());
+
+            BufferParam param;
+            param.byteWidth = sizeof(PointLightConstantBuffer);
+            param.byteWidthStride = sizeof(PointLightConstantBuffer);
+            pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &pointLightConstantBuffer, &param, Graphics::GraphicsResourceType::CBV);
+        }
     }
 
     void Scene::DrawScene(Graphics::IGraphics* pGraphics)
