@@ -49,8 +49,10 @@ PS_OUT PS_main(PS_IN input) {
     PS_OUT output = (PS_OUT)0;
 
     output.color = diffuseTex.Sample(sampleState, input.uv);
-
-    output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
+    output.color *= material.diffuse;
+    
+    if (output.color.a <= 0.3f)
+        discard;
     
     float3 dir = normalize(-directionalLight.pos.xyz);
     float3 n = normalize(input.normal);

@@ -24,7 +24,7 @@ namespace Simple
         m_eye(0.0f, 100.0f, -100.0f),
         m_forcus(0.0f, 0.0f, 0.0f),
         m_up(0.0f, 1.0f, 0.0f),
-        m_speed(30.0f)
+        m_speed(10.0f)
     {
         m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
             DegreeToRadian(90.0f),

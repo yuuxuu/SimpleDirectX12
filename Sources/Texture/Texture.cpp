@@ -46,13 +46,25 @@ namespace Simple {
 
     bool Texture::LoadTexture(const std::string& filePath) 
     {
-        if (m_isLoaded) return true;
+        if (m_isLoaded) 
+            return true;
 
         std::wstring loadName;
         Simple::StringConvertToWchar(filePath, loadName);
 
         DirectX::ScratchImage sImage;
-        HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
+
+        auto extension = std::filesystem::path(loadName).extension().string();
+        std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+        if (extension.empty())
+            return false;
+
+        HRESULT hr;
+        if(extension == ".tga")
+            hr = DirectX::LoadFromTGAFile(loadName.c_str(), nullptr, sImage);
+        else
+            hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
+
         if (FAILED(hr)) 
         {
             std::string errorStr = filePath + "読み込み：失敗";
