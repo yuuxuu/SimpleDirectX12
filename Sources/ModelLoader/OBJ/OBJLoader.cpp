@@ -55,7 +55,9 @@ namespace ModelLoader
         std::vector<DWORD> normalIndices;
         std::vector<DWORD> uvIndices;
 
-        std::map<std::string, ModelDrawInfoParam> modelDrawInfoParamMap;
+        RegisterMaterialMap materialMap;
+        RegisterTextureMap textureMap;
+
         std::string materialName;
 
         std::map<std::string, std::function<void(const std::string&, const UINT)>> findKeyActionMap;
@@ -63,18 +65,10 @@ namespace ModelLoader
             {
                 auto mtllibName = lineString.substr(pos, lineString.size() - pos);
 
-                const auto charSize = 128;
+                auto parentPath = std::filesystem::path(filePath).parent_path().string();
+                auto path = parentPath + "/" + std::string(mtllibName);
 
-                char drive[charSize];
-                char dir[charSize];
-                char name[charSize];
-                char extension[charSize];
-
-                _splitpath_s(filePath.c_str(), drive, dir, name, extension);
-
-                auto path = std::string(drive) + std::string(dir) + std::string(mtllibName);
-
-                if (!LoadMaterial(path, modelDrawInfoParamMap, pModelMesh))
+                if (!LoadMaterial(path, materialMap, textureMap, pModelMesh))
                     return false;
 
                 return true;
@@ -89,8 +83,10 @@ namespace ModelLoader
                     {
                         if (!indices.empty())
                             vecVertexBuffer[i].vertex = vertices[indices[i]];
-                        if(!normalIndices.empty())
+                        if (!normalIndices.empty())
                             vecVertexBuffer[i].normal = normals[normalIndices[i]];
+                        else
+                            vecVertexBuffer[i].normal = Vec3Normalize(Vec3Cross(vecVertexBuffer[i].vertex, VECTOR3(0.0f, 1.0f, 0.0f)));
                         if (!uvIndices.empty())
                             vecVertexBuffer[i].uv = uvs[uvIndices[i]];
                     }
@@ -103,13 +99,26 @@ namespace ModelLoader
 
                     pMesh->Initialize(vecVertexBuffer, std::vector<DWORD>());
 
-                    auto itr = modelDrawInfoParamMap.find(materialName);
-                    if (itr != modelDrawInfoParamMap.cend())
-                    {
-                        itr->second.pMesh = pMesh.get();
+                    ModelDrawInfoParam param;
+                    param.pMesh = pMesh.get();
 
-                        pModelMesh->AddModelDrawInfoParam(itr->second);
+                    auto materialItr = materialMap.find(materialName);
+                    if (materialItr != materialMap.cend())
+                    {
+                        param.pMaterial = materialItr->second.get();
+
+                        std::vector<Texture*> vecTextures;
+
+                        auto textureItr = textureMap.find(materialName);
+                        if (textureItr != textureMap.cend())
+                        {
+                            std::vector<Texture*> vecTextures{ textureItr->second.get() };
+
+                            param.vecTexture.swap(vecTextures);
+                        }
                     }
+
+                    pModelMesh->AddModelDrawInfoParam(param);
 
                     pModelMesh->RegisterMesh(pMesh);
                 }
@@ -268,52 +277,64 @@ namespace ModelLoader
             auto pMesh = std::make_unique<Mesh>();
             pMesh->Initialize(vecVertexBuffer, std::vector<DWORD>());
 
-            auto itr = modelDrawInfoParamMap.find(materialName);
-            if (itr != modelDrawInfoParamMap.cend())
-            {
-                itr->second.pMesh = pMesh.get();
+            ModelDrawInfoParam param;
+            param.pMesh = pMesh.get();
 
-                pModelMesh->AddModelDrawInfoParam(itr->second);
+            auto materialItr = materialMap.find(materialName);
+            if (materialItr != materialMap.cend())
+            {
+                param.pMaterial = materialItr->second.get();
+
+                auto textureItr = textureMap.find(materialName);
+                if (textureItr != textureMap.cend())
+                {
+                    std::vector<Texture*> vecTextures { textureItr->second.get() };
+
+                    param.vecTexture.swap(vecTextures);
+                }
             }
+
+            pModelMesh->AddModelDrawInfoParam(param);
 
             pModelMesh->RegisterMesh(pMesh);
         }
 
+        for (auto itr = materialMap.begin(); itr != materialMap.end(); ++itr)
+            pModelMesh->RegisterMaterial(itr->second);
+
+        for (auto itr = textureMap.begin(); itr != textureMap.end(); ++itr)
+            pModelMesh->RegisterTexture(itr->first, itr->second);
+
         return true;
     }
 
-    bool OBJLoader::LoadMaterial(const std::string& filePath, std::map<std::string, ModelDrawInfoParam>& modelDrawInfoParamMap, Simple::ModelMesh* pModelMesh)
+    bool OBJLoader::LoadMaterial(
+        const std::string& filePath, 
+        RegisterMaterialMap& materialMap,
+        RegisterTextureMap& textureMap,
+        Simple::ModelMesh* pModelMesh)
     {
         std::ifstream ifs;
         ifs.open(filePath);
         if (!ifs) return false;
 
         std::string materialName;
-        std::unique_ptr<Material> pMaterial;
         MaterialBuffer materialBuffer;
 
         std::map<std::string, std::function<void(const std::string&, const UINT)>> findKeyActionMap;
         findKeyActionMap["newmtl "] = [&](const std::string& lineString, const UINT pos)
             {
-                if (pMaterial)
+                if (!materialName.empty())
                 {
-                    pMaterial->Initialize(materialBuffer);
-
-                    auto itr = modelDrawInfoParamMap.find(materialName);
-                    if (itr != modelDrawInfoParamMap.cend())
-                        itr->second.pMaterialTexturesMap[pMaterial.get()];
-
-                    pModelMesh->RegisterMaterial(pMaterial);
+                    auto itr = materialMap.find(materialName);
+                    if (itr == materialMap.cend())
+                    {
+                        auto pMaterial = std::make_unique<Material>(materialBuffer);
+                        materialMap[materialName] = std::move(pMaterial);
+                    }
                 }
 
                 materialName = lineString.substr(pos, lineString.size() - pos);
-
-                if (!pMaterial)
-                {
-                    modelDrawInfoParamMap[materialName];
-
-                    pMaterial = std::make_unique<Material>();
-                }
             };
         findKeyActionMap["Ka "] = [&](const std::string& lineString, const UINT pos)
             {
@@ -348,24 +369,14 @@ namespace ModelLoader
                 ss = std::stringstream(textureFileName);
                 while (std::getline(ss, textureFileName, ' ')) {}
 
-                const auto charSize = 128;
+                auto itr = materialMap.find(materialName);
+                if (itr == materialMap.cend())
+                {
+                    auto parentPath = std::filesystem::path(filePath).parent_path().string();
+                    auto path = parentPath + "/textures/" + std::string(textureFileName);
 
-                char drive[charSize];
-                char dir[charSize];
-                char name[charSize];
-                char extension[charSize];
-
-                _splitpath_s(filePath.c_str(), drive, dir, name, extension);
-
-                auto path = std::string(drive) + std::string(dir) + "textures/" + std::string(textureFileName);
-
-                auto pTexture = std::make_unique<Texture>();
-
-                auto itr = modelDrawInfoParamMap.find(materialName);
-                if (itr != modelDrawInfoParamMap.cend())
-                    itr->second.pMaterialTexturesMap[pMaterial.get()].push_back(pTexture.get());
-
-                pModelMesh->RegisterTexture(path, pTexture);
+                    textureMap[materialName] = std::make_unique<Texture>(path);
+                }
             };
 
         std::string lineString;
@@ -387,15 +398,14 @@ namespace ModelLoader
             }
         }
 
-        if (pMaterial)
+        if (!materialName.empty())
         {
-            pMaterial->Initialize(materialBuffer);
-
-            auto itr = modelDrawInfoParamMap.find(materialName);
-            if (itr != modelDrawInfoParamMap.cend())
-                itr->second.pMaterialTexturesMap[pMaterial.get()];
-
-            pModelMesh->RegisterMaterial(pMaterial);
+            auto itr = materialMap.find(materialName);
+            if (itr == materialMap.cend())
+            {
+                auto pMaterial = std::make_unique<Material>(materialBuffer);
+                materialMap[materialName] = std::move(pMaterial);
+            }
         }
 
         return true;

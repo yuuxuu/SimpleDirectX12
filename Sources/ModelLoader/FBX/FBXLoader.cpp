@@ -347,19 +347,16 @@ namespace ModelLoader
 
     void FBXLoader::ConvertMaterial(FbxSurfaceMaterial* pFbxMaterial, Simple::ModelMesh* pModelMesh, ModelDrawInfoParam* pParam)
     {
-        auto pMaterial = std::make_unique<Simple::Material>();
-        auto pMat = pMaterial.get();
-
         std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
 
         if (std::string("PictureBorder") == pFbxMaterial->GetName())
             std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
 
+        MaterialBuffer materialBuffer;
+
         if (pFbxMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId)) 
         {
             auto lambert = static_cast<FbxSurfaceLambert*>(pFbxMaterial);
-
-            MaterialBuffer materialBuffer;
 
             materialBuffer.diffuse.x = static_cast<float>(lambert->Diffuse.Get()[0]);
             materialBuffer.diffuse.y = static_cast<float>(lambert->Diffuse.Get()[1]);
@@ -375,14 +372,10 @@ namespace ModelLoader
             materialBuffer.emissive.y = static_cast<float>(lambert->Emissive.Get()[1]);
             materialBuffer.emissive.z = static_cast<float>(lambert->Emissive.Get()[2]);
             materialBuffer.emissive.w = 1.0f;
-            
-            pMaterial->Initialize(materialBuffer);
         }
         else if (pFbxMaterial->GetClassId().Is(FbxSurfacePhong::ClassId)) 
         {
             auto phong = static_cast<FbxSurfacePhong*>(pFbxMaterial);
-
-            MaterialBuffer materialBuffer;
 
             materialBuffer.diffuse.x = static_cast<float>(phong->Diffuse.Get()[0]);
             materialBuffer.diffuse.y = static_cast<float>(phong->Diffuse.Get()[1]);
@@ -403,9 +396,10 @@ namespace ModelLoader
             materialBuffer.emissive.y = static_cast<float>(phong->Emissive.Get()[1]);
             materialBuffer.emissive.z = static_cast<float>(phong->Emissive.Get()[2]);
             materialBuffer.emissive.w = 1.0f;
-
-            pMaterial->Initialize(materialBuffer);
         }
+
+        auto pMaterial = std::make_unique<Simple::Material>(materialBuffer);
+        pParam->pMaterial = pMaterial.get();
 
         pModelMesh->RegisterMaterial(pMaterial);
 
@@ -427,25 +421,17 @@ namespace ModelLoader
 
                 std::cout << "テクスチャ名 = " << pFbxTexture->GetRelativeFileName() << std::endl;
 
-                const auto charSize = 128;
+                auto parentPath = std::filesystem::path(pFbxTexture->GetRelativeFileName()).parent_path().string();
+                auto path = parentPath + "/textures/" + std::string(pFbxTexture->GetFileName());
 
-                char drive[charSize];
-                char dir[charSize];
-                char name[charSize];
-                char extension[charSize];
-
-                _splitpath_s(pFbxTexture->GetRelativeFileName(), drive, dir, name, extension);
-
-                auto path = std::string(drive) + std::string(dir) + std::string(name) + std::string(extension);
-
-                auto pTexture = std::make_unique<Simple::Texture>();
+                auto pTexture = std::make_unique<Simple::Texture>(path);
                 textureVec.push_back(pTexture.get());
 
                 pModelMesh->RegisterTexture(pFbxTexture->GetFileName(), pTexture);
             }
         }
 
-        pParam->pMaterialTexturesMap[pMat] = textureVec;
+        pParam->vecTexture.swap(textureVec);
     }
 
     // FbxNodeを再帰的に検索

@@ -17,9 +17,13 @@ namespace Simple
     class Mesh;
     class ModelMesh;
     class Material;
+    class Texture;
 
     struct VertexBuffer;
     struct ModelDrawInfoParam;
+
+    using RegisterMaterialMap = std::map<std::string, std::unique_ptr<Simple::Material>>;
+    using RegisterTextureMap = std::map<std::string, std::unique_ptr<Simple::Texture>>;
 
 namespace ModelLoader
 {
@@ -31,7 +35,7 @@ namespace ModelLoader
 
     private:
         bool LoadMesh(const std::string& filePath, Simple::ModelMesh* pModelMesh);
-        bool LoadMaterial(const std::string& filePath, std::map<std::string, ModelDrawInfoParam>& modelDrawInfoParamMap, Simple::ModelMesh* pModelMesh);
+        bool LoadMaterial(const std::string& filePath, RegisterMaterialMap& materialMap, RegisterTextureMap& textureMap, Simple::ModelMesh* pModelMesh);
 
     public:
         OBJLoader();

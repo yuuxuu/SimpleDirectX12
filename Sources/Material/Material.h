@@ -20,7 +20,7 @@ namespace Simple
     class Material 
     {
     private:
-        MaterialBuffer                  m_MaterialBuffer;
+        Simple::MaterialBuffer          m_MaterialBuffer;
 
         Graphics::IGraphicsResource*    pGraphicsResource;
 
@@ -29,10 +29,8 @@ namespace Simple
         Material operator=(const Material&) = delete;
 
     public:
-        Material();
+        explicit Material(const Simple::MaterialBuffer& materialBuffer);
         ~Material();
-
-        void Initialize(const MaterialBuffer& materialBuffer);
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 

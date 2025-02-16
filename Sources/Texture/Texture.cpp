@@ -18,6 +18,16 @@ namespace Simple {
         pGraphicsResource(),
         m_pTextureParam(),
         m_cubeTextureData(),
+        m_filePath(),
+        m_isLoaded(false)
+    {}
+
+    // コンストラクタ
+    Texture::Texture(const std::string& filePath) :
+        pGraphicsResource(),
+        m_pTextureParam(),
+        m_cubeTextureData(),
+        m_filePath(filePath),
         m_isLoaded(false)
     {}
 
@@ -26,7 +36,16 @@ namespace Simple {
     {}
 
     // テクスチャを読み込む
-    bool Texture::LoadTexture(const std::string& filePath) {
+    bool Texture::LoadTexture()
+    {
+        if (m_filePath.empty())
+            return false;
+
+        return LoadTexture(m_filePath);
+    }
+
+    bool Texture::LoadTexture(const std::string& filePath) 
+    {
         if (m_isLoaded) return true;
 
         std::wstring loadName;
@@ -68,6 +87,9 @@ namespace Simple {
 
     void Texture::SetGraphicsResource(const UINT index, Graphics::IGraphics* pGraphics)
     {
+        if (!pGraphicsResource)
+            return;
+
         pGraphics->SetShaderResource(6 + index, pGraphicsResource);
     }
 

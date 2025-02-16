@@ -276,7 +276,7 @@ namespace ModelLoader
 
             std::map<UINT, std::unique_ptr<Texture>> textureMap;
             for (auto i = 0; i < textureInfo.vecPmxTextureFileName.size(); ++i)
-                textureMap[i] = std::move(std::make_unique<Texture>());
+                textureMap[i] = std::move(std::make_unique<Texture>(textureInfo.vecPmxTextureFileName[i].pmxInfoStr));
 
             UINT startIndex = 0;
             UINT endIndex = 0;
@@ -319,16 +319,15 @@ namespace ModelLoader
                 materialBuffer.specular = VECTOR4(pmxMaterial.materialSpecular.x, pmxMaterial.materialSpecular.y, pmxMaterial.materialSpecular.z, pmxMaterial.materialSpecularPower);
                 materialBuffer.ambient = VECTOR4(pmxMaterial.materialAmbient.x, pmxMaterial.materialAmbient.y, pmxMaterial.materialAmbient.z, 1.0f);
 
-                auto pMaterial = std::make_unique<Material>();
-                pMaterial->Initialize(materialBuffer);
+                auto pMaterial = std::make_unique<Material>(materialBuffer);
+                param.pMaterial = pMaterial.get();
 
                 auto itr = textureMap.find(pmxMaterial.diffuseTextureIndex);
                 if (itr != textureMap.cend())
                 {
-                    std::vector<Texture*> vecTextures;
-                    vecTextures.push_back(itr->second.get());
+                    std::vector<Texture*> vecTextures { itr->second.get() };
 
-                    param.pMaterialTexturesMap[pMaterial.get()] = vecTextures;
+                    param.vecTexture.swap(vecTextures);
                 }
 
                 pModelMesh->RegisterMaterial(pMaterial);

@@ -18,12 +18,11 @@ namespace Simple
     class Material;
     class Texture;
 
-    using MaterialTexturesMap = std::map<Material*, std::vector<Texture*>>;
-
     struct ModelDrawInfoParam : public IParam
     {
-        Mesh*                 pMesh;
-        MaterialTexturesMap   pMaterialTexturesMap;
+        Mesh*                   pMesh;
+        Material*               pMaterial;
+        std::vector<Texture*>   vecTexture;
     };
 } // namespace
 

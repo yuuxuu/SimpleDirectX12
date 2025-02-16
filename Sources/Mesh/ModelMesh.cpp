@@ -73,7 +73,7 @@ namespace Simple {
 
         for (auto itr = m_registerTextureMap.cbegin(); itr != m_registerTextureMap.cend(); itr++)
         {
-            if (!itr->second->LoadTexture(itr->first))
+            if (!itr->second->LoadTexture())
                 continue;
 
             itr->second->InitializeGraphicsResource(pGraphics);
@@ -95,12 +95,15 @@ namespace Simple {
 
         for (const auto& meshDrawInfo : m_ModelDrawInfoParamVec)
         {
-            for (const auto& material : meshDrawInfo.pMaterialTexturesMap)
-            {
-                material.first->SetGraphicsResource(pGraphics);
+            if (!meshDrawInfo.pMesh)
+                continue;
 
-                for (auto i = 0; i < material.second.size(); ++i)
-                    material.second[i]->SetGraphicsResource(i, pGraphics);
+            if (meshDrawInfo.pMaterial)
+            {
+                meshDrawInfo.pMaterial->SetGraphicsResource(pGraphics);
+
+                for (auto i = 0; i < meshDrawInfo.vecTexture.size(); ++i)
+                    meshDrawInfo.vecTexture[i]->SetGraphicsResource(i, pGraphics);
             }
 
             meshDrawInfo.pMesh->SetGraphicsResource(pGraphics);

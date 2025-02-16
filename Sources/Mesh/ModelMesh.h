@@ -26,6 +26,7 @@ namespace Simple
 
     using RegisterMeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
     using RegisterMaterialVec = std::vector<std::unique_ptr<Simple::Material>>;
+    using RegisterMaterialMap = std::map<std::string, std::unique_ptr<Simple::Material>>;
     using RegisterTextureMap = std::map<std::string, std::unique_ptr<Simple::Texture>>;
 
     class ModelMesh 

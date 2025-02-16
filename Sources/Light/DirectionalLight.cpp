@@ -15,7 +15,8 @@ namespace Simple
 namespace Light
 {
     // コンストラクタ
-    DirectionalLight::DirectionalLight()
+    DirectionalLight::DirectionalLight() :
+        pConstantBufferResource()
     {}
 
     // デストラクタ

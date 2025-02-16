@@ -20,6 +20,13 @@ namespace Simple
         VECTOR4	specular;
         VECTOR4	ambient;
         VECTOR4	emissive;
+
+        MaterialBuffer() :
+            diffuse(1.0f, 1.0f, 1.0f, 1.0f),
+            specular(),
+            ambient(),
+            emissive()
+        {}
     };
 
 } // namespace

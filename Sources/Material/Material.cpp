@@ -12,8 +12,8 @@
 namespace Simple {
 
     // コンストラクタ
-    Material::Material() :
-        m_MaterialBuffer(),
+    Material::Material(const Simple::MaterialBuffer& materialBuffer) :
+        m_MaterialBuffer(materialBuffer),
         pGraphicsResource(nullptr)
     {}
 
@@ -21,15 +21,11 @@ namespace Simple {
     Material::~Material()
     {}
 
-    void Material::Initialize(const MaterialBuffer& materialBuffer)
-    {
-        m_MaterialBuffer = materialBuffer;
-    }
-
     void Material::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
         BufferParam materialBufferParam;
         materialBufferParam.byteWidth = sizeof(MaterialBuffer);
+        materialBufferParam.byteWidthStride = sizeof(MaterialBuffer);
 
         pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, &materialBufferParam, Graphics::GraphicsResourceType::CBV);
 
@@ -38,6 +34,9 @@ namespace Simple {
 
     void Material::SetGraphicsResource(Graphics::IGraphics* pGraphics)
     {
+        if (!pGraphicsResource)
+            return;
+
         pGraphics->SetConstantBufferResource(2, pGraphicsResource);
     }
 

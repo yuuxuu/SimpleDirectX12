@@ -106,19 +106,19 @@ namespace Simple
 
             pModelMesh->RegisterMesh(pMesh);
 
-            auto pTexture = std::make_unique<Simple::Texture>();
-            std::vector<Texture*> vecTexture;
-            vecTexture.push_back(pTexture.get());
-            pModelMesh->RegisterTexture("Resources/Texture/default.png", pTexture);
+            std::string filePath = "Resources/Texture/default.png";
+            auto pTexture = std::make_unique<Simple::Texture>(filePath);
 
-            auto pMaterial = std::make_unique<Material>();
+            std::vector<Texture*> vecTexture { pTexture.get() };
+            pModelMesh->RegisterTexture(filePath, pTexture);
 
             MaterialBuffer materialBuffer;
             materialBuffer.diffuse = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 
-            pMaterial->Initialize(materialBuffer);
+            auto pMaterial = std::make_unique<Material>(materialBuffer);
+            param.pMaterial = pMaterial.get();
 
-            param.pMaterialTexturesMap[pMaterial.get()] = vecTexture;
+            param.vecTexture.swap(vecTexture);
 
             pModelMesh->RegisterMaterial(pMaterial);
 
