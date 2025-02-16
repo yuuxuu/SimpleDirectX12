@@ -18,7 +18,7 @@ namespace Simple {
         pGraphicsResource(),
         m_pTextureParam(),
         m_cubeTextureData(),
-        m_filePath(),
+        m_filePath(std::string()),
         m_isLoaded(false)
     {}
 
@@ -49,11 +49,12 @@ namespace Simple {
         if (m_isLoaded) return true;
 
         std::wstring loadName;
-        Simple::UTF8ConvertToUTF16(filePath, loadName);
+        Simple::StringConvertToWchar(filePath, loadName);
 
         DirectX::ScratchImage sImage;
         HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
-        if (FAILED(hr)) {
+        if (FAILED(hr)) 
+        {
             std::string errorStr = filePath + "読み込み：失敗";
 
             MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
@@ -82,12 +83,15 @@ namespace Simple {
 
     void Texture::InitializeGraphicsResource(Graphics::IGraphics* pGraphics)
     {
+        if (!m_isLoaded)
+            return;
+
         pGraphics->InitializeGraphicsBufferResource(pGraphicsResource, m_pTextureParam.get(), Graphics::GraphicsResourceType::SRV);
     }
 
     void Texture::SetGraphicsResource(const UINT index, Graphics::IGraphics* pGraphics)
     {
-        if (!pGraphicsResource)
+        if (!m_isLoaded)
             return;
 
         pGraphics->SetShaderResource(6 + index, pGraphicsResource);

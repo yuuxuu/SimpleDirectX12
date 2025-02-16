@@ -150,6 +150,8 @@ namespace ModelLoader
                 VECTOR2 uv;
                 ss >> uv.x >> uv.y;
 
+                uv.y = 1.0f - uv.y;
+
                 uvs.emplace_back(uv);
             };
         findKeyActionMap["f "] = [&](const std::string& lineString, const UINT pos)

@@ -23,6 +23,11 @@ namespace Simple
         Mesh*                   pMesh;
         Material*               pMaterial;
         std::vector<Texture*>   vecTexture;
+
+        ModelDrawInfoParam() :
+            pMesh(nullptr),
+            pMaterial(nullptr)
+        {}
     };
 } // namespace
 

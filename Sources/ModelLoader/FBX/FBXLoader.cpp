@@ -345,7 +345,11 @@ namespace ModelLoader
         }
     }
 
-    void FBXLoader::ConvertMaterial(FbxSurfaceMaterial* pFbxMaterial, Simple::ModelMesh* pModelMesh, ModelDrawInfoParam* pParam)
+    void FBXLoader::ConvertMaterial(
+        FbxSurfaceMaterial* pFbxMaterial, 
+        ModelDrawInfoParam* pParam,
+        RegisterMaterialMap& materialMap,
+        RegisterTextureMap& textureMap)
     {
         std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
 
@@ -398,10 +402,18 @@ namespace ModelLoader
             materialBuffer.emissive.w = 1.0f;
         }
 
-        auto pMaterial = std::make_unique<Simple::Material>(materialBuffer);
-        pParam->pMaterial = pMaterial.get();
+        auto itr = materialMap.find(pFbxMaterial->GetName());
+        if (itr == materialMap.cend())
+        {
+            auto pMaterial = std::make_unique<Simple::Material>(materialBuffer);
+            pParam->pMaterial = pMaterial.get();
 
-        pModelMesh->RegisterMaterial(pMaterial);
+            materialMap[pFbxMaterial->GetName()] = std::move(pMaterial);
+        }
+        else
+        {
+            pParam->pMaterial = itr->second.get();
+        }
 
         std::vector<std::string> properties =
         {
@@ -409,7 +421,7 @@ namespace ModelLoader
             std::string(FbxSurfaceMaterial::sNormalMap),
         };
 
-        std::vector<Texture*> textureVec;
+        std::vector<Texture*> textures;
         for (auto prop : properties)
         {
             auto pFbxProp = pFbxMaterial->FindProperty(prop.c_str());
@@ -421,17 +433,25 @@ namespace ModelLoader
 
                 std::cout << "テクスチャ名 = " << pFbxTexture->GetRelativeFileName() << std::endl;
 
-                auto parentPath = std::filesystem::path(pFbxTexture->GetRelativeFileName()).parent_path().string();
-                auto path = parentPath + "/textures/" + std::string(pFbxTexture->GetFileName());
+                auto path = pFbxTexture->GetFileName();
 
-                auto pTexture = std::make_unique<Simple::Texture>(path);
-                textureVec.push_back(pTexture.get());
+                auto itr = textureMap.find(path);
+                if (itr == textureMap.cend())
+                {
+                    auto pTexture = std::make_unique<Simple::Texture>(path);
+                    textures.push_back(pTexture.get());
 
-                pModelMesh->RegisterTexture(pFbxTexture->GetFileName(), pTexture);
+                    textureMap[path] = std::move(pTexture);
+                }
+                else
+                {
+                    textures.push_back(itr->second.get());
+                }
             }
         }
 
-        pParam->vecTexture.swap(textureVec);
+        if (!textures.empty())
+            pParam->vecTexture.swap(textures);
     }
 
     // FbxNodeを再帰的に検索
@@ -512,6 +532,8 @@ namespace ModelLoader
 
         RecursiveFbxNode(pRootNode, fbxMeshNodes);
 
+        RegisterMaterialMap materialMap;
+        RegisterTextureMap textureMap;
         for (const auto& pNode : fbxMeshNodes)
         {
             auto pFbxMesh = pNode->GetMesh();
@@ -527,11 +549,17 @@ namespace ModelLoader
                 auto pFbxMaterial = pNode->GetMaterial(i);
                 if (!pFbxMaterial) continue;
 
-                ConvertMaterial(pFbxMaterial, pModelMesh, &param);
+                ConvertMaterial(pFbxMaterial, &param, materialMap, textureMap);
             }
 
             pModelMesh->AddModelDrawInfoParam(param);
         }
+
+        for (auto itr = materialMap.begin(); itr != materialMap.end(); ++itr)
+            pModelMesh->RegisterMaterial(itr->second);
+
+        for (auto itr = textureMap.begin(); itr != textureMap.end(); ++itr)
+            pModelMesh->RegisterTexture(itr->first, itr->second);
 
         return true;
     }
