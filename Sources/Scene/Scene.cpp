@@ -45,8 +45,12 @@ namespace Simple
         if (std::filesystem::exists("Resources/Model/"))
         {
             auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/");
-            for (auto path : itr)
+            for (const auto& path : itr)
             {
+                const auto& parentPath = path.path().parent_path().string();
+                if (parentPath.find("animations") != std::string::npos)
+                    continue;
+
                 auto extension = path.path().extension().string();
                 std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
                 if (extension.empty())
