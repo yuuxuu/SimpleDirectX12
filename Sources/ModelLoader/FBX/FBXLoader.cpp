@@ -10,6 +10,8 @@
 #include "math/math.h"
 
 #include "Mesh/Mesh.h"
+#include "Mesh/MeshBone.h"
+
 #include "Mesh/ModelMesh.h"
 
 #include "Material/Material.h"
@@ -33,14 +35,14 @@ namespace ModelLoader
     {}
 
     // FbxMeshをコンバート
-    void FBXLoader::ConvertMesh(FbxMesh* pFbxMesh, Simple::ModelMesh* pModelMesh, ModelDrawInfoParam* pParam)
+    void FBXLoader::ConvertMesh(FbxMesh* pFbxMesh, ModelMesh* pModelMesh, ModelDrawInfoParam* pParam)
     {
-        auto pMesh = std::make_unique<Simple::Mesh>();
+        auto pMesh = std::make_unique<Mesh>();
         pParam->pMesh = pMesh.get();
 
         std::cout << "メッシュ名 = " << pFbxMesh->GetName() << std::endl;
 
-        std::vector<Simple::VertexBuffer> vertices;
+        std::vector<VertexBuffer> vertices;
         std::vector<DWORD> indices;
         std::vector<VECTOR2> vecUV;
         std::vector<VECTOR3> vecNormal;
@@ -59,7 +61,7 @@ namespace ModelLoader
 
         // 頂点インデックス数と各要素のインデックス数が違う場合は頂点の再構築
 
-        std::vector<Simple::VertexBuffer> vecVertex;
+        std::vector<VertexBuffer> vecVertex;
         auto numIndex = indices.size();
         vecVertex.reserve(numIndex);
         for (auto i = 0; i < numIndex; ++i)
@@ -72,14 +74,14 @@ namespace ModelLoader
             if (!vecNormal.empty())
                 vertex.normal = vecNormal[indices[i]];
 
-            vecVertex.push_back(vertex);
+            vecVertex.emplace_back(vertex);
         }
         
         pMesh->Initialize(vecVertex, std::vector<DWORD>());
         pModelMesh->RegisterMesh(pMesh);
     }
 
-    void FBXLoader::ConvertVertex(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, std::vector<DWORD>& indices)
+    void FBXLoader::ConvertVertex(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, std::vector<DWORD>& indices)
     {
         auto numVertex = pFbxMesh->GetControlPointsCount();
         std::cout << "総頂点数 = " << numVertex << std::endl;
@@ -93,7 +95,7 @@ namespace ModelLoader
         auto pVertices = pFbxMesh->GetPolygonVertices();
         indices.reserve(numIndex);
         for (auto i = 0; i < numIndex; ++i)
-            indices.push_back(static_cast<int>(pVertices[i]));
+            indices.emplace_back(static_cast<int>(pVertices[i]));
 
         auto points = pFbxMesh->GetControlPoints();
         vertices.reserve(numVertex);
@@ -104,11 +106,11 @@ namespace ModelLoader
             vertex.vertex.y = static_cast<float>(points[i][1]);
             vertex.vertex.z = static_cast<float>(points[i][2]);
 
-            vertices.push_back(vertex);
+            vertices.emplace_back(vertex);
         }
     }
 
-    void FBXLoader::ConvertNormal(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR3> vecNormal)
+    void FBXLoader::ConvertNormal(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR3> vecNormal)
     {
         auto numNormalLayer = pFbxMesh->GetElementNormalCount();
         for (auto i = 0; i < numNormalLayer; ++i)
@@ -171,7 +173,7 @@ namespace ModelLoader
                             vertices[index].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[1]);
                             vertices[index].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[2]);
 
-                            vecNormal.push_back(vertices[index].normal);
+                            vecNormal.emplace_back(vertices[index].normal);
                         }
                         if (pFbxTangent)
                         {
@@ -217,7 +219,7 @@ namespace ModelLoader
         }
     }
 
-    void FBXLoader::ConvertColor(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices)
+    void FBXLoader::ConvertColor(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices)
     {
         auto numColorLayer = pFbxMesh->GetElementVertexColorCount();
         for (auto i = 0; i < numColorLayer; ++i)
@@ -276,7 +278,7 @@ namespace ModelLoader
         }
     }
 
-    void FBXLoader::ConvertUV(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR2>& vecUV)
+    void FBXLoader::ConvertUV(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR2>& vecUV)
     {
         auto numUVLayer = pFbxMesh->GetElementUVCount();
         numUVLayer = numUVLayer > 1 ? 1 : numUVLayer;
@@ -338,9 +340,46 @@ namespace ModelLoader
                         vertices[indices[j]].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[0]);
                         vertices[indices[j]].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[1]);
 
-                        vecUV.push_back(vertices[indices[j]].uv);
+                        vecUV.emplace_back(vertices[indices[j]].uv);
                     }
                 }
+            }
+        }
+    }
+
+    void FBXLoader::ConvertMeshBone(FbxMesh* pFbxMesh, ModelMesh* pModelMesh, ModelDrawInfoParam* pPraram)
+    {
+        auto deformerCount = pFbxMesh->GetDeformerCount();
+        for (auto dIndex = 0; dIndex < deformerCount; ++dIndex)
+        {
+            auto pFbxSkin = (FbxSkin*)pFbxMesh->GetDeformer(dIndex, FbxDeformer::eSkin);
+            if (!pFbxSkin)
+                continue;
+
+            auto clusterCount = pFbxSkin->GetClusterCount();
+
+            pPraram->vecMeshBone.reserve(clusterCount);
+
+            for (auto cIndex = 0; cIndex < clusterCount; ++cIndex)
+            {
+                auto pFbxCluster = pFbxSkin->GetCluster(cIndex);
+                if (!pFbxCluster)
+                    continue;
+
+                auto fbxMatrix = pFbxCluster->GetLink()->EvaluateGlobalTransform();
+                
+                int row = 4;
+                int col = 4;
+                Matrix mat;
+                for (int rIndex = 0; rIndex < row; rIndex++)
+                    for (int cIndex = 0; cIndex < col; cIndex++)
+                        mat.m[rIndex][cIndex] = static_cast<float>(fbxMatrix.Get(rIndex, cIndex));
+
+                auto pMeshBone = std::make_unique<MeshBone>(mat);
+
+                pPraram->vecMeshBone.emplace_back(pMeshBone.get());
+
+                pModelMesh->RegisterMeshBone(pFbxCluster->GetLink()->GetName(), pMeshBone);
             }
         }
     }
@@ -405,7 +444,7 @@ namespace ModelLoader
         auto itr = materialMap.find(pFbxMaterial->GetName());
         if (itr == materialMap.cend())
         {
-            auto pMaterial = std::make_unique<Simple::Material>(materialBuffer);
+            auto pMaterial = std::make_unique<Material>(materialBuffer);
             pParam->pMaterial = pMaterial.get();
 
             materialMap[pFbxMaterial->GetName()] = std::move(pMaterial);
@@ -438,14 +477,14 @@ namespace ModelLoader
                 auto itr = textureMap.find(path);
                 if (itr == textureMap.cend())
                 {
-                    auto pTexture = std::make_unique<Simple::Texture>(path);
-                    textures.push_back(pTexture.get());
+                    auto pTexture = std::make_unique<Texture>(path);
+                    textures.emplace_back(pTexture.get());
 
                     textureMap[path] = std::move(pTexture);
                 }
                 else
                 {
-                    textures.push_back(itr->second.get());
+                    textures.emplace_back(itr->second.get());
                 }
             }
         }
@@ -485,7 +524,7 @@ namespace ModelLoader
     }
 
     // FBXモデルの読み込み
-    bool FBXLoader::LoadModel(const std::string& filePath, Simple::ModelMesh* pModelMesh)
+    bool FBXLoader::LoadModel(const std::string& filePath, ModelMesh* pModelMesh)
     {
         auto fbxManager = FbxManager::Create();
 
@@ -542,6 +581,8 @@ namespace ModelLoader
             ModelDrawInfoParam param;
 
             ConvertMesh(pFbxMesh, pModelMesh, &param);
+
+            ConvertMeshBone(pFbxMesh, pModelMesh, &param);
 
             auto numMaterial = pNode->GetMaterialCount();
             for (auto i = 0; i < numMaterial; ++i)

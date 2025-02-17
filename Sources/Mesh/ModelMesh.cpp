@@ -12,6 +12,7 @@
 #include "math/math.h"
 
 #include "Mesh/Mesh.h"
+#include "Mesh/MeshBone.h"
 
 #include "Material/Material.h"
 
@@ -78,6 +79,15 @@ namespace Simple {
 
             itr->second->InitializeGraphicsResource(pGraphics);
         }
+
+        if(!m_registerMeshBoneMap.empty())
+        {
+            BufferParam param;
+            param.byteWidth = sizeof(Matrix) * static_cast<UINT>(m_registerMeshBoneMap.size());
+            param.byteWidthStride = sizeof(Matrix);
+
+            pGraphics->InitializeGraphicsBufferResource(pBoneMatrixConstantBufferResource, &param, Graphics::GraphicsResourceType::CBV);
+        }
     }
 
     void ModelMesh::UpdateGraphicsResource(Graphics::IGraphics* pGraphics, Simple::WorldBuffer& worldBuffer)
@@ -112,12 +122,12 @@ namespace Simple {
 
     void ModelMesh::RegisterMesh(std::unique_ptr<Mesh>& pMesh)
     {
-        m_registerMeshVec.push_back(std::move(pMesh));
+        m_registerMeshVec.emplace_back(std::move(pMesh));
     }
 
     void ModelMesh::RegisterMaterial(std::unique_ptr<Material>& pMaterial)
     {
-        m_registerMaterialVec.push_back(std::move(pMaterial));
+        m_registerMaterialVec.emplace_back(std::move(pMaterial));
     }
 
     void ModelMesh::RegisterTexture(const std::string& texturePath, std::unique_ptr<Texture>& pTexture)
@@ -129,9 +139,18 @@ namespace Simple {
         m_registerTextureMap[texturePath] = std::move(pTexture);
     }
 
+    void ModelMesh::RegisterMeshBone(const std::string& boneName, std::unique_ptr<MeshBone>& pMeshBone)
+    {
+        auto itr = m_registerMeshBoneMap.find(boneName);
+        if (itr != m_registerMeshBoneMap.cend())
+            return;
+
+        m_registerMeshBoneMap[boneName] = std::move(pMeshBone);
+    }
+
     void ModelMesh::AddModelDrawInfoParam(const ModelDrawInfoParam& param)
     {
-        m_ModelDrawInfoParamVec.push_back(param);
+        m_ModelDrawInfoParamVec.emplace_back(param);
     }
 
 } // namespace

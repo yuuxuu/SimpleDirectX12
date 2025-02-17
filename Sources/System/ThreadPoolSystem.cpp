@@ -64,7 +64,7 @@ namespace System
     void ThreadPoolSystem::Initialize(UINT numThread) 
     {
         for (UINT i = 0; i < numThread; ++i) 
-            m_workThreadVec.push_back(std::make_unique<std::thread>(&ThreadPoolSystem::WorkTask, this));
+            m_workThreadVec.emplace_back(std::make_unique<std::thread>(&ThreadPoolSystem::WorkTask, this));
 
         m_isRunning = true;
     }

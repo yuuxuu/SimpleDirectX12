@@ -147,7 +147,7 @@ namespace ModelLoader
 
 						ifs.read(reinterpret_cast<char*>(&pmxVertex.edge), sizeof(float));
 
-						vertexInfo.vecPmxVertex.push_back(pmxVertex);
+						vertexInfo.vecPmxVertex.emplace_back(pmxVertex);
 					}
                 };
 
@@ -171,19 +171,19 @@ namespace ModelLoader
                         {
                             ifs.read(reinterpret_cast<char*>(&pmxVertexIndex_us16.indices), sizeof(BYTE) * 3);
 
-                            indexInfo.vecPmxVertexIndex_us16.push_back(pmxVertexIndex_us16);
+                            indexInfo.vecPmxVertexIndex_us16.emplace_back(pmxVertexIndex_us16);
                         }
                         else if (header.vertexIndexSize == 2) 
                         {
                             ifs.read(reinterpret_cast<char*>(&pmxVertexIndex_us16.indices), sizeof(USHORT) * 3);
 
-                            indexInfo.vecPmxVertexIndex_us16.push_back(pmxVertexIndex_us16);
+                            indexInfo.vecPmxVertexIndex_us16.emplace_back(pmxVertexIndex_us16);
                         }
                         else if (header.vertexIndexSize == 4) 
                         {
                             ifs.read(reinterpret_cast<char*>(&pmxVertexIndex_ui32.indices), sizeof(UINT32) * 3);
 
-                            indexInfo.vecPmxVertexIndex_ui32.push_back(pmxVertexIndex_ui32);
+                            indexInfo.vecPmxVertexIndex_ui32.emplace_back(pmxVertexIndex_ui32);
                         }
                     }
                 };
@@ -209,7 +209,7 @@ namespace ModelLoader
 
                         pmxTextureBuffer.pmxInfoStr = parentPath + "/textures/" + pmxTextureBuffer.pmxInfoStr;
 
-                        textureInfo.vecPmxTextureFileName.push_back(pmxTextureBuffer);
+                        textureInfo.vecPmxTextureFileName.emplace_back(pmxTextureBuffer);
                     }
                 };
 
@@ -252,7 +252,7 @@ namespace ModelLoader
                         ifs.read(reinterpret_cast<char*>(&pmxMaterial.materialPolygonCount), sizeof(PmxMaterial::materialPolygonCount));
                         pmxMaterial.materialPolygonCount /= 3;
 
-                        materialInfo.vecPmxMaterial.push_back(pmxMaterial);
+                        materialInfo.vecPmxMaterial.emplace_back(pmxMaterial);
                     }
                 };
 
@@ -271,7 +271,7 @@ namespace ModelLoader
                 vertexBuffer.normal = vertexInfo.vecPmxVertex[i].normal;
                 vertexBuffer.uv = vertexInfo.vecPmxVertex[i].uv;
 
-                vertices.push_back(vertexBuffer);
+                vertices.emplace_back(vertexBuffer);
             }
 
             std::map<UINT, std::unique_ptr<Texture>> textureMap;
@@ -290,18 +290,18 @@ namespace ModelLoader
                 {
                     for (auto i = startIndex; i < endIndex; ++i)
                     {
-                        indices.push_back(indexInfo.vecPmxVertexIndex_us16[i].indices[0]);
-                        indices.push_back(indexInfo.vecPmxVertexIndex_us16[i].indices[1]);
-                        indices.push_back(indexInfo.vecPmxVertexIndex_us16[i].indices[2]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_us16[i].indices[0]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_us16[i].indices[1]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_us16[i].indices[2]);
                     }
                 }
                 else if (!indexInfo.vecPmxVertexIndex_ui32.empty())
                 {
                     for (auto i = startIndex; i < endIndex; ++i)
                     {
-                        indices.push_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[0]);
-                        indices.push_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[1]);
-                        indices.push_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[2]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[0]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[1]);
+                        indices.emplace_back(indexInfo.vecPmxVertexIndex_ui32[i].indices[2]);
                     }
                 }
 

@@ -17,6 +17,7 @@
 namespace Simple 
 {
     class Mesh;
+    class MeshBone;
     class ModelMesh;
     class Material;
     class Texture;
@@ -36,11 +37,13 @@ namespace ModelLoader
         FBXLoader operator=(const FBXLoader&) = delete;
 
     private:
-        void ConvertMesh(FbxMesh* pFbxMesh, Simple::ModelMesh* pModelMesh, ModelDrawInfoParam* pParam);
-        void ConvertVertex(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, std::vector<DWORD>& indices);
-        void ConvertNormal(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR3> vecNormal);
-        void ConvertColor(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices);
-        void ConvertUV(FbxMesh* pFbxMesh, std::vector<Simple::VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR2>& vecUV);
+        void ConvertMesh(FbxMesh* pFbxMesh, ModelMesh* pModelMesh, ModelDrawInfoParam* pParam);
+        void ConvertVertex(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, std::vector<DWORD>& indices);
+        void ConvertNormal(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR3> vecNormal);
+        void ConvertColor(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices);
+        void ConvertUV(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices, std::vector<VECTOR2>& vecUV);
+
+        void ConvertMeshBone(FbxMesh* pFbxMesh, ModelMesh* pModelMesh, ModelDrawInfoParam* pPraram);
 
         void ConvertMaterial(FbxSurfaceMaterial* pFbxMaterial, ModelDrawInfoParam* pParam, RegisterMaterialMap& materialMap, RegisterTextureMap& textureMap);
 
@@ -49,7 +52,7 @@ namespace ModelLoader
         FBXLoader();
         ~FBXLoader();
 
-        bool LoadModel(const std::string& filePath, Simple::ModelMesh* pModelMesh) override;
+        bool LoadModel(const std::string& filePath, ModelMesh* pModelMesh) override;
     };
 } // namespace ModelLoader
 } // namespacce Simple

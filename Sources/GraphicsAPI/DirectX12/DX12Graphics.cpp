@@ -83,7 +83,7 @@ namespace Graphics
 
                     heapAllocator->AddHeapIndex();
 
-                    m_pRenderTargetViews.push_back(std::move(renderTargetView));
+                    m_pRenderTargetViews.emplace_back(std::move(renderTargetView));
                 }
 
                 m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(heapAllocator);
@@ -204,9 +204,9 @@ namespace Graphics
             auto pPipeline = std::make_unique<Shader::GraphicsPipeline>(m_pDX12Device.get(), m_pDX12Command.get());
             if (pPipeline->InitializePipeline(graphicsPipelineStateDesc))
             {
-                m_pShaderVec.push_back(std::move(pShader));
+                m_pShaderVec.emplace_back(std::move(pShader));
 
-                m_pGraphicsPipelineVec.push_back(std::move(pPipeline));
+                m_pGraphicsPipelineVec.emplace_back(std::move(pPipeline));
             }
         }
     }
@@ -267,7 +267,7 @@ namespace Graphics
 
         pGraphicsResource = pDX12Resource.get();
 
-        m_pGraphicsBufferResourceViews.push_back(std::move(pDX12Resource));
+        m_pGraphicsBufferResourceViews.emplace_back(std::move(pDX12Resource));
     }
 
     void DX12Graphics::UpdateGraphicsBufferResource(

@@ -42,39 +42,42 @@ namespace Simple
 
     void Scene::SetUpScene(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight)
     {
-        auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/");
-        for (auto path : itr)
+        if (std::filesystem::exists("Resources/Model/"))
         {
-            auto extension = path.path().extension().string();
-            std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-            if (extension.empty())
-                continue;
+            auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/");
+            for (auto path : itr)
+            {
+                auto extension = path.path().extension().string();
+                std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+                if (extension.empty())
+                    continue;
 
-            std::unique_ptr<ModelLoader::IModelLoader> pModelLoader = nullptr;
+                std::unique_ptr<ModelLoader::IModelLoader> pModelLoader = nullptr;
 
-            if (extension == ".fbx")
-                pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
-            else if (extension == ".obj")
-                pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
-            else if (extension == ".pmx")
-                pModelLoader = std::make_unique<ModelLoader::PMXLoader>();
+                if (extension == ".fbx")
+                    pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
+                else if (extension == ".obj")
+                    pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
+                else if (extension == ".pmx")
+                    pModelLoader = std::make_unique<ModelLoader::PMXLoader>();
 
-            if (!pModelLoader)
-                continue;
+                if (!pModelLoader)
+                    continue;
 
-            auto pModelMesh = std::make_unique<ModelMesh>();
+                auto pModelMesh = std::make_unique<ModelMesh>();
 
-            pModelLoader->LoadModel(path.path().string(), pModelMesh.get());
+                pModelLoader->LoadModel(path.path().string(), pModelMesh.get());
 
-            pModelMesh->InitializeGraphicsResource(pGraphics);
+                pModelMesh->InitializeGraphicsResource(pGraphics);
 
-            m_pModelMeshVec.push_back(std::move(pModelMesh));
+                m_pModelMeshVec.emplace_back(std::move(pModelMesh));
 
-            //System::ThreadPoolSystem::GetThreadPoolSystem().AddTask(
-            //    [=]() 
-            //    {
-            //        
-            //    });
+                //System::ThreadPoolSystem::GetThreadPoolSystem().AddTask(
+                //    [=]() 
+                //    {
+                //        
+                //    });
+            }
         }
 
         {
@@ -126,7 +129,7 @@ namespace Simple
 
             pModelMesh->InitializeGraphicsResource(pGraphics);
 
-            m_pModelMeshVec.push_back(std::move(pModelMesh));
+            m_pModelMeshVec.emplace_back(std::move(pModelMesh));
         }
 
         {
@@ -153,7 +156,7 @@ namespace Simple
                 pointLightConstantBuffer.pointLightBuffers[i] = pointLightBuffer;
 
                 auto pPointLight = std::make_unique<Light::PointLight>(pointLightBuffer);
-                m_pPointLightVec.push_back(std::move(pPointLight));
+                m_pPointLightVec.emplace_back(std::move(pPointLight));
             }
 
             pointLightConstantBuffer.numPointLight = numLight;
