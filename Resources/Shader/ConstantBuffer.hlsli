@@ -68,7 +68,8 @@ cbuffer CbMaterial : register(b2)
     Material material;
 }
 
-struct DirectionalLight {
+struct DirectionalLight 
+{
     float4 pos;
     float4 diffuse;
     float4 specular;
@@ -113,14 +114,21 @@ cbuffer CbSpotLight : register(b5)
     int numSpotLight;
 }
 
+#define BONE_MATRIX_MAX 200
+
+cbuffer CbWorld : register(b6)
+{
+    float4x4 BoneMatrixW[BONE_MATRIX_MAX];
+}
+
 #define OFFSET_MAX 15
 
-cbuffer CbPostEffect : register(b6)
+cbuffer CbPostEffect : register(b7)
 {
     float4 blurOffset[OFFSET_MAX];
 }
 
-cbuffer CbScreenParam : register(b7)
+cbuffer CbScreenParam : register(b8)
 {
     int textureWidth;
     int textureHeight;

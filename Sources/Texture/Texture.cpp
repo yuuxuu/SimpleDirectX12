@@ -106,7 +106,7 @@ namespace Simple {
         if (!m_isLoaded)
             return;
 
-        pGraphics->SetShaderResource(6 + index, pGraphicsResource);
+        pGraphics->SetShaderResource(7 + index, pGraphicsResource);
     }
 
     // テクスチャをキューブマップテクスチャに変換

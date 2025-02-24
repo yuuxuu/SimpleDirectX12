@@ -15,6 +15,7 @@
 namespace Simple
 {
     class Mesh;
+    class MeshBone;
     class Material;
     class Texture;
 

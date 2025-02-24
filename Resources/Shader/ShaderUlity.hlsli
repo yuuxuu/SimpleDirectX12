@@ -31,10 +31,23 @@ float3 float3Cross(float3 vec1, float3 vec2)
     return float3(vec1.y * vec2.z - vec1.z * vec2.y, vec1.z * vec2.x - vec1.x * vec2.z, vec1.x * vec2.y - vec1.y * vec2.x);
 }
 
+float4x4 GetIdentityMatrix()
+{
+    float4x4 mat =
+    {
+        float4(1.0f, 0.0f, 0.0f, 0.0f),
+        float4(0.0f, 1.0f, 0.0f, 0.0f),
+        float4(0.0f, 0.0f, 1.0f, 0.0f),
+        float4(0.0f, 0.0f, 0.0f, 1.0f),
+    };
+    return mat;
+}
+
 // スケール行列を取得
 float4x4 GetScaleMatrix(float3 scale) 
 {
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4(scale.x,    0.0f,    0.0f, 0.0f),
         float4(   0.0f, scale.y,    0.0f, 0.0f),
         float4(   0.0f,    0.0f, scale.z, 0.0f),
@@ -48,7 +61,8 @@ float4x4 GetRotationXMatrix(float angle)
 {
     float radian = DegreeToRadian(angle);
 
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4(1.0f,        0.0f,        0.0f, 0.0f),
         float4(0.0f, cos(radian), sin(radian), 0.0f),
         float4(0.0f,-sin(radian), cos(radian), 0.0f),
@@ -62,7 +76,8 @@ float4x4 GetRotationYMatrix(float angle)
 {
     float radian = DegreeToRadian(angle);
     
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4(cos(radian), 0.0f,-sin(radian), 0.0f),
         float4(       0.0f, 1.0f,        0.0f, 0.0f),
         float4(sin(radian), 0.0f, cos(radian), 0.0f),
@@ -76,7 +91,8 @@ float4x4 GetRotationZMatrix(float angle)
 {
     float radian = DegreeToRadian(angle);
 
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4( cos(radian), sin(radian), 0.0f, 0.0f),
         float4(-sin(radian), cos(radian), 0.0f, 0.0f),
         float4(        0.0f,        0.0f, 0.0f, 0.0f),
@@ -88,7 +104,8 @@ float4x4 GetRotationZMatrix(float angle)
 // 平行移動行列を取得
 float4x4 GetTransMatrix(float3 pos) 
 {
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4( 1.0f,  0.0f,  0.0f, 0.0f),
         float4( 0.0f,  1.0f,  0.0f, 0.0f),
         float4( 0.0f,  0.0f,  1.0f, 0.0f),
@@ -108,7 +125,8 @@ float4x4 GetLookAtMatrix(float3 pos, float3 look, float3 up)
     float3 y = float3Cross(z, x);
     y = normalize(y);
 
-    float4x4 mat = {
+    float4x4 mat = 
+    {
         float4( x.x,  x.y,  x.z, 0.0f),
         float4( y.x,  y.y,  y.z, 0.0f),
         float4( z.x,  z.y,  z.z, 0.0f),

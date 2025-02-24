@@ -16,7 +16,7 @@ namespace Simple
 {
     struct WorldBuffer
     {
-        Matrix	matW;
+        Matrix matW;
     };
 
 } // namespace

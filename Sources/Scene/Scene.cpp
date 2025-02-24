@@ -11,7 +11,6 @@
 #include "Param/ModelDrawInfoParam.h"
 
 #include "Buffer/VertexBuffer.h"
-#include "Material/Material.h"
 
 #include "Camera/Camera.h"
 
@@ -29,6 +28,8 @@
 #include "ModelLoader/OBJ/OBJLoader.h"
 #include "ModelLoader/PMX/PMXLoader.h"
 
+#include "AnimationLoader/FBX/FBXAnimationLoader.h"
+
 #include "System/ThreadPoolSystem.h"
 
 namespace Simple 
@@ -42,45 +43,68 @@ namespace Simple
 
     void Scene::SetUpScene(Graphics::IGraphics* pGraphics, const UINT windowWidth, const UINT windowHeight)
     {
-        if (std::filesystem::exists("Resources/Model/"))
         {
-            auto itr = std::filesystem::recursive_directory_iterator("Resources/Model/");
-            for (const auto& path : itr)
+            auto loadPath = std::string("Resources/Model/FBX/unitychan/");
+            if (std::filesystem::exists(loadPath))
             {
-                const auto& parentPath = path.path().parent_path().string();
-                if (parentPath.find("animations") != std::string::npos)
-                    continue;
+                ModelMesh* pTargetModelMesh = nullptr;
+                std::vector<std::string> animationFilePaths;
 
-                auto extension = path.path().extension().string();
-                std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-                if (extension.empty())
-                    continue;
+                auto itr = std::filesystem::recursive_directory_iterator(loadPath);
+                for (const auto& path : itr)
+                {
+                    auto extension = path.path().extension().string();
+                    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+                    if (extension.empty())
+                        continue;
 
-                std::unique_ptr<ModelLoader::IModelLoader> pModelLoader = nullptr;
+                    const auto& parentPath = path.path().parent_path().string();
+                    if (parentPath.find("animations") != std::string::npos)
+                    {
+                        animationFilePaths.emplace_back(path.path().string());
+                        continue;
+                    }
 
-                if (extension == ".fbx")
-                    pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
-                else if (extension == ".obj")
-                    pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
-                else if (extension == ".pmx")
-                    pModelLoader = std::make_unique<ModelLoader::PMXLoader>();
+                    std::unique_ptr<ModelLoader::IModelLoader> pModelLoader = nullptr;
+                    if (extension == ".fbx")
+                        pModelLoader = std::make_unique<ModelLoader::FBXLoader>();
+                    else if (extension == ".obj")
+                        pModelLoader = std::make_unique<ModelLoader::OBJLoader>();
+                    else if (extension == ".pmx")
+                        pModelLoader = std::make_unique<ModelLoader::PMXLoader>();
 
-                if (!pModelLoader)
-                    continue;
+                    if (!pModelLoader)
+                        continue;
 
-                auto pModelMesh = std::make_unique<ModelMesh>();
+                    auto pModelMesh = std::make_unique<ModelMesh>();
 
-                pModelLoader->LoadModel(path.path().string(), pModelMesh.get());
+                    pTargetModelMesh = pModelMesh.get();
 
-                pModelMesh->InitializeGraphicsResource(pGraphics);
+                    pModelLoader->LoadModel(path.path().string(), pModelMesh.get());
 
-                m_pModelMeshVec.emplace_back(std::move(pModelMesh));
+                    pModelMesh->InitializeGraphicsResource(pGraphics);
 
-                //System::ThreadPoolSystem::GetThreadPoolSystem().AddTask(
-                //    [=]() 
-                //    {
-                //        
-                //    });
+                    m_pModelMeshVec.emplace_back(std::move(pModelMesh));
+                }
+
+                Simple::System::ThreadPoolSystem::GetThreadPoolSystem().AddTask(
+                    [=]() 
+                    {
+                        if (pTargetModelMesh)
+                        {
+                            for (const auto& path : animationFilePaths)
+                            {
+                                std::unique_ptr<AnimationLoader::IAnimationLoader> pAnimationLoader = nullptr;
+                                if (path.find(".fbx") != std::string::npos)
+                                    pAnimationLoader = std::make_unique<AnimationLoader::FBXAnimationLoader>();
+
+                                if (!pAnimationLoader)
+                                    continue;
+
+                                pAnimationLoader->LoadAnimation(path, pTargetModelMesh);
+                            }
+                        }
+                    });
             }
         }
 
@@ -190,7 +214,13 @@ namespace Simple
             BufferParam param;
             param.byteWidth = sizeof(PointLightConstantBuffer);
             param.byteWidthStride = sizeof(PointLightConstantBuffer);
+
             pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &pointLightConstantBuffer, &param, Graphics::GraphicsResourceType::CBV);
+        }
+
+        {
+            for (auto itr = m_pModelMeshVec.cbegin(); itr != m_pModelMeshVec.cend(); itr++)
+                itr->get()->UpdateGraphicsResource(pGraphics);
         }
     }
 
@@ -199,9 +229,6 @@ namespace Simple
         m_pDirectionalLight->SetGraphicsResource(pGraphics);
 
         pGraphics->SetConstantBufferResource(4, pConstantBufferResource);
-
-        //for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
-        //    itr->get()->SetGraphicsResource(pGraphics);
 
         for (auto itr = m_pModelMeshVec.cbegin(); itr != m_pModelMeshVec.cend(); itr++)
             itr->get()->SetGraphicsResource(pGraphics);

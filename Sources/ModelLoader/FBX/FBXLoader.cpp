@@ -51,6 +51,7 @@ namespace ModelLoader
         ConvertNormal(pFbxMesh, vertices, indices, vecNormal);
         ConvertColor(pFbxMesh, vertices, indices);
         ConvertUV(pFbxMesh, vertices, indices, vecUV);
+        ConvertMeshIndexWeight(pFbxMesh, vertices, indices);
 
         if (vecUV.empty() && vecNormal.empty())
         {
@@ -347,39 +348,99 @@ namespace ModelLoader
         }
     }
 
-    void FBXLoader::ConvertMeshBone(FbxMesh* pFbxMesh, ModelMesh* pModelMesh, ModelDrawInfoParam* pPraram)
+    void FBXLoader::ConvertMeshIndexWeight(FbxMesh* pFbxMesh, std::vector<VertexBuffer>& vertices, const std::vector<DWORD>& indices)
     {
-        auto deformerCount = pFbxMesh->GetDeformerCount();
-        for (auto dIndex = 0; dIndex < deformerCount; ++dIndex)
+        struct BoneIndexWeight
         {
-            auto pFbxSkin = (FbxSkin*)pFbxMesh->GetDeformer(dIndex, FbxDeformer::eSkin);
+            int index;
+            float weight;
+        };
+
+        auto deformerCount = pFbxMesh->GetDeformerCount();
+        for (auto i = 0; i < deformerCount; ++i)
+        {
+            auto pFbxSkin = (FbxSkin*)pFbxMesh->GetDeformer(i, FbxDeformer::eSkin);
+            if (!pFbxSkin)
+                continue;
+
+            std::map<int, std::vector<BoneIndexWeight>> mapBoneIndexWeight;
+
+            auto clusterCount = pFbxSkin->GetClusterCount();
+            for (auto boneIndex = 0; boneIndex < clusterCount; ++boneIndex)
+            {
+                auto pFbxCluster = pFbxSkin->GetCluster(boneIndex);
+                if (!pFbxCluster)
+                    continue;
+
+                auto pVertexIndices = pFbxCluster->GetControlPointIndices();
+                auto pVertexWeights = pFbxCluster->GetControlPointWeights();
+
+                auto indicesCount = pFbxCluster->GetControlPointIndicesCount();
+                for (auto index = 0; index < indicesCount; index++)
+                {
+                    auto vertexIndex = pVertexIndices[index];
+                    auto weight = static_cast<float>(pVertexWeights[index]);
+
+                    mapBoneIndexWeight[vertexIndex].emplace_back(BoneIndexWeight{ boneIndex, weight });
+                }
+            }
+
+            for (auto itr = mapBoneIndexWeight.begin(); itr != mapBoneIndexWeight.end(); ++itr)
+            {
+                if (itr->second.size() > 1)
+                {
+                    std::sort(itr->second.begin(), itr->second.end(),
+                        [](const BoneIndexWeight& right, const BoneIndexWeight& left) {return right.weight > left.weight; });
+                }
+
+                for (auto i = 0; i < itr->second.size(); ++i)
+                {
+                    if (i >= BONE_INDEX_MAX)
+                        break;
+
+                    vertices[itr->first].boneIndices[i] = itr->second[i].index;
+                    vertices[itr->first].boneWeights[i] = itr->second[i].weight;
+                }
+            }
+        }
+    }
+
+    void FBXLoader::ConvertMeshBone(FbxNode* pFbxNode, ModelMesh* pModelMesh)
+    {
+        auto pFbxMesh = pFbxNode->GetMesh();
+        if (!pFbxMesh)
+            return;
+
+        auto deformerCount = pFbxMesh->GetDeformerCount();
+        for (auto i = 0; i < deformerCount; ++i)
+        {
+            auto pFbxSkin = (FbxSkin*)pFbxMesh->GetDeformer(i, FbxDeformer::eSkin);
             if (!pFbxSkin)
                 continue;
 
             auto clusterCount = pFbxSkin->GetClusterCount();
-
-            pPraram->vecMeshBone.reserve(clusterCount);
-
-            for (auto cIndex = 0; cIndex < clusterCount; ++cIndex)
+            for (auto i = 0; i < clusterCount; ++i)
             {
-                auto pFbxCluster = pFbxSkin->GetCluster(cIndex);
+                auto pFbxCluster = pFbxSkin->GetCluster(i);
                 if (!pFbxCluster)
                     continue;
 
-                auto fbxMatrix = pFbxCluster->GetLink()->EvaluateGlobalTransform();
-                
-                int row = 4;
-                int col = 4;
-                Matrix mat;
-                for (int rIndex = 0; rIndex < row; rIndex++)
-                    for (int cIndex = 0; cIndex < col; cIndex++)
-                        mat.m[rIndex][cIndex] = static_cast<float>(fbxMatrix.Get(rIndex, cIndex));
+                FbxAMatrix fbxMatrix = pFbxCluster->GetLink()->EvaluateGlobalTransform().Inverse();
 
-                auto pMeshBone = std::make_unique<MeshBone>(mat);
+                auto row = 4;
+                auto col = 4;
+                Matrix initMat;
+                for (int j = 0; j < row; j++)
+                    for (int k = 0; k < col; k++)
+                        initMat.m[j][k] = static_cast<float>(fbxMatrix.Get(j, k));
 
-                pPraram->vecMeshBone.emplace_back(pMeshBone.get());
+                auto boneName = pFbxCluster->GetLink()->GetName();
 
-                pModelMesh->RegisterMeshBone(pFbxCluster->GetLink()->GetName(), pMeshBone);
+                auto pMeshBone = std::make_unique<MeshBone>(boneName, initMat);
+
+                pModelMesh->RegisterMeshBone(pMeshBone);
+
+                std::cout << boneName << std::endl;
             }
         }
     }
@@ -567,13 +628,15 @@ namespace ModelLoader
         auto pRootNode = fbxScene->GetRootNode();
         if (!pRootNode) return false;
 
-        std::vector<FbxNode*> fbxMeshNodes;
+        std::vector<FbxNode*> vecFbxMeshNode;
+        RecursiveFbxNode(pRootNode, vecFbxMeshNode);
 
-        RecursiveFbxNode(pRootNode, fbxMeshNodes);
+        if (vecFbxMeshNode.empty())
+            return false;
 
         RegisterMaterialMap materialMap;
         RegisterTextureMap textureMap;
-        for (const auto& pNode : fbxMeshNodes)
+        for (const auto& pNode : vecFbxMeshNode)
         {
             auto pFbxMesh = pNode->GetMesh();
             if (!pFbxMesh) continue;
@@ -581,8 +644,6 @@ namespace ModelLoader
             ModelDrawInfoParam param;
 
             ConvertMesh(pFbxMesh, pModelMesh, &param);
-
-            ConvertMeshBone(pFbxMesh, pModelMesh, &param);
 
             auto numMaterial = pNode->GetMaterialCount();
             for (auto i = 0; i < numMaterial; ++i)
@@ -595,6 +656,32 @@ namespace ModelLoader
 
             pModelMesh->AddModelDrawInfoParam(param);
         }
+
+        auto GetFbxSkin = [=]() -> FbxNode*
+            {
+                for (const auto& pNode : vecFbxMeshNode)
+                {
+                    auto pFbxMesh = pNode->GetMesh();
+                    if (!pFbxMesh)
+                        continue;
+
+                    auto deformerCount = pFbxMesh->GetDeformerCount();
+                    for (auto i = 0; i < deformerCount; ++i)
+                    {
+                        auto pFbxSkin = (FbxSkin*)pFbxMesh->GetDeformer(i, FbxDeformer::eSkin);
+                        if (!pFbxSkin)
+                            continue;
+
+                        auto clusterCount = pFbxSkin->GetClusterCount();
+                        if (clusterCount > 0)
+                            return pNode;
+                    }
+                }
+
+                return nullptr;
+            };
+
+        ConvertMeshBone(GetFbxSkin(), pModelMesh);
 
         for (auto itr = materialMap.begin(); itr != materialMap.end(); ++itr)
             pModelMesh->RegisterMaterial(itr->second);

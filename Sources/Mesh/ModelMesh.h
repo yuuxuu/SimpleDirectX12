@@ -18,6 +18,8 @@
 namespace Simple 
 {
     class Mesh;
+    class MeshBone;
+    class MeshAnimation;
     class Material;
     class Texture;
 
@@ -26,8 +28,12 @@ namespace Simple
 
     using RegisterMeshVec = std::vector<std::unique_ptr<Simple::Mesh>>;
     using RegisterMaterialVec = std::vector<std::unique_ptr<Simple::Material>>;
+    using RegisterMeshBoneVec = std::vector<std::unique_ptr<Simple::MeshBone>>;
+
     using RegisterMaterialMap = std::map<std::string, std::unique_ptr<Simple::Material>>;
     using RegisterTextureMap = std::map<std::string, std::unique_ptr<Simple::Texture>>;
+    using RegisterMeshBoneMap = std::map<std::string, std::unique_ptr<Simple::MeshBone>>;
+    using RegisterMeshAnimationMap = std::map<std::string, std::unique_ptr<Simple::MeshAnimation>>;
 
     class ModelMesh 
     {
@@ -36,9 +42,16 @@ namespace Simple
 
         RegisterMeshVec                 m_registerMeshVec;
         RegisterMaterialVec             m_registerMaterialVec;
+        RegisterMeshBoneVec             m_registerMeshBoneVec;
+
         RegisterTextureMap              m_registerTextureMap;
+        RegisterMeshBoneMap             m_registerMeshBoneMap;
+
+        RegisterMeshAnimationMap        m_registerMeshAnimationMap;
 
         Graphics::IGraphicsResource*    pConstantBufferResource;
+
+        Graphics::IGraphicsResource*    pBoneMatrixConstantBufferResource;
 
     private:
         ModelMesh(const ModelMesh&) = delete;
@@ -50,10 +63,13 @@ namespace Simple
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void UpdateGraphicsResource(Graphics::IGraphics* pGraphics, Simple::WorldBuffer& worldBuffer);
+        void UpdateGraphicsResource(Graphics::IGraphics* pGraphics);
         void SetGraphicsResource(Graphics::IGraphics* pGraphics);
 
         void RegisterMesh(std::unique_ptr<Mesh>& pMesh);
+        void RegisterMeshBone(std::unique_ptr<MeshBone>& pMeshBone);
+        void RegisterMeshAnimation(const std::string& animationName, std::unique_ptr<MeshAnimation>& pMeshAnimation);
+        
         void RegisterMaterial(std::unique_ptr<Material>& pMaterial);
         void RegisterTexture(const std::string& texturePath, std::unique_ptr<Texture>& pTexture);
 

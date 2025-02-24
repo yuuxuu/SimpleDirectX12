@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef _CMESH_H_
-#define _CMESH_H_
+#ifndef _MESH_H_
+#define _MESH_H_
 
 #include "Math/math.h"
 
@@ -20,21 +20,6 @@ namespace Simple
     class Material;
 
     struct VertexBuffer;
-
-    struct MeshInfo 
-    {
-        VECTOR3 vertexE;
-        VECTOR3 vertexCenterPos;
-        VECTOR3 maxVertexPos;
-        VECTOR3 minVertexPos;
-
-        MeshInfo() :
-            vertexE(0.0f, 0.0f, 0.0f),
-            vertexCenterPos(0.0f, 0.0f, 0.0f),
-            maxVertexPos(0.0f, 0.0f, 0.0f),
-            minVertexPos(10000.0f, 10000.0f, 10000.0f)
-        {}
-    };
 
     class Mesh 
     {
@@ -63,4 +48,4 @@ namespace Simple
 
 } // namespace
 
-#endif // _CMESH_H_
+#endif // _MESH_H_

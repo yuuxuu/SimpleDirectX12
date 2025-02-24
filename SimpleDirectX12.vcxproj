@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,7 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\x64\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -147,6 +147,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sources\AnimationLoader\FBX\FBXAnimationLoader.cpp" />
     <ClCompile Include="Sources\App\App.cpp" />
     <ClCompile Include="Sources\Camera\Camera.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp" />
@@ -169,6 +170,8 @@
     <ClCompile Include="Sources\Material\Material.cpp" />
     <ClCompile Include="Sources\math\math.cpp" />
     <ClCompile Include="Sources\Mesh\Mesh.cpp" />
+    <ClCompile Include="Sources\Mesh\MeshAnimation.cpp" />
+    <ClCompile Include="Sources\Mesh\MeshBone.cpp" />
     <ClCompile Include="Sources\Mesh\ModelMesh.cpp" />
     <ClCompile Include="Sources\ModelLoader\FBX\FBXLoader.cpp" />
     <ClCompile Include="Sources\ModelLoader\OBJ\OBJLoader.cpp" />
@@ -182,11 +185,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\stdafx.h" />
+    <ClInclude Include="Sources\AnimationLoader\IAnimationLoader.h" />
+    <ClInclude Include="Sources\AnimationLoader\FBX\FBXAnimationLoader.h" />
     <ClInclude Include="Sources\App\App.h" />
     <ClInclude Include="Sources\Buffer\CameraBuffer.h" />
     <ClInclude Include="Sources\Buffer\LightBuffer.h" />
     <ClInclude Include="Sources\Buffer\MaterialBuffer.h" />
     <ClInclude Include="Sources\Buffer\VertexBuffer.h" />
+    <ClInclude Include="Sources\Buffer\WorldBoneMatrixBuffer.h" />
     <ClInclude Include="Sources\Buffer\WorldBuffer.h" />
     <ClInclude Include="Sources\Camera\Camera.h" />
     <ClInclude Include="Sources\GraphicsAPI\GraphicsResourceType.h" />
@@ -214,6 +220,8 @@
     <ClInclude Include="Sources\Material\Material.h" />
     <ClInclude Include="Sources\math\math.h" />
     <ClInclude Include="Sources\Mesh\Mesh.h" />
+    <ClInclude Include="Sources\Mesh\MeshAnimation.h" />
+    <ClInclude Include="Sources\Mesh\MeshBone.h" />
     <ClInclude Include="Sources\Mesh\ModelMesh.h" />
     <ClInclude Include="Sources\ModelLoader\IModelLoader.h" />
     <ClInclude Include="Sources\ModelLoader\FBX\FBXLoader.h" />

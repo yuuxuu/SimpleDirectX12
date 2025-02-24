@@ -22,6 +22,6 @@ namespace ModelLoader
         virtual bool LoadModel(const std::string& filePath, Simple::ModelMesh* pModelMesh) = 0;
     };
 } // namespace ModelLoader
-} // namespacce Simple
+} // namespace Simple
 
 #endif // _IMODEL_LOADER_H_

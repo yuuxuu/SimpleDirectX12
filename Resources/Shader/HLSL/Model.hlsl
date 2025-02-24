@@ -9,11 +9,17 @@
 #include "../RootSignature.hlsli"
 #include "../ShaderUlity.hlsli"
 
+#define BONE_INDEX_MAX 4
+
 struct VS_IN {
-    float3 pos      : POSITION;
-    float4 color    : COLOR;
-    float2 uv       : TEXCOORD;
-    float3 normal   : NORMAL;
+    float3 pos        : POSITION;
+    float4 color      : COLOR;
+    float2 uv         : TEXCOORD;
+    float3 normal     : NORMAL;
+    float3 tangent    : TANGENT;
+    float3 binormal   : BINORMAL;
+    int4   boneIndex  : BONEINDEX;
+    float4 boneWeight : BONEWEIGHT;
 };
 
 struct VS_OUT {
@@ -31,14 +37,26 @@ struct PS_OUT {
 [RootSignature(RS_MODEL)]
 VS_OUT VS_main(VS_IN input) {
     VS_OUT output = (VS_OUT)0;
-
-    output.posw = mul(float4(input.pos, 1.0f), matW);
+    
+    // 頂点ブレンド処理
+    float4x4 comb = GetIdentityMatrix();
+    
+    for (int i = 0; i < BONE_INDEX_MAX; ++i)
+    {
+        if (input.boneIndex[i] < 0)
+            continue;
+            
+        comb += BoneMatrixW[input.boneIndex[i]] * input.boneWeight[i];
+    }
+    
+    output.pos = mul(float4(input.pos, 1.0f), comb);
+    output.posw = mul(output.pos, matW);
     output.pos = mul(output.posw, matVP);
 
     output.color = input.color;
     output.uv = input.uv;
 
-    output.normal = mul(input.normal, (float3x3)matW);
+    output.normal = mul(input.normal, (float3x3) matW);
 
     return output;
 }
