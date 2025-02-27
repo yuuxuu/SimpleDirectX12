@@ -40,7 +40,7 @@ namespace Light
 
     void DirectionalLight::SetGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->SetConstantBufferResource(3, pConstantBufferResource);
+        pGraphics->SetConstantBufferView(3, pConstantBufferResource);
     }
 
 } // namespace Light

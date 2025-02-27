@@ -33,28 +33,35 @@ namespace Graphics
     class DX12Command;
     class DX12HeapAllocator;
 
+    class DX12RenderTargetView;
+    class DX12DepthStencilView;
+
     class DX12Graphics : public IGraphics
     {
     private:
         std::unique_ptr<DX12Device>                     m_pDX12Device;
         std::unique_ptr<DX12Command>                    m_pDX12Command;
 
-        GraphicsPipelineVec                             m_pGraphicsPipelineVec;
         ShaderVec                                       m_pShaderVec;
 
         HeapAllocatorMap                                m_pDX12HeapAllocatorMap;
 
-        std::vector<std::unique_ptr<IDX12Resouce>>      m_pRenderTargetViews;
-        std::unique_ptr<IDX12Resouce>                   m_pDepthStencilView;
-
-        std::vector<std::unique_ptr<IDX12Resouce>>      m_pGraphicsBufferResourceViews;
-
         UINT                                            m_windowWidth;
         UINT                                            m_windowHeight;
+
+        UINT                                            m_primitiveTopology;
 
     private:
         DX12Graphics(const DX12Graphics&) = delete;
         DX12Graphics& operator=(const DX12Graphics) = delete;
+
+        DX12RenderTargetView* GetRenderTargetView(UINT index);
+
+        DX12DepthStencilView* GetDepthStencilView();
+
+        void InitializeGraphicsPipeline() override;
+
+        void SetGraphicsPipeline() override;
 
     public:
         DX12Graphics();
@@ -62,21 +69,17 @@ namespace Graphics
 
         bool Initialize(HWND hwnd, const UINT windowWidth, const UINT windowHeight) override;
 
-        void Finalize() override;
+        void RenderPrepare() override;
 
-        void Update() override;
-
-        void InitializeGraphicsPipeline() override;
-
-        void SetGraphicsPipeline() override;
+        void RenderEnd() override;
 
         void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
 
         void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) override;
 
-        void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) override;
+        void SetConstantBufferView(UINT index, IGraphicsResource* pGraphicsResource) override;
 
-        void SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource) override;
+        void SetShaderResourceView(UINT index, IGraphicsResource* pGraphicsResource) override;
 
         void DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties) override;
 

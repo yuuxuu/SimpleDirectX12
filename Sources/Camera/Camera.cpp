@@ -199,7 +199,7 @@ namespace Simple
 
         pGraphics->UpdateGraphicsBufferResource(pGraphicsResource, &cameraBuffer, &param, Graphics::GraphicsResourceType::CBV);
 
-        pGraphics->SetConstantBufferResource(1, pGraphicsResource);
+        pGraphics->SetConstantBufferView(1, pGraphicsResource);
     }
 
 } // namespace

@@ -124,9 +124,9 @@ namespace Simple {
 
     void ModelMesh::SetGraphicsResource(Graphics::IGraphics* pGraphics)
     {
-        pGraphics->SetConstantBufferResource(0, pConstantBufferResource);
+        pGraphics->SetConstantBufferView(0, pConstantBufferResource);
 
-        pGraphics->SetConstantBufferResource(6, pBoneMatrixConstantBufferResource);
+        pGraphics->SetConstantBufferView(6, pBoneMatrixConstantBufferResource);
 
         for (const auto& meshDrawInfo : m_ModelDrawInfoParamVec)
         {

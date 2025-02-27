@@ -14,8 +14,7 @@ namespace Graphics
 {
     DX12HeapAllocator::DX12HeapAllocator(DX12Device* pDX12Device, D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc) :
         pDX12Device(pDX12Device),
-        m_descriptorHeapDesc(descriptorHeapDesc),
-        m_heapIndex(0)
+        m_descriptorHeapDesc(descriptorHeapDesc)
     {}
 
     DX12HeapAllocator::~DX12HeapAllocator()
@@ -37,12 +36,26 @@ namespace Graphics
         pDX12Command->SetDescriptorHeaps(m_descriptorHeap.Get());
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartCPUDescriptorHeapHandle()
+    void DX12HeapAllocator::AddResource(std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    {
+        m_DX12ResourceVec.emplace_back(std::move(pDX12Resource));
+    }
+
+    IDX12Resouce* DX12HeapAllocator::GetDX12Resource(UINT index)
+    {
+        auto& pDX12Resource = m_DX12ResourceVec.at(index);
+        if (!pDX12Resource)
+            return nullptr;
+
+        return pDX12Resource.get();
+    }
+
+    const D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartCPUDescriptorHeapHandle() const
     {
         return m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetCPUDescriptorHeapHandle(UINT heapIndex)
+    const D3D12_CPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetCPUDescriptorHeapHandle(UINT heapIndex) const
     {
         if (heapIndex == 0)
             return GetStartCPUDescriptorHeapHandle();
@@ -57,12 +70,12 @@ namespace Graphics
         return handle;
     }
 
-    D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartGPUDescriptorHeapHandle()
+    const D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetStartGPUDescriptorHeapHandle() const
     {
         return m_descriptorHeap->GetGPUDescriptorHandleForHeapStart();
     }
 
-    D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetGPUDescriptorHeapHandle(UINT heapIndex)
+    const D3D12_GPU_DESCRIPTOR_HANDLE DX12HeapAllocator::GetGPUDescriptorHeapHandle(UINT heapIndex) const
     {
         if (heapIndex == 0)
             return GetStartGPUDescriptorHeapHandle();
@@ -77,15 +90,19 @@ namespace Graphics
         return handle;
     }
 
-    void DX12HeapAllocator::AddHeapIndex()
+    const UINT DX12HeapAllocator::GetHeapIndex() const
     {
-        if (m_heapIndex >= m_descriptorHeapDesc.NumDescriptors)
-        {
-            MessageBoxA(NULL, "Descriptor最大値を超えています。", "MessageBox", MB_OK);
-            return;
-        }
+        return static_cast<UINT>(m_DX12ResourceVec.size());
+    }
 
-        m_heapIndex++;
+    const UINT DX12HeapAllocator::GetMaxNumDescriptors() const
+    {
+        return m_descriptorHeapDesc.NumDescriptors;
+    }
+
+    const bool DX12HeapAllocator::IsVisibleShader() const
+    {
+        return m_descriptorHeapDesc.Flags == D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     }
 
 } // namespace

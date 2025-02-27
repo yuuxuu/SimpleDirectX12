@@ -10,6 +10,8 @@
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 #include "GraphicsAPI/DirectX12/DX12Command.h"
 
+#include "GraphicsAPI/Shader/DirectX/GraphicsPipeline.h"
+
 #include "Utility/utility.h"
 
 namespace Graphics 
@@ -19,7 +21,7 @@ namespace Shader
     // コンストラクタ
     Shader::Shader(DX12Device* pDX12Device, DX12Command* pDX12Commnad) :
         pDX12Device(pDX12Device),
-        pDX12Commnad(pDX12Commnad),
+        pDX12Command(pDX12Commnad),
         m_pShadeMap(),
         m_pRootSignature()
     {}
@@ -74,7 +76,7 @@ namespace Shader
             { "CS", "cs_5_0" },
         };
 
-        for (const auto entry : SHADER_ENTRY)
+        for (const auto& entry : SHADER_ENTRY)
             CompileShader(shaderFilePath, entry.first, entry.second);
 
         if (m_pShadeMap.empty())
@@ -87,7 +89,7 @@ namespace Shader
         if (shaderMapItr == m_pShadeMap.cend())
             return false;
 
-        auto pShader = shaderMapItr->second;
+        auto& pShader = shaderMapItr->second;
 
         ComPtr<ID3DBlob> pBlob;
         HRESULT hr = D3DGetBlobPart(pShader->GetBufferPointer(), pShader->GetBufferSize(), D3D_BLOB_ROOT_SIGNATURE, 0, &pBlob);
@@ -106,14 +108,28 @@ namespace Shader
         return true;
     }
 
-    void Shader::SetRootSignature()
+    void Shader::SetGraphicsRootSignature()
     {
-        pDX12Commnad->SetGraphicsRootSignature(m_pRootSignature.Get());
+        pDX12Command->SetGraphicsRootSignature(m_pRootSignature.Get());
     }
 
-    void Shader::SetGraphicsPipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc)
+    void Shader::SetComputeRootSignature()
     {
-        for (const auto pShader : m_pShadeMap)
+        pDX12Command->SetComputeRootSignature(m_pRootSignature.Get());
+    }
+
+    void Shader::SetPiplineState(const UINT primitiveTopologyType)
+    {
+        auto pPiplineItr = m_pGraphicsPiplineMap.find(primitiveTopologyType);
+        if (pPiplineItr == m_pGraphicsPiplineMap.cend())
+            return;
+
+        pPiplineItr->second->SetPipelineState();
+    }
+
+    void Shader::InitializeGraphicsPipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc)
+    {
+        for (const auto& pShader : m_pShadeMap)
         {
             auto shaderByteCode = D3D12_SHADER_BYTECODE
             {
@@ -134,23 +150,39 @@ namespace Shader
         }
 
         graphicsPipelineStateDesc.pRootSignature = m_pRootSignature.Get();
-        graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
+        std::vector<D3D12_PRIMITIVE_TOPOLOGY_TYPE> vecPrimitiveTopologyTypes
+        {
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,
+        };
+
+        for (const auto type : vecPrimitiveTopologyTypes)
+        {
+            graphicsPipelineStateDesc.PrimitiveTopologyType = type;
+
+            auto pGraphicsPipeline = std::make_unique<GraphicsPipeline>(pDX12Device, pDX12Command);
+            if (pGraphicsPipeline->InitializePipeline(graphicsPipelineStateDesc))
+                m_pGraphicsPiplineMap[type] = std::move(pGraphicsPipeline);
+        }
     }
 
-    void Shader::SetComputePipelineState(D3D12_COMPUTE_PIPELINE_STATE_DESC& computePipelineStateDesc)
+    void Shader::InitializeComputePipelineState(D3D12_COMPUTE_PIPELINE_STATE_DESC& computePipelineStateDesc)
     {
-        for (const auto pShader : m_pShadeMap)
-        {
-            auto shaderByteCode = D3D12_SHADER_BYTECODE
-            {
-                pShader.second->GetBufferPointer(),
-                pShader.second->GetBufferSize()
-            };
+        auto itr = m_pShadeMap.find("CS");
+        if (itr == m_pShadeMap.cend())
+            return;
 
-            if (pShader.first == "CS")
-                computePipelineStateDesc.CS = shaderByteCode;
-        }
+        auto shaderByteCode = D3D12_SHADER_BYTECODE
+        {
+            itr->second->GetBufferPointer(),
+            itr->second->GetBufferSize()
+        };
+
+        computePipelineStateDesc.CS = shaderByteCode;
+
+        computePipelineStateDesc.pRootSignature = m_pRootSignature.Get();
     }
 } // namespace Shader
 } // namespace Graphics

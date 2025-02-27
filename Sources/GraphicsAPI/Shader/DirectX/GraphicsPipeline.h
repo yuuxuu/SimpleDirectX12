@@ -40,7 +40,7 @@ namespace Shader
 
         bool InitializePipeline(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
 
-        void SetPipeline();
+        void SetPipelineState();
     };
 } // namespace GraphicsPipeline
 } // namespace Graphics

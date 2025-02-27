@@ -14,19 +14,30 @@
 
 namespace Simple
 {
+    using Data = std::unique_ptr<uint8_t[]>;
+
     struct TextureDataParam : public IParam
     {
-        std::unique_ptr<uint8_t[]>  pData;
+        Data        pData;
 
-        UINT                        PixelsSize;
+        UINT        PixelsSize;
+                    
+        UINT        RowPitch;
+        UINT        SlicePitch;
+                    
+        UINT        Width;
+        UINT        Height;
+                    
+        DXGI_FORMAT Format;
 
-        UINT                        RowPitch;
-        UINT                        SlicePitch;
-
-        UINT                        Width;
-        UINT                        Height;
-
-        DXGI_FORMAT                 Format;
+        TextureDataParam() :
+            PixelsSize(0),
+            RowPitch(0),
+            SlicePitch(0),
+            Width(0),
+            Height(0),
+            Format(DXGI_FORMAT::DXGI_FORMAT_UNKNOWN)
+        {}
     };
 } // namespace
 

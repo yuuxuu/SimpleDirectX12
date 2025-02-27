@@ -1,11 +1,11 @@
 ﻿/**
- * @file DX12GraphicsResourceBuilder.cpp
+ * @file DX12GraphicsResourceFactory.cpp
  * @brief
  * @author Yu Kimura
  * @date 2025/01/18
  */
 
-#include "DX12GraphicsResourceBuilder.h"
+#include "DX12GraphicsResourceFactory.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 #include "GraphicsAPI/DirectX12/DX12Command.h"
@@ -23,35 +23,21 @@
 
 namespace Graphics
 {
-    DX12GraphicsResourceBuilder::DX12GraphicsResourceBuilder()
-    {}
-
-    DX12GraphicsResourceBuilder::~DX12GraphicsResourceBuilder()
-    {}
-
-    void DX12GraphicsResourceBuilder::CreateRenderTargetView(
-        DX12Device* pDX12Device, 
-        DX12HeapAllocator* pHeapAllocator, 
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    std::unique_ptr<IDX12Resouce> DX12RenderTargetViewResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto renderTargetView = std::make_unique<DX12RenderTargetView>(pDX12Device, pHeapAllocator, nullptr);
         renderTargetView->Initialize(nullptr, nullptr, pHeapAllocator->GetHeapIndex());
 
-        pDX12Resource = std::move(renderTargetView);
+        return std::move(renderTargetView);
     }
 
-    void DX12GraphicsResourceBuilder::CreateDepthStencilView(
-        DX12Device* pDX12Device, 
-        DX12HeapAllocator* pHeapAllocator,
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    std::unique_ptr<IDX12Resouce> DX12DepthStencilViewResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto pTextureDataParam = dynamic_cast<Simple::TextureDataParam*>(pParam);
         if (!pTextureDataParam)
         {
             MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
-            return;
+            return nullptr;
         }
 
         D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilviewDesc = {};
@@ -75,23 +61,19 @@ namespace Graphics
 
         auto prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
-        auto pDepthStencilView = std::make_unique<DX12DepthStencilView>(pDX12Device,pHeapAllocator, &depthStencilviewDesc);
+        auto pDepthStencilView = std::make_unique<DX12DepthStencilView>(pDX12Device, pHeapAllocator, &depthStencilviewDesc);
         pDepthStencilView->Initialize(&prop, &resourceDesc);
 
-        pDX12Resource = std::move(pDepthStencilView);
+        return std::move(pDepthStencilView);
     }
 
-    void DX12GraphicsResourceBuilder::CreateConstantBufferView(
-        DX12Device* pDX12Device,
-        DX12HeapAllocator* pHeapAllocator,
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    std::unique_ptr<IDX12Resouce> DX12ConstantBufferViewResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
         if (!pBufferParam)
         {
             MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
-            return;
+            return nullptr;
         }
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC constantBufferViewDesc = {};
@@ -115,22 +97,16 @@ namespace Graphics
         auto pConstantBufferView = std::make_unique<DX12ConstantBufferView>(pDX12Device, pHeapAllocator, &constantBufferViewDesc);
         pConstantBufferView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
 
-        pHeapAllocator->AddHeapIndex();
-
-        pDX12Resource = std::move(pConstantBufferView);
+        return std::move(pConstantBufferView);
     }
 
-    void DX12GraphicsResourceBuilder::CreateVertexBufferView(
-        DX12Device* pDX12Device,
-        DX12HeapAllocator* pHeapAllocator,
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    std::unique_ptr<IDX12Resouce> DX12VertexBufferResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
         if (!pBufferParam)
         {
             MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
-            return;
+            return nullptr;
         }
 
         D3D12_RESOURCE_DESC resourceDesc = {};
@@ -149,20 +125,16 @@ namespace Graphics
         auto pVertexBufferView = std::make_unique<DX12VertexBufferView>(pDX12Device, pBufferParam);
         pVertexBufferView->Initialize(&prop, &resourceDesc);
 
-        pDX12Resource = std::move(pVertexBufferView);
+        return std::move(pVertexBufferView);
     }
 
-    void DX12GraphicsResourceBuilder::CreateIndexBufferView(
-        DX12Device* pDX12Device,
-        DX12HeapAllocator* pHeapAllocator,
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pDX12Resource)
+    std::unique_ptr<IDX12Resouce> DX12IndexBufferResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto pBufferParam = dynamic_cast<Simple::BufferParam*>(pParam);
         if (!pBufferParam)
         {
             MessageBoxA(NULL, "BufferParamへのキャストに失敗しました。", "MessageBox", MB_OK);
-            return;
+            return nullptr;
         }
 
         D3D12_RESOURCE_DESC resourceDesc = {};
@@ -181,21 +153,20 @@ namespace Graphics
         auto pIndexBufferView = std::make_unique<DX12IndexBufferView>(pDX12Device, pBufferParam);
         pIndexBufferView->Initialize(&prop, &resourceDesc);
 
-        pDX12Resource = std::move(pIndexBufferView);
+        return std::move(pIndexBufferView);
     }
 
-    void DX12GraphicsResourceBuilder::CreateShaderResourceView(
-        DX12Device* pDX12Device, 
-        DX12Command* pDX12Command,
-        DX12HeapAllocator* pHeapAllocator,
-        Simple::IParam* pParam,
-        std::unique_ptr<IDX12Resouce>& pGraphicsResource)
+    DX12ShaderResourceViewResourceFactory::DX12ShaderResourceViewResourceFactory(DX12Command* pDX12Command) :
+        pDX12Command(pDX12Command)
+    { }
+
+    std::unique_ptr<IDX12Resouce> DX12ShaderResourceViewResourceFactory::CreateResource(DX12Device* pDX12Device, DX12HeapAllocator* pHeapAllocator, Simple::IParam* pParam)
     {
         auto pTextureDataParam = dynamic_cast<Simple::TextureDataParam*>(pParam);
         if (!pTextureDataParam)
         {
             MessageBoxA(NULL, "TextureDataParamへのキャストに失敗しました。", "MessageBox", MB_OK);
-            return;
+            return nullptr;
         }
 
         D3D12_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = {};
@@ -228,9 +199,7 @@ namespace Graphics
         auto pShaderResourceView = std::make_unique<DX12ShaderResourceView>(pDX12Device, pDX12Command, pHeapAllocator, &shaderResourceViewDesc, &subData);
         pShaderResourceView->Initialize(&prop, &resourceDesc, pHeapAllocator->GetHeapIndex());
 
-        pHeapAllocator->AddHeapIndex();
-
-        pGraphicsResource = std::move(pShaderResourceView);
+        return std::move(pShaderResourceView);
     }
 
 } // namespace

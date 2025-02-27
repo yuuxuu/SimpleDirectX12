@@ -37,7 +37,7 @@ namespace Simple {
         if (!pGraphicsResource)
             return;
 
-        pGraphics->SetConstantBufferResource(2, pGraphicsResource);
+        pGraphics->SetConstantBufferView(2, pGraphicsResource);
     }
 
 } // namespace

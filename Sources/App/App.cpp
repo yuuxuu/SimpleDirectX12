@@ -64,7 +64,7 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
     if (!pGraphics.Initialize(window.GetHwnd(), windowWidth, windowHeight))
     {
         MessageBoxA(NULL, "グラフィックデバイス初期化：失敗", "MessageBox", MB_OK);
-        pGraphics.Finalize();
+        pGraphics.RenderEnd();
         return -1;
     }
 
@@ -76,11 +76,14 @@ int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, in
     }
 
     MSG	msg;
-    while (1) {
-        if (!GetMessage(&msg, NULL, 0, 0)) {
+    while (1) 
+    {
+        if (!GetMessage(&msg, NULL, 0, 0)) 
+        {
             break;
         }
-        else {
+        else 
+        {
             // 文字メッセージへのコンバート
             TranslateMessage(&msg);
             // メッセージをWndProcへ送る

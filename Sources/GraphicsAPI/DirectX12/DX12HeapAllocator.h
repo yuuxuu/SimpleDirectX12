@@ -12,10 +12,14 @@
 
 using Microsoft::WRL::ComPtr;
 
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
+
 namespace Graphics
 {
     class DX12Device;
     class DX12Command;
+
+    using DX12ResourcVec = std::vector<std::unique_ptr<IDX12Resouce>>;
 
     class DX12HeapAllocator
     {
@@ -26,7 +30,7 @@ namespace Graphics
 
         DX12Device*                     pDX12Device;
 
-        UINT                            m_heapIndex;
+        DX12ResourcVec                  m_DX12ResourceVec;
 
     private:
         DX12HeapAllocator(const DX12HeapAllocator&) = delete;
@@ -40,19 +44,21 @@ namespace Graphics
 
         void SetDescriptorHeap(DX12Command* pDX12Command);
 
-        D3D12_CPU_DESCRIPTOR_HANDLE GetStartCPUDescriptorHeapHandle();
-        D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHeapHandle(UINT heapIndex);
+        void AddResource(std::unique_ptr<IDX12Resouce>& pDX12Resource);
 
-        D3D12_GPU_DESCRIPTOR_HANDLE GetStartGPUDescriptorHeapHandle();
-        D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHeapHandle(UINT heapIndex);
+        IDX12Resouce* GetDX12Resource(UINT index);
 
-        void AddHeapIndex();
+        const D3D12_CPU_DESCRIPTOR_HANDLE GetStartCPUDescriptorHeapHandle() const;
+        const D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHeapHandle(UINT heapIndex) const;
 
-        const UINT GetHeapIndex() const { return m_heapIndex; }
+        const D3D12_GPU_DESCRIPTOR_HANDLE GetStartGPUDescriptorHeapHandle() const;
+        const D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHeapHandle(UINT heapIndex) const;
 
-        const UINT GetMaxNumDescriptors() const { return m_descriptorHeapDesc.NumDescriptors; }
+        const UINT GetHeapIndex() const;
 
-        const bool IsVisibleShader() const { return m_descriptorHeapDesc.Flags == D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; }
+        const UINT GetMaxNumDescriptors() const;
+
+        const bool IsVisibleShader() const;
     };
 } // namespace
 

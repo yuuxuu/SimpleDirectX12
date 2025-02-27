@@ -10,8 +10,9 @@
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 #include "GraphicsAPI/DirectX12/DX12Command.h"
 #include "GraphicsAPI/DirectX12/DX12HeapAllocator.h"
-#include "GraphicsAPI/DirectX12/DX12GraphicsResourceBuilder.h"
+#include "GraphicsAPI/DirectX12/DX12GraphicsResourceFactory.h"
 
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/RTV/DX12RenderTargetView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/DSV/DX12DepthStencilView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/SRV/DX12ShaderResourceView.h"
@@ -19,6 +20,7 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/VBV/DX12VertexBufferView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/IBV/DX12IndexBufferView.h"
 
+#include "GraphicsAPI/Shader/DirectX/ShaderFactory.h"
 #include "GraphicsAPI/Shader/DirectX/Shader.h"
 
 #include "Texture/Texture.h"
@@ -27,7 +29,8 @@ namespace Graphics
 {
     DX12Graphics::DX12Graphics() :
         m_windowHeight(0),
-        m_windowWidth(0)
+        m_windowWidth(0),
+        m_primitiveTopology(0)
     {}
 
     DX12Graphics::~DX12Graphics()
@@ -64,29 +67,22 @@ namespace Graphics
                 D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
             };
 
-            auto heapAllocator = std::make_unique<DX12HeapAllocator>(m_pDX12Device.get(), descriptorHeapDesc);
-            if (heapAllocator->CreateDescriptorHeap())
+            auto pHeapAllocator = std::make_unique<DX12HeapAllocator>(m_pDX12Device.get(), descriptorHeapDesc);
+            if (pHeapAllocator->CreateDescriptorHeap())
             {
                 for (int i = 0; i < numRTV; i++)
                 {
-                    std::unique_ptr<IDX12Resouce> renderTargetView;
-
                     Simple::TextureDataParam param;
                     param.Width = windowWidth;
                     param.Height = windowHeight;
 
-                    DX12GraphicsResourceBuilder::CreateRenderTargetView(
-                        m_pDX12Device.get(),
-                        heapAllocator.get(),
-                        &param,
-                        renderTargetView);
-
-                    heapAllocator->AddHeapIndex();
-
-                    m_pRenderTargetViews.emplace_back(std::move(renderTargetView));
+                    DX12RenderTargetViewResourceFactory resourceFactory;
+                    auto renderTargetView = resourceFactory.CreateResource(m_pDX12Device.get(), pHeapAllocator.get(), &param);
+                    if(renderTargetView)
+                        pHeapAllocator->AddResource(renderTargetView);
                 }
 
-                m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(heapAllocator);
+                m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(pHeapAllocator);
             }
         }
 
@@ -100,20 +96,19 @@ namespace Graphics
                 D3D12_DESCRIPTOR_HEAP_FLAG_NONE
             };
 
-            auto heapAllocator = std::make_unique<DX12HeapAllocator>(m_pDX12Device.get(), descriptorHeapDesc);
-            if (heapAllocator->CreateDescriptorHeap())
+            auto pHeapAllocator = std::make_unique<DX12HeapAllocator>(m_pDX12Device.get(), descriptorHeapDesc);
+            if (pHeapAllocator->CreateDescriptorHeap())
             {
                 Simple::TextureDataParam param;
                 param.Width = windowWidth;
                 param.Height = windowHeight;
 
-                DX12GraphicsResourceBuilder::CreateDepthStencilView(
-                    m_pDX12Device.get(),
-                    heapAllocator.get(),
-                    &param,
-                    m_pDepthStencilView);
+                DX12DepthStencilViewResourceFactory resourceFactory;
+                auto depthStencilView = resourceFactory.CreateResource(m_pDX12Device.get(), pHeapAllocator.get(), &param);
+                if (depthStencilView)
+                    pHeapAllocator->AddResource(depthStencilView);
 
-                m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(heapAllocator);
+                m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(pHeapAllocator);
             }
         }
 
@@ -137,24 +132,39 @@ namespace Graphics
         return true;
     }
 
-    void DX12Graphics::Finalize()
+    DX12RenderTargetView* DX12Graphics::GetRenderTargetView(UINT index)
     {
-        auto index = m_pDX12Device->GetCurrentBackBufferIndex();
+        auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
+        {
+            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。", "MessageBox", MB_OK);
+            return nullptr;
+        }
 
-        auto renderTargetView = dynamic_cast<DX12RenderTargetView*>(m_pRenderTargetViews.at(index).get());
-        auto renderTargetViewHandle = renderTargetView->GetCPUDescriptorHandle();
-        auto depthStencilView = dynamic_cast<DX12DepthStencilView*>(m_pDepthStencilView.get());
-        auto depthStencilViewHandle = depthStencilView->GetCPUDescriptorHandle();
+        auto pDX12Resource = pHeapAllocatorItr->second->GetDX12Resource(index);
+        if (!pDX12Resource)
+            return nullptr;
 
-        m_pDX12Command->SetResourceBarrier(renderTargetView->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        m_pDX12Command->SetResourceBarrier(depthStencilView->GetResource(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
-
-        m_pDX12Command->ExecuteComandLists();
-
-        m_pDX12Device->Present();
+        return dynamic_cast<DX12RenderTargetView*>(pDX12Resource);
     }
 
-    void DX12Graphics::Update()
+    DX12DepthStencilView* DX12Graphics::GetDepthStencilView()
+    {
+        auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+        if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
+        {
+            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。", "MessageBox", MB_OK);
+            return nullptr;
+        }
+
+        auto pDX12Resource = pHeapAllocatorItr->second->GetDX12Resource(0);
+        if (!pDX12Resource)
+            return nullptr;
+
+        return dynamic_cast<DX12DepthStencilView*>(pDX12Resource);
+    }
+
+    void DX12Graphics::RenderPrepare()
     {
         if (m_windowWidth == 0 && m_windowHeight == 0)
         {
@@ -164,18 +174,29 @@ namespace Graphics
 
         auto index = m_pDX12Device->GetCurrentBackBufferIndex();
 
-        auto renderTargetView = dynamic_cast<DX12RenderTargetView*>(m_pRenderTargetViews.at(index).get());
-        auto renderTargetViewHandle = renderTargetView->GetCPUDescriptorHandle();
-        auto depthStencilView = dynamic_cast<DX12DepthStencilView*>(m_pDepthStencilView.get());
-        auto depthStencilViewHandle = depthStencilView->GetCPUDescriptorHandle();
+        auto pRenderTargetView = GetRenderTargetView(index);
+        if (!pRenderTargetView)
+        {
+            MessageBoxA(NULL, "DX12RenderTargetViewのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+        auto renderTargetViewHandle = pRenderTargetView->GetCPUDescriptorHandle();
+
+        auto pDepthStencilView = GetDepthStencilView();
+        if (!pDepthStencilView)
+        {
+            MessageBoxA(NULL, "DX12DepthStencilViewのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+        auto depthStencilViewHandle = pDepthStencilView->GetCPUDescriptorHandle();
 
         m_pDX12Command->ResetCommandList();
 
         m_pDX12Command->SetRect(m_windowWidth, m_windowHeight);
         m_pDX12Command->SetViewPort(0, 0, m_windowWidth, m_windowHeight);
 
-        m_pDX12Command->SetResourceBarrier(renderTargetView->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-        m_pDX12Command->SetResourceBarrier(depthStencilView->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+        m_pDX12Command->SetResourceBarrier(pRenderTargetView->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        m_pDX12Command->SetResourceBarrier(pDepthStencilView->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
         m_pDX12Command->ClearRenderTargetView(renderTargetViewHandle);
         m_pDX12Command->ClearDepthStencilView(depthStencilViewHandle, D3D12_CLEAR_FLAG_DEPTH);
@@ -184,51 +205,70 @@ namespace Graphics
         SetGraphicsPipeline();
     }
 
+    void DX12Graphics::RenderEnd()
+    {
+        auto index = m_pDX12Device->GetCurrentBackBufferIndex();
+
+        auto pRenderTargetView = GetRenderTargetView(index);
+        if (!pRenderTargetView)
+        {
+            MessageBoxA(NULL, "DX12RenderTargetViewのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+        auto renderTargetViewHandle = pRenderTargetView->GetCPUDescriptorHandle();
+
+        auto pDepthStencilView = GetDepthStencilView();
+        if (!pDepthStencilView)
+        {
+            MessageBoxA(NULL, "DX12DepthStencilViewのキャストに失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+        auto depthStencilViewHandle = pDepthStencilView->GetCPUDescriptorHandle();
+
+        m_pDX12Command->SetResourceBarrier(pRenderTargetView->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+        m_pDX12Command->SetResourceBarrier(pDepthStencilView->GetResource(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+        m_pDX12Command->ExecuteComandLists();
+
+        m_pDX12Device->Present();
+    }
+
     void DX12Graphics::InitializeGraphicsPipeline()
     {
-        auto itr = std::filesystem::recursive_directory_iterator("Resources/Shader/HLSL");
-        for (const auto& file : itr)
-        {
-            auto extension = file.path().extension();
-            if (extension != ".hlsl")
-                continue;
-
-            auto pShader = std::make_unique<Shader::Shader>(m_pDX12Device.get(), m_pDX12Command.get());
-            if (!pShader->Initialize(file.path().generic_string().c_str()))
-                continue;
-
-            D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
-
-            pShader->SetGraphicsPipelineState(graphicsPipelineStateDesc);
-
-            auto pPipeline = std::make_unique<Shader::GraphicsPipeline>(m_pDX12Device.get(), m_pDX12Command.get());
-            if (pPipeline->InitializePipeline(graphicsPipelineStateDesc))
-            {
-                m_pShaderVec.emplace_back(std::move(pShader));
-
-                m_pGraphicsPipelineVec.emplace_back(std::move(pPipeline));
-            }
-        }
+        Shader::ModelShaderFactory shaderFactory;
+        auto pShader = shaderFactory.CreateShader(m_pDX12Device.get(), m_pDX12Command.get());
+        if(pShader)
+            m_pShaderVec.emplace_back(std::move(pShader));
     }
 
     void DX12Graphics::SetGraphicsPipeline()
     {
-        auto pPipeline = m_pGraphicsPipelineVec.front().get();
-        if (!pPipeline)
-            return;
-
         auto pShader = m_pShaderVec.front().get();
         if (!pShader)
             return;
 
-        pShader->SetRootSignature();
+        UINT primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-        pPipeline->SetPipeline();
+        pShader->SetGraphicsRootSignature();
+        pShader->SetPiplineState(primitiveTopologyType);
+
+        switch (primitiveTopologyType)
+        {
+            case D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
+                m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+                break;
+            case D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE:
+                m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+                break;
+            case D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT:
+                m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+                break;
+        }
 
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
         {
-            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。\nGraphicsResourceの初期化が出来ませんでした。", "MessageBox", MB_OK);
+            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。", "MessageBox", MB_OK);
             return;
         }
 
@@ -244,30 +284,37 @@ namespace Graphics
             return;
         }
          
-        std::unique_ptr<IDX12Resouce> pDX12Resource;
+        std::unique_ptr<IGraphicsResourceFactory> pResourceFactory = nullptr;
 
         switch (graphicsResourceType)
         {
         case GraphicsResourceType::SRV:
-            DX12GraphicsResourceBuilder::CreateShaderResourceView(m_pDX12Device.get(), m_pDX12Command.get(), pHeapAllocatorItr->second.get(), pParam, pDX12Resource);
+            pResourceFactory = std::make_unique<DX12ShaderResourceViewResourceFactory>(m_pDX12Command.get());
             break;
         case GraphicsResourceType::CBV:
-            DX12GraphicsResourceBuilder::CreateConstantBufferView(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), pParam, pDX12Resource);
+            pResourceFactory = std::make_unique<DX12ConstantBufferViewResourceFactory>();
             break;
         case GraphicsResourceType::VBV:
-            DX12GraphicsResourceBuilder::CreateVertexBufferView(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), pParam, pDX12Resource);
+            pResourceFactory = std::make_unique<DX12VertexBufferResourceFactory>();
             break;
         case GraphicsResourceType::IBV:
-            DX12GraphicsResourceBuilder::CreateIndexBufferView(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), pParam, pDX12Resource);
+            pResourceFactory = std::make_unique<DX12IndexBufferResourceFactory>();
             break;
         default:
             MessageBoxA(NULL, "対象のResourceBufferView作成処理がありません。", "MessageBox", MB_OK);
             return;
         }
 
+        if (!pResourceFactory)
+            return;
+
+        auto pDX12Resource = pResourceFactory->CreateResource(m_pDX12Device.get(), pHeapAllocatorItr->second.get(), pParam);
+        if (!pDX12Resource)
+            return;
+
         pGraphicsResource = pDX12Resource.get();
 
-        m_pGraphicsBufferResourceViews.emplace_back(std::move(pDX12Resource));
+        pHeapAllocatorItr->second->AddResource(pDX12Resource);
     }
 
     void DX12Graphics::UpdateGraphicsBufferResource(
@@ -317,7 +364,7 @@ namespace Graphics
         }
     }
 
-    void DX12Graphics::SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource)
+    void DX12Graphics::SetConstantBufferView(UINT index, IGraphicsResource* pGraphicsResource)
     {
         auto pDX12ConstantBufferView = dynamic_cast<DX12ConstantBufferView*>(pGraphicsResource);
         if (pDX12ConstantBufferView == nullptr)
@@ -329,7 +376,7 @@ namespace Graphics
         m_pDX12Command->SetGraphicsRootDescriptorTable(index, pDX12ConstantBufferView->GetGPUDescriptorHandle());
     }
 
-    void DX12Graphics::SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource)
+    void DX12Graphics::SetShaderResourceView(UINT index, IGraphicsResource* pGraphicsResource)
     {
         auto pDX12ShaderResourceView = dynamic_cast<DX12ShaderResourceView*>(pGraphicsResource);
         if (pDX12ShaderResourceView == nullptr)
@@ -353,7 +400,7 @@ namespace Graphics
         auto pVertexBufferView = pDX12VertexBufferView->GetVertexBufferView();
         m_pDX12Command->SetBuffer(pVertexBufferView, nullptr);
 
-        m_pDX12Command->DrawInstanced(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numVerties);
+        m_pDX12Command->DrawInstanced(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitiveTopology), numVerties);
     }
 
     void DX12Graphics::DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndies)
@@ -374,7 +421,7 @@ namespace Graphics
 
         m_pDX12Command->SetBuffer(pVertexBufferView, pIndexBufferview);
 
-        m_pDX12Command->DrawIndexed(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numIndies);
+        m_pDX12Command->DrawIndexed(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitiveTopology), numIndies);
     }
 
 } // namespace

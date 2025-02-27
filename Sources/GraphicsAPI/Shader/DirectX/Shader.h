@@ -21,16 +21,21 @@ namespace Graphics
 
 namespace Shader
 { 
-    using shadersMap = std::map<std::string, ComPtr<ID3D10Blob>>;
+    class GraphicsPipeline;
+
+    using ShadersMap = std::map<std::string, ComPtr<ID3D10Blob>>;
+    using GraphicsPiplineMap = std::map<UINT, std::unique_ptr<GraphicsPipeline>>;
 
     class Shader : public IShader
     {
     private:
         ComPtr<ID3D12RootSignature> m_pRootSignature;
-        shadersMap                  m_pShadeMap;
+        ShadersMap                  m_pShadeMap;
+
+        GraphicsPiplineMap          m_pGraphicsPiplineMap;
 
         DX12Device*                 pDX12Device;
-        DX12Command*                pDX12Commnad;
+        DX12Command*                pDX12Command;
 
     private:
         Shader(const Shader&) = delete;
@@ -43,10 +48,13 @@ namespace Shader
 
         bool Initialize(const std::string& shaderFilePath) override;
 
-        void SetRootSignature();
+        void SetGraphicsRootSignature();
+        void SetComputeRootSignature();
 
-        void SetGraphicsPipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
-        void SetComputePipelineState(D3D12_COMPUTE_PIPELINE_STATE_DESC& computePipelineStateDesc);
+        void SetPiplineState(const UINT primitiveTopologyType);
+
+        void InitializeGraphicsPipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc);
+        void InitializeComputePipelineState(D3D12_COMPUTE_PIPELINE_STATE_DESC& computePipelineStateDesc);
     };
 } // namespace Shader
 } // namespace Graphics

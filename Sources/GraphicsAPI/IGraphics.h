@@ -25,9 +25,9 @@ namespace Graphics
 
         virtual bool Initialize(HWND hwnd, UINT width, UINT height) = 0;
 
-        virtual void Finalize() = 0;
+        virtual void RenderPrepare() = 0;
 
-        virtual void Update() = 0;
+        virtual void RenderEnd() = 0;
 
         virtual void InitializeGraphicsPipeline() = 0;
 
@@ -37,9 +37,9 @@ namespace Graphics
 
         virtual void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) = 0;
 
-        virtual void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) = 0;
+        virtual void SetConstantBufferView(UINT index, IGraphicsResource* pGraphicsResource) = 0;
 
-        virtual void SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource) = 0;
+        virtual void SetShaderResourceView(UINT index, IGraphicsResource* pGraphicsResource) = 0;
 
         virtual void DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties) = 0;
 

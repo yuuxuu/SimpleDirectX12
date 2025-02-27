@@ -153,7 +153,7 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Command.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Device.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.cpp" />
-    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceFactory.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp" />
@@ -164,6 +164,7 @@
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\Shader.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ShaderFactory.cpp" />
     <ClCompile Include="Sources\Input\Input.cpp" />
     <ClCompile Include="Sources\Light\DirectionalLight.cpp" />
     <ClCompile Include="Sources\Light\PointLight.cpp" />
@@ -201,7 +202,7 @@
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Command.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Device.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h" />
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceFactory.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ComputePipeline.h" />
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\GraphicsPipeline.h" />
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\Shader.h" />
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ShaderFactory.h" />
     <ClInclude Include="Sources\Input\Input.h" />
     <ClInclude Include="Sources\Light\DirectionalLight.h" />
     <ClInclude Include="Sources\Light\PointLight.h" />

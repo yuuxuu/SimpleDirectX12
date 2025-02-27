@@ -2,101 +2,101 @@
 <Project ToolsVersion="4.0">
   <ItemGroup>
     <Filter Include="Sources">
-      <UniqueIdentifier>{9873d744-e0c7-40da-9cce-65235b1dcc1f}</UniqueIdentifier>
+      <UniqueIdentifier>{500ed6ab-c304-4669-b741-f5c5c1fca00c}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Sources\AnimationLoader">
-      <UniqueIdentifier>{1c7eee5f-1ba4-4edc-a582-b9be5e275f46}</UniqueIdentifier>
+      <UniqueIdentifier>{a62835b8-e2e2-4698-8620-c531f6c66356}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\App">
-      <UniqueIdentifier>{e3591aab-b035-443a-8cf9-795e8f538dae}</UniqueIdentifier>
+      <UniqueIdentifier>{5136fbfa-d4e0-4fa4-a9b0-829446657e96}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Buffer">
-      <UniqueIdentifier>{0d9f18ea-b026-4a83-88cb-55341501d092}</UniqueIdentifier>
+      <UniqueIdentifier>{db6de2d1-a548-401c-95a2-dae566520bee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Camera">
-      <UniqueIdentifier>{5f1cd847-8c35-4d6a-856f-96e690172485}</UniqueIdentifier>
+      <UniqueIdentifier>{a2c02da0-7116-4e3c-a2f2-84c673fbfe96}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI">
-      <UniqueIdentifier>{68698f1f-813e-4f43-8bc3-b03ae253f63f}</UniqueIdentifier>
+      <UniqueIdentifier>{021de770-862a-4dc5-a9a0-a2927a48be05}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Input">
-      <UniqueIdentifier>{c9937fe1-b0a5-4fb9-85ff-5eb283dc4596}</UniqueIdentifier>
+      <UniqueIdentifier>{8439f86a-9d40-4f48-a7a8-71b92a31ab42}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Light">
-      <UniqueIdentifier>{a57dbe81-483a-464d-9770-3338fdb71965}</UniqueIdentifier>
+      <UniqueIdentifier>{7b8747e5-45f7-4946-ae23-75fc6c93034f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Material">
-      <UniqueIdentifier>{35e3ac68-bcd1-4a51-97ce-6eb027f9b357}</UniqueIdentifier>
+      <UniqueIdentifier>{2f93048f-bc1b-4d90-a14d-4ffcb5aeeff7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\math">
-      <UniqueIdentifier>{be7e1460-2d83-437f-bf81-f3fb56ab4e70}</UniqueIdentifier>
+      <UniqueIdentifier>{0215576e-cd4a-4810-82d4-a36f983aece2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Mesh">
-      <UniqueIdentifier>{92d0ff97-d3ce-4aa9-92d9-bfd14f162534}</UniqueIdentifier>
+      <UniqueIdentifier>{7f9f53fe-4e60-4a14-9253-1f130458d5c6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader">
-      <UniqueIdentifier>{708b799c-c5dc-407a-91b9-f32d2878f032}</UniqueIdentifier>
+      <UniqueIdentifier>{7f5f6d27-6a83-4961-ab9c-5c4f03d67781}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Param">
-      <UniqueIdentifier>{a81a05c0-5350-4af2-8c87-ac8d2fc7cd9c}</UniqueIdentifier>
+      <UniqueIdentifier>{908b331a-4624-4f5d-93d8-4cd4aab12df9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scene">
-      <UniqueIdentifier>{6d508f75-6fe8-4e13-b1b8-1f1b4f12948e}</UniqueIdentifier>
+      <UniqueIdentifier>{58f3ec90-3491-4df5-9332-642ec88182a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\System">
-      <UniqueIdentifier>{a0e3dfab-f1d1-4c6a-be3b-bbd9a14a6551}</UniqueIdentifier>
+      <UniqueIdentifier>{d369678e-0212-455d-ba85-29ec588e8ad9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Texture">
-      <UniqueIdentifier>{a96468b2-b98d-4616-b46e-5f70902aeeef}</UniqueIdentifier>
+      <UniqueIdentifier>{227f24b0-0093-4bf6-9c4d-d265af0f46cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Utility">
-      <UniqueIdentifier>{55534bd0-d4de-4cfd-bc50-731b5bc2e9bb}</UniqueIdentifier>
+      <UniqueIdentifier>{47834a7d-161a-4727-b0bf-7d086cb02fcf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Window">
-      <UniqueIdentifier>{f6d49ee7-2c34-46f9-9c9b-ec0b0fb7c441}</UniqueIdentifier>
+      <UniqueIdentifier>{b8462fc6-d44b-48a8-bb90-79e2f23410f5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\AnimationLoader\FBX">
-      <UniqueIdentifier>{8b963035-3560-44d7-9ef3-d61593f4fe68}</UniqueIdentifier>
+      <UniqueIdentifier>{94c2daa9-f976-4c15-bc67-a983ef18c21a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12">
-      <UniqueIdentifier>{2d20fa28-b63d-438e-809f-e39fb19b5d59}</UniqueIdentifier>
+      <UniqueIdentifier>{e25c767b-9fb2-4ae3-bd7c-9ec8fe2b4670}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\Shader">
-      <UniqueIdentifier>{89ef1072-47f6-4006-94bf-bf5d428efe85}</UniqueIdentifier>
+      <UniqueIdentifier>{3f4a5c32-f2f3-4a55-a7d2-c36a43747cea}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource">
-      <UniqueIdentifier>{bdd5d49d-1b30-4195-a846-384c9c07b145}</UniqueIdentifier>
+      <UniqueIdentifier>{602b4731-b6bd-4198-b98e-2dbcd6f2ad97}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV">
-      <UniqueIdentifier>{f8aab22a-3701-4631-bfd1-bbf3b0a24786}</UniqueIdentifier>
+      <UniqueIdentifier>{41be3a3d-1724-4168-8bde-0e60c38cd5d0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV">
-      <UniqueIdentifier>{74b519f3-81e5-431a-b450-31fbbcd595a1}</UniqueIdentifier>
+      <UniqueIdentifier>{b215b31d-2340-4a23-9060-9c9fed09d1ca}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV">
-      <UniqueIdentifier>{f9ed7123-bc75-477b-b3f6-f57c8e56a420}</UniqueIdentifier>
+      <UniqueIdentifier>{8dd1275c-5564-46e5-ac44-1eb77298862e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\RTV">
-      <UniqueIdentifier>{6e54ea1f-abcc-45e7-b44d-52b8e40892d4}</UniqueIdentifier>
+      <UniqueIdentifier>{1d3f7029-36a6-4631-bb6c-58aa979ba4bd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\SRV">
-      <UniqueIdentifier>{fce8e77f-6e0e-41fa-a950-16acca9f2b13}</UniqueIdentifier>
+      <UniqueIdentifier>{8a23a748-bc46-4eb3-bd0e-81c96bc5359a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\DirectX12\DX12Resource\VBV">
-      <UniqueIdentifier>{7b6a2393-42e3-4c20-8ea3-e116b0bf97b3}</UniqueIdentifier>
+      <UniqueIdentifier>{6c1482fd-fd33-4c77-8945-ecc80a74595c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GraphicsAPI\Shader\DirectX">
-      <UniqueIdentifier>{96542c3c-fb20-4d6e-a417-03197ffbe550}</UniqueIdentifier>
+      <UniqueIdentifier>{d8a66193-9e6b-44c7-9633-3f294b452c68}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader\FBX">
-      <UniqueIdentifier>{1224a7fb-a95f-48a2-8d42-4f6ee14f6739}</UniqueIdentifier>
+      <UniqueIdentifier>{54ad65bd-7162-4663-9a26-1cf6765af6a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader\OBJ">
-      <UniqueIdentifier>{50effb6b-6fc4-4cc9-b57c-9fce8b18ba78}</UniqueIdentifier>
+      <UniqueIdentifier>{e28175ff-aed6-44a5-b330-6214f4682566}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\ModelLoader\PMX">
-      <UniqueIdentifier>{c5f8ca82-7408-4fab-989f-9d2ff1b8b678}</UniqueIdentifier>
+      <UniqueIdentifier>{bad38dbf-34cb-4a64-9d42-648a1f7cabb5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,7 +121,7 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.cpp">
       <Filter>Sources\GraphicsAPI\DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.cpp">
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceFactory.cpp">
       <Filter>Sources\GraphicsAPI\DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp">
@@ -152,6 +152,9 @@
       <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\Shader.cpp">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GraphicsAPI\Shader\DirectX\ShaderFactory.cpp">
       <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Input\Input.cpp">
@@ -261,7 +264,7 @@
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h">
       <Filter>Sources\GraphicsAPI\DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.h">
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceFactory.h">
       <Filter>Sources\GraphicsAPI\DirectX12</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h">
@@ -298,6 +301,9 @@
       <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\Shader.h">
+      <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GraphicsAPI\Shader\DirectX\ShaderFactory.h">
       <Filter>Sources\GraphicsAPI\Shader\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Input\Input.h">

@@ -110,7 +110,7 @@ namespace Shader
         return true;
     }
 
-    void GraphicsPipeline::SetPipeline()
+    void GraphicsPipeline::SetPipelineState()
     {
         pDX12Command->SetPipelineState(m_pPipelineState.Get());
     }
