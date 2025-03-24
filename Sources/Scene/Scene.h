@@ -10,7 +10,7 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "GraphicsAPI/IGraphics.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 namespace Simple
 {
@@ -33,7 +33,7 @@ namespace Simple
         DirectionalLight    m_pDirectionalLight;
         PointLightVec       m_pPointLightVec;
 
-        Graphics::IGraphicsResource* pConstantBufferResource;
+        Graphics::IDX12Resouce* pConstantBufferResource;
 
     private:
         Scene(const Scene&) = delete;

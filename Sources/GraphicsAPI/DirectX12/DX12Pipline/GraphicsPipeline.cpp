@@ -10,7 +10,7 @@
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 #include "GraphicsAPI/DirectX12/DX12Command.h"
 
-#include "GraphicsAPI/Shader/DirectX/Shader.h"
+#include "GraphicsAPI/DirectX12/DX12Shader/Shader.h"
 
 namespace Graphics 
 {

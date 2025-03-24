@@ -10,7 +10,7 @@
 #ifndef _SHADER_H_
 #define _SHADER_H_
 
-#include "GraphicsAPI/Shader/IShader.h"
+#include "GraphicsAPI/DirectX12/DX12Shader/IShader.h"
 
 using Microsoft::WRL::ComPtr;
 

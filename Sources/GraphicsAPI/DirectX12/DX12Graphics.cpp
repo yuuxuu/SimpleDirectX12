@@ -19,7 +19,9 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/VBV/DX12VertexBufferView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/IBV/DX12IndexBufferView.h"
 
-#include "GraphicsAPI/Shader/DirectX/Shader.h"
+#include "GraphicsAPI/DirectX12/DX12Shader/Shader.h"
+
+#include "GraphicsAPI/DirectX12/DX12Pipline/GraphicsPipeline.h"
 
 #include "Texture/Texture.h"
 
@@ -235,7 +237,7 @@ namespace Graphics
         pHeapAllocatorItr->second->SetDescriptorHeap(m_pDX12Command.get());
     }
 
-    void DX12Graphics::InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType)
+    void DX12Graphics::InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType)
     {
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
@@ -271,7 +273,7 @@ namespace Graphics
     }
 
     void DX12Graphics::UpdateGraphicsBufferResource(
-        IGraphicsResource* pGraphicsResource, 
+        IDX12Resouce* pGraphicsResource, 
         const void* updateSource, 
         Simple::IParam* pParam,
         GraphicsResourceType graphicsResourceType)
@@ -317,7 +319,7 @@ namespace Graphics
         }
     }
 
-    void DX12Graphics::SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource)
+    void DX12Graphics::SetConstantBufferResource(UINT index, IDX12Resouce* pGraphicsResource)
     {
         auto pDX12ConstantBufferView = dynamic_cast<DX12ConstantBufferView*>(pGraphicsResource);
         if (pDX12ConstantBufferView == nullptr)
@@ -329,7 +331,7 @@ namespace Graphics
         m_pDX12Command->SetGraphicsRootDescriptorTable(index, pDX12ConstantBufferView->GetGPUDescriptorHandle());
     }
 
-    void DX12Graphics::SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource)
+    void DX12Graphics::SetShaderResource(UINT index, IDX12Resouce* pGraphicsResource)
     {
         auto pDX12ShaderResourceView = dynamic_cast<DX12ShaderResourceView*>(pGraphicsResource);
         if (pDX12ShaderResourceView == nullptr)
@@ -341,7 +343,7 @@ namespace Graphics
         m_pDX12Command->SetGraphicsRootDescriptorTable(index, pDX12ShaderResourceView->GetGPUDescriptorHandle());
     }
 
-    void DX12Graphics::DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties)
+    void DX12Graphics::DrawInstancedVertexBuffer(IDX12Resouce* pVertexResource, UINT numVerties)
     {
         auto pDX12VertexBufferView = dynamic_cast<DX12VertexBufferView*>(pVertexResource);
         if (pDX12VertexBufferView == nullptr)
@@ -356,7 +358,7 @@ namespace Graphics
         m_pDX12Command->DrawInstanced(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, numVerties);
     }
 
-    void DX12Graphics::DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndies)
+    void DX12Graphics::DrawIndexedIndexBuffer(IDX12Resouce* pVertexResource, IDX12Resouce* pIndexResource, UINT numIndies)
     {
         auto pDX12VertexBufferView = dynamic_cast<DX12VertexBufferView*>(pVertexResource);
         if (pDX12VertexBufferView == nullptr)

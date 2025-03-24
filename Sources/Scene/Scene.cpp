@@ -18,8 +18,6 @@
 #include "Mesh/Mesh.h"
 #include "Mesh/ModelMesh.h"
 
-#include "Material/Material.h"
-
 #include "Texture/Texture.h"
 
 #include "Light/DirectionalLight.h"

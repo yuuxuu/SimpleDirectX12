@@ -10,7 +10,7 @@
 #ifndef _GAME_SYSTEM_H_
 #define _GAME_SYSTEM_H_
 
-#include "GraphicsAPI/IGraphics.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 namespace Simple 
 {

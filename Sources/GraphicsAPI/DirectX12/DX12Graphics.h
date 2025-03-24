@@ -10,11 +10,11 @@
 #ifndef _DX12_GRAPHICS_H_
 #define _DX12_GRAPHICS_H_
 
-#include "GraphicsAPI/IGraphics.h"
+#include "IGraphics.h"
 
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
-#include "GraphicsAPI/Shader/DirectX/GraphicsPipeline.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/GraphicsPipeline.h"
 
 #include "Param/IParam.h"
 
@@ -70,17 +70,17 @@ namespace Graphics
 
         void SetGraphicsPipeline() override;
 
-        void InitializeGraphicsBufferResource(IGraphicsResource*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
+        void InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
 
-        void UpdateGraphicsBufferResource(IGraphicsResource* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) override;
+        void UpdateGraphicsBufferResource(IDX12Resouce* pGraphicsResource, const void* updateSource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType) override;
 
-        void SetConstantBufferResource(UINT index, IGraphicsResource* pGraphicsResource) override;
+        void SetConstantBufferResource(UINT index, IDX12Resouce* pGraphicsResource) override;
 
-        void SetShaderResource(UINT index, IGraphicsResource* pGraphicsResource) override;
+        void SetShaderResource(UINT index, IDX12Resouce* pGraphicsResource) override;
 
-        void DrawInstancedVertexBuffer(IGraphicsResource* pVertexResource, UINT numVerties) override;
+        void DrawInstancedVertexBuffer(IDX12Resouce* pVertexResource, UINT numVerties) override;
 
-        void DrawIndexedIndexBuffer(IGraphicsResource* pVertexResource, IGraphicsResource* pIndexResource, UINT numIndies) override;
+        void DrawIndexedIndexBuffer(IDX12Resouce* pVertexResource, IDX12Resouce* pIndexResource, UINT numIndies) override;
     };
 } // namespace
 

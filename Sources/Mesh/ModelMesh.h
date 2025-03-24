@@ -12,8 +12,9 @@
 
 #include "ModelLoader/IModelLoader.h"
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
+
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
 namespace Simple 
 {
@@ -38,7 +39,7 @@ namespace Simple
         RegisterMaterialVec             m_registerMaterialVec;
         RegisterTextureMap              m_registerTextureMap;
 
-        Graphics::IGraphicsResource*    pConstantBufferResource;
+        Graphics::IDX12Resouce*         pConstantBufferResource;
 
     private:
         ModelMesh(const ModelMesh&) = delete;

@@ -10,8 +10,7 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 #include "Param/TextureDataParam.h"
 #include "Param/CubeTextureDataParam.h"
@@ -29,7 +28,7 @@ namespace Simple
 
         bool                                    m_isLoaded;
 
-        Graphics::IGraphicsResource*            pGraphicsResource;
+        Graphics::IDX12Resouce*                 pGraphicsResource;
 
     private:
         Texture(const Texture&) = delete;

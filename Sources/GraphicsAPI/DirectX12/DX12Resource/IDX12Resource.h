@@ -10,8 +10,6 @@
 #ifndef _IDX12_RESOURCE_H_
 #define _IDX12_RESOURCE_H_
 
-#include "GraphicsAPI/IGraphicsResource.h"
-
 using Microsoft::WRL::ComPtr;
 
 namespace Graphics
@@ -20,7 +18,7 @@ namespace Graphics
     class DX12Command;
     class DX12HeapAllocator;
 
-    class IDX12Resouce : public IGraphicsResource
+    class IDX12Resouce
     {
     public:
         IDX12Resouce() {}
