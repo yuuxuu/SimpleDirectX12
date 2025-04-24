@@ -19,9 +19,9 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/VBV/DX12VertexBufferView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/IBV/DX12IndexBufferView.h"
 
-#include "GraphicsAPI/DirectX12/DX12Shader/Shader.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/DX12GraphicsPipelineStateObject.h"
 
-#include "GraphicsAPI/DirectX12/DX12Pipline/GraphicsPipeline.h"
+#include "GraphicsAPI/Shader/Shader.h"
 
 #include "Texture/Texture.h"
 
@@ -195,16 +195,14 @@ namespace Graphics
             if (extension != ".hlsl")
                 continue;
 
-            auto pShader = std::make_unique<Shader::Shader>(m_pDX12Device.get(), m_pDX12Command.get());
+            auto pShader = std::make_unique<Shader::Shader>();
             if (!pShader->Initialize(file.path().generic_string().c_str()))
                 continue;
 
             D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 
-            pShader->SetGraphicsPipelineState(graphicsPipelineStateDesc);
-
-            auto pPipeline = std::make_unique<Shader::GraphicsPipeline>(m_pDX12Device.get(), m_pDX12Command.get());
-            if (pPipeline->InitializePipeline(graphicsPipelineStateDesc))
+            auto pPipeline = std::make_unique<Graphics::DX12GraphicsPipelineStateObject>(m_pDX12Device.get(), m_pDX12Command.get());
+            if (pPipeline->InitializePipeline(pShader.get(), graphicsPipelineStateDesc))
             {
                 m_pShaderVec.emplace_back(std::move(pShader));
 
@@ -219,12 +217,7 @@ namespace Graphics
         if (!pPipeline)
             return;
 
-        auto pShader = m_pShaderVec.front().get();
-        if (!pShader)
-            return;
-
-        pShader->SetRootSignature();
-
+        pPipeline->SetRootSignature();
         pPipeline->SetPipeline();
 
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

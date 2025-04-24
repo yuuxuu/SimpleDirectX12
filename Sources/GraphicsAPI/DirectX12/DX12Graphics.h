@@ -14,7 +14,7 @@
 
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
-#include "GraphicsAPI/DirectX12/DX12Pipline/GraphicsPipeline.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/DX12GraphicsPipelineStateObject.h"
 
 #include "Param/IParam.h"
 
@@ -26,7 +26,7 @@ namespace Graphics
     }
 
     using HeapAllocatorMap = std::map<D3D12_DESCRIPTOR_HEAP_TYPE, std::unique_ptr<DX12HeapAllocator>>;
-    using GraphicsPipelineVec = std::vector<std::unique_ptr<Shader::GraphicsPipeline>>;
+    using GraphicsPipelineVec = std::vector<std::unique_ptr<DX12GraphicsPipelineStateObject>>;
     using ShaderVec = std::vector<std::unique_ptr<Shader::Shader>>;
 
     class DX12Device;

@@ -1,32 +1,80 @@
 ﻿/**
- * @file GraphicsPipeline.cpp
+ * @file DX12GraphicsPipelineStateObject.cpp
  * @brief
  * @author Yu Kimura
  * @date 2020/05/18
  */
 
-#include "GraphicsPipeline.h"
+#include "DX12GraphicsPipelineStateObject.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 #include "GraphicsAPI/DirectX12/DX12Command.h"
 
-#include "GraphicsAPI/DirectX12/DX12Shader/Shader.h"
+#include "GraphicsAPI/Shader/Shader.h"
 
 namespace Graphics 
 {
-namespace Shader
-{
     // コンストラクタ
-    GraphicsPipeline::GraphicsPipeline(DX12Device* pDX12Device,DX12Command* pDX12Command) :
+    DX12GraphicsPipelineStateObject::DX12GraphicsPipelineStateObject(DX12Device* pDX12Device, DX12Command* pDX12Command) :
         pDX12Device(pDX12Device),
         pDX12Command(pDX12Command)
-    {}
+    {
+    }
 
     // デストラクタ
-    GraphicsPipeline::~GraphicsPipeline()
-    {}
+    DX12GraphicsPipelineStateObject::~DX12GraphicsPipelineStateObject()
+    {
+    }
 
-    void GraphicsPipeline::SetDepthStencilState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
+    void DX12GraphicsPipelineStateObject::SetGraphicsPipelineState(Shader::Shader* pShader, D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc)
+    {
+        auto m_pShaderMap = pShader->GetShaderMap();
+        for (const auto pShader : m_pShaderMap)
+        {
+            auto shaderByteCode = D3D12_SHADER_BYTECODE
+            {
+                pShader.second->GetBufferPointer(),
+                pShader.second->GetBufferSize()
+            };
+
+            if (pShader.first == "VS")
+                graphicsPipelineStateDesc.VS = shaderByteCode;
+            else if (pShader.first == "PS")
+                graphicsPipelineStateDesc.PS = shaderByteCode;
+            else if (pShader.first == "HS")
+                graphicsPipelineStateDesc.HS = shaderByteCode;
+            else if (pShader.first == "DS")
+                graphicsPipelineStateDesc.DS = shaderByteCode;
+            else if (pShader.first == "GS")
+                graphicsPipelineStateDesc.GS = shaderByteCode;
+        }
+
+        auto shaderMapItr = m_pShaderMap.find("VS");
+        if (shaderMapItr == m_pShaderMap.cend())
+            return;
+
+        auto pShaderBlob = shaderMapItr->second;
+
+        ComPtr<ID3DBlob> pBlob;
+        HRESULT hr = D3DGetBlobPart(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), D3D_BLOB_ROOT_SIGNATURE, 0, &pBlob);
+        if (FAILED(hr))
+        {
+            MessageBoxA(NULL, "RootSignatureの取得に失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        if (!pDX12Device->CreateRootSignature(m_pRootSignature, pBlob.Get()))
+        {
+            MessageBoxA(NULL, "RootSignatureの作成に失敗しました。", "MessageBox", MB_OK);
+            return;
+        }
+
+        graphicsPipelineStateDesc.pRootSignature = m_pRootSignature.Get();
+        graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    }
+
+    void DX12GraphicsPipelineStateObject::SetDepthStencilState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
         graphicsPipelineStateDesc.DepthStencilState.DepthEnable = TRUE;
         graphicsPipelineStateDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
         graphicsPipelineStateDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
@@ -43,7 +91,7 @@ namespace Shader
         graphicsPipelineStateDesc.DepthStencilState.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
     }
 
-    void GraphicsPipeline::SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
+    void DX12GraphicsPipelineStateObject::SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
         graphicsPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
         graphicsPipelineStateDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
         graphicsPipelineStateDesc.RasterizerState.FrontCounterClockwise = FALSE;
@@ -57,7 +105,7 @@ namespace Shader
         graphicsPipelineStateDesc.RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
     }
 
-    void GraphicsPipeline::SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
+    void DX12GraphicsPipelineStateObject::SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc) {
         graphicsPipelineStateDesc.BlendState.AlphaToCoverageEnable = FALSE;
         graphicsPipelineStateDesc.BlendState.IndependentBlendEnable = FALSE;
 
@@ -75,17 +123,18 @@ namespace Shader
         }
     }
 
-    bool GraphicsPipeline::InitializePipeline(D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc)
+    bool DX12GraphicsPipelineStateObject::InitializePipeline(Shader::Shader* pShader, D3D12_GRAPHICS_PIPELINE_STATE_DESC& graphicsPipelineStateDesc)
     {
         graphicsPipelineStateDesc.NumRenderTargets = 1;
         graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_B8G8R8A8_UNORM;
         graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
+        SetGraphicsPipelineState(pShader, graphicsPipelineStateDesc);
         SetDepthStencilState(graphicsPipelineStateDesc);
         SetRasterizerState(graphicsPipelineStateDesc);
         SetBlendState(graphicsPipelineStateDesc);
 
-        D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = 
+        D3D12_INPUT_ELEMENT_DESC inputElementDesc[] =
         {
             { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT	, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
             { "COLOR"    , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -106,10 +155,13 @@ namespace Shader
         return true;
     }
 
-    void GraphicsPipeline::SetPipeline()
+    void DX12GraphicsPipelineStateObject::SetRootSignature()
+    {
+        pDX12Command->SetGraphicsRootSignature(m_pRootSignature.Get());
+    }
+
+    void DX12GraphicsPipelineStateObject::SetPipeline()
     {
         pDX12Command->SetPipelineState(m_pPipelineState.Get());
     }
-
-} // namespace GraphicsPipeline
 } // namespace Graphics
