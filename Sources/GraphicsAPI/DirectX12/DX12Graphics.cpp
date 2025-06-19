@@ -19,7 +19,9 @@
 #include "GraphicsAPI/DirectX12/DX12Resource/VBV/DX12VertexBufferView.h"
 #include "GraphicsAPI/DirectX12/DX12Resource/IBV/DX12IndexBufferView.h"
 
-#include "GraphicsAPI/DirectX12/DX12Pipline/DX12GraphicsPipelineStateObject.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/PSO/DX12GraphicsPSO.h"
+
+#include "GraphicsAPI/DirectX12/DX12Pipline/PSOFactory/DX12PSOAbstractFactory.h"
 
 #include "GraphicsAPI/Shader/Shader.h"
 
@@ -188,6 +190,8 @@ namespace Graphics
 
     void DX12Graphics::InitializeGraphicsPipeline()
     {
+        DX12PSOAbstractFactory psofactory;
+
         auto itr = std::filesystem::recursive_directory_iterator("Resources/Shader/HLSL");
         for (const auto& file : itr)
         {
@@ -199,14 +203,12 @@ namespace Graphics
             if (!pShader->Initialize(file.path().generic_string().c_str()))
                 continue;
 
-            D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
-
-            auto pPipeline = std::make_unique<Graphics::DX12GraphicsPipelineStateObject>(m_pDX12Device.get(), m_pDX12Command.get());
-            if (pPipeline->InitializePipeline(pShader.get(), graphicsPipelineStateDesc))
+            auto pPSO = psofactory.CreatePSO(m_pDX12Device.get(), pShader.get());
+            if (pPSO)
             {
                 m_pShaderVec.emplace_back(std::move(pShader));
 
-                m_pGraphicsPipelineVec.emplace_back(std::move(pPipeline));
+                m_pGraphicsPipelineVec.emplace_back(std::move(pPSO));
             }
         }
     }
@@ -217,8 +219,8 @@ namespace Graphics
         if (!pPipeline)
             return;
 
-        pPipeline->SetRootSignature();
-        pPipeline->SetPipeline();
+        pPipeline->SetRootSignature(m_pDX12Command.get());
+        pPipeline->SetPipeline(m_pDX12Command.get());
 
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())

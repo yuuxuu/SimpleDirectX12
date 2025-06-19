@@ -7,14 +7,11 @@
 
 #pragma once
 
-#ifndef _DX12_GRAPHICS_H_
-#define _DX12_GRAPHICS_H_
-
 #include "IGraphics.h"
 
 #include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
-#include "GraphicsAPI/DirectX12/DX12Pipline/DX12GraphicsPipelineStateObject.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/PSO/IDX12PSO.h"
 
 #include "Param/IParam.h"
 
@@ -26,7 +23,7 @@ namespace Graphics
     }
 
     using HeapAllocatorMap = std::map<D3D12_DESCRIPTOR_HEAP_TYPE, std::unique_ptr<DX12HeapAllocator>>;
-    using GraphicsPipelineVec = std::vector<std::unique_ptr<DX12GraphicsPipelineStateObject>>;
+    using GraphicsPipelineVec = std::vector<std::unique_ptr<IDX12PSO>>;
     using ShaderVec = std::vector<std::unique_ptr<Shader::Shader>>;
 
     class DX12Device;
@@ -83,5 +80,3 @@ namespace Graphics
         void DrawIndexedIndexBuffer(IDX12Resouce* pVertexResource, IDX12Resouce* pIndexResource, UINT numIndies) override;
     };
 } // namespace
-
-#endif // _DX12_GRAPHICS_H_

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#ifndef _IGRAPHICS_H_
-#define _IGRAPHICS_H_
-
 #include "Param/IParam.h"
 
 #include "GraphicsResourceType.h"
@@ -47,6 +44,4 @@ namespace Graphics
         virtual void DrawIndexedIndexBuffer(IDX12Resouce* pVertexResource, IDX12Resouce* pIndexResource, UINT numIndeies) = 0;
     };
 } // namespace
-
-#endif // _IGRAPHICS_H_
 
