@@ -53,10 +53,8 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="Shared"></ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -156,9 +154,9 @@
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.cpp" />
-    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12PiplineStateObjectFactory.cpp" />
-    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\DX12ComputePipelineStateObject.cpp" />
-    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\DX12GraphicsPipelineStateObject.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSO\DX12ComputePSO.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSO\DX12GraphicsPSO.cpp" />
+    <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSOFactory\DX12PSOAbstractFactory.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.cpp" />
     <ClCompile Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IBV\DX12IndexBufferView.cpp" />
@@ -197,11 +195,13 @@
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Graphics.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12GraphicsResourceBuilder.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12HeapAllocator.h" />
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12PiplineStateObjectFactory.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\GraphicsResourceType.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\IGraphics.h" />
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\DX12ComputePipelineStateObject.h" />
-    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\DX12GraphicsPipelineStateObject.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSO\DX12ComputePSO.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSO\DX12GraphicsPSO.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSO\IDX12PSO.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSOFactory\DX12PSOAbstractFactory.h" />
+    <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Pipline\PSOFactory\IDX12PSOAbstractFactory.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\IDX12Resource.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\CBV\DX12ConstantBurfferView.h" />
     <ClInclude Include="Sources\GraphicsAPI\DirectX12\DX12Resource\DSV\DX12DepthStencilView.h" />
@@ -236,6 +236,5 @@
     <ClInclude Include="Sources\Window\Winow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>
