@@ -1,5 +1,5 @@
 ﻿/**
- * @file DX12PSOAbstractFactory.h
+ * @file DX12GraphicsPSOAbstractFactory.h
  * @brief
  * @author Yu Kimura
  * @date 2025/06/19
@@ -11,11 +11,11 @@
 
 namespace Graphics
 {
-	class DX12PSOAbstractFactory : IDX12PSOAbstractFactory
+	class DX12GraphicsPSOAbstractFactory : IDX12PSOAbstractFactory
 	{
 	public:
-		DX12PSOAbstractFactory();
-		~DX12PSOAbstractFactory();
+		DX12GraphicsPSOAbstractFactory();
+		~DX12GraphicsPSOAbstractFactory();
 
 		std::unique_ptr<IDX12PSO> CreatePSO(DX12Device* pDX12Device, Shader::Shader* pShader) override;
 	};

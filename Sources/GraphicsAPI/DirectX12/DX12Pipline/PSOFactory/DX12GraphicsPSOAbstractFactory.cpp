@@ -1,11 +1,11 @@
 ﻿/**
- * @file DX12PSOAbstractFactory.h
+ * @file DX12GraphicsPSOAbstractFactory.h
  * @brief
  * @author Yu Kimura
  * @date 2025/06/19
  */
 
-#include "DX12PSOAbstractFactory.h"
+#include "DX12GraphicsPSOAbstractFactory.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
 
@@ -15,16 +15,15 @@
 
 namespace Graphics
 {
-	DX12PSOAbstractFactory::DX12PSOAbstractFactory()
+	DX12GraphicsPSOAbstractFactory::DX12GraphicsPSOAbstractFactory()
 	{ }
 
-	DX12PSOAbstractFactory::~DX12PSOAbstractFactory()
+	DX12GraphicsPSOAbstractFactory::~DX12GraphicsPSOAbstractFactory()
 	{ }
 
-	std::unique_ptr<IDX12PSO> DX12PSOAbstractFactory::CreatePSO(DX12Device* pDX12Device, Shader::Shader* pShader)
+	std::unique_ptr<IDX12PSO> DX12GraphicsPSOAbstractFactory::CreatePSO(DX12Device* pDX12Device, Shader::Shader* pShader)
 	{
 		auto pDX12PSO = std::make_unique<DX12GraphicsPSO>();
-
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc = {};
 
 		{
