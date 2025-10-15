@@ -10,6 +10,8 @@
 #include "GraphicsAPI/Shader/IShader.h"
 #include "GraphicsAPI/DirectX12/DX12Pipline/PSO/IDX12PSO.h"
 
+#include "Param/ShaderParam.h"
+
 namespace Graphics
 {
 	class DX12Device;
@@ -56,7 +58,7 @@ namespace System
 
 		void Initialize(Graphics::DX12Device* pDX12Device);
 
-		void SetCurrentShader(const std::string& shaderFileName);
+		void SetCurrentShader(const ShaderParam& shaderFileName);
 
 		void SetPipline(Graphics::DX12Command* pDX12Command);
 	};

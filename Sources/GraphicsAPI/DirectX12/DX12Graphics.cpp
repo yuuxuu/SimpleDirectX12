@@ -21,9 +21,13 @@
 
 #include "GraphicsAPI/DirectX12/DX12Pipline/PSO/DX12GraphicsPSO.h"
 
-#include "GraphicsAPI/DirectX12/DX12Pipline/PSOFactory/DX12PSOAbstractFactory.h"
+#include "GraphicsAPI/DirectX12/DX12Pipline/PSOFactory/DX12GraphicsPSOAbstractFactory.h"
 
 #include "GraphicsAPI/Shader/Shader.h"
+
+#include "System/ShaderCacheSystem.h"
+
+#include "Param/ShaderParam.h"
 
 #include "Texture/Texture.h"
 
@@ -136,7 +140,7 @@ namespace Graphics
                 m_pDX12HeapAllocatorMap[descriptorHeapDesc.Type] = std::move(pHeapAllocator);
         }
 
-        InitializeGraphicsPipeline();
+        Simple::System::ShaderCacheSystem::GetSystem().Initialize(m_pDX12Device.get());
 
         return true;
     }
@@ -184,48 +188,17 @@ namespace Graphics
         m_pDX12Command->ClearRenderTargetView(renderTargetViewHandle);
         m_pDX12Command->ClearDepthStencilView(depthStencilViewHandle, D3D12_CLEAR_FLAG_DEPTH);
         m_pDX12Command->SetRenderTargetView(&renderTargetViewHandle, &depthStencilViewHandle);
-
-        SetGraphicsPipeline();
     }
 
-    void DX12Graphics::InitializeGraphicsPipeline()
+    void DX12Graphics::SetShaderPipeline()
     {
-        DX12PSOAbstractFactory psofactory;
-
-        auto itr = std::filesystem::recursive_directory_iterator("Resources/Shader/HLSL");
-        for (const auto& file : itr)
-        {
-            auto extension = file.path().extension();
-            if (extension != ".hlsl")
-                continue;
-
-            auto pShader = std::make_unique<Shader::Shader>();
-            if (!pShader->Initialize(file.path().generic_string().c_str()))
-                continue;
-
-            auto pPSO = psofactory.CreatePSO(m_pDX12Device.get(), pShader.get());
-            if (pPSO)
-            {
-                m_pShaderVec.emplace_back(std::move(pShader));
-
-                m_pGraphicsPipelineVec.emplace_back(std::move(pPSO));
-            }
-        }
-    }
-
-    void DX12Graphics::SetGraphicsPipeline()
-    {
-        auto pPipeline = m_pGraphicsPipelineVec.front().get();
-        if (!pPipeline)
-            return;
-
-        pPipeline->SetRootSignature(m_pDX12Command.get());
-        pPipeline->SetPipeline(m_pDX12Command.get());
-
+        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
+        shaderCacheSystem.SetPipline(m_pDX12Command.get());
+        
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
         {
-            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。\nGraphicsResourceの初期化が出来ませんでした。", "MessageBox", MB_OK);
+            MessageBoxA(NULL, "対象のHeapAllocatorが取得出来ませんでした。", "MessageBox", MB_OK);
             return;
         }
 

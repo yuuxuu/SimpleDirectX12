@@ -23,8 +23,6 @@ namespace Graphics
     }
 
     using HeapAllocatorMap = std::map<D3D12_DESCRIPTOR_HEAP_TYPE, std::unique_ptr<DX12HeapAllocator>>;
-    using GraphicsPipelineVec = std::vector<std::unique_ptr<IDX12PSO>>;
-    using ShaderVec = std::vector<std::unique_ptr<Shader::Shader>>;
 
     class DX12Device;
     class DX12Command;
@@ -35,9 +33,6 @@ namespace Graphics
     private:
         std::unique_ptr<DX12Device>                     m_pDX12Device;
         std::unique_ptr<DX12Command>                    m_pDX12Command;
-
-        GraphicsPipelineVec                             m_pGraphicsPipelineVec;
-        ShaderVec                                       m_pShaderVec;
 
         HeapAllocatorMap                                m_pDX12HeapAllocatorMap;
 
@@ -63,9 +58,7 @@ namespace Graphics
 
         void Update() override;
 
-        void InitializeGraphicsPipeline() override;
-
-        void SetGraphicsPipeline() override;
+        void SetShaderPipeline() override;
 
         void InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
 

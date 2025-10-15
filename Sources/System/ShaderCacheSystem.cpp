@@ -13,8 +13,6 @@
 
 #include "GraphicsAPI/DirectX12/DX12Pipline/PSOFactory/DX12GraphicsPSOAbstractFactory.h"
 
-#include "Param/ShaderFileNameListParam.h"
-
 namespace Simple
 {
 namespace System
@@ -40,7 +38,7 @@ namespace System
         }
 
         Graphics::DX12GraphicsPSOAbstractFactory factory;
-        for (const auto& fileName : ShaderFileNameListParam::GetFileNameList())
+        for (const auto& fileName : Simple::ShaderFileNameList)
         {
             auto itr = filePathMap.find(fileName);
             if (itr == filePathMap.cend())
@@ -59,20 +57,20 @@ namespace System
         }
 	}
 
-    void ShaderCacheSystem::SetCurrentShader(const std::string& shaderFileName)
+    void ShaderCacheSystem::SetCurrentShader(const ShaderParam& shaderParam)
     {
-        if (m_pCurrentShader.first != shaderFileName)
+        if (m_pCurrentShader.first != shaderParam.targetShaderFile)
         {
-            auto itr = m_shaderMap.find(shaderFileName);
+            auto itr = m_shaderMap.find(shaderParam.targetShaderFile);
             if (itr == m_shaderMap.cend())
             {
                 m_pCurrentShader = {};
 
-                MessageBoxA(NULL, (shaderFileName + " が読み込まれていません。").c_str(), "MessageBox", MB_OK);
+                MessageBoxA(NULL, (shaderParam.targetShaderFile + " が読み込まれていません。").c_str(), "MessageBox", MB_OK);
                 return;
             }
 
-            m_pCurrentShader = { shaderFileName, &itr->second };
+            m_pCurrentShader = { shaderParam.targetShaderFile, &itr->second };
         }
     }
 
