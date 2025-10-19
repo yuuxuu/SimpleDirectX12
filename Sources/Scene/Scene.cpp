@@ -135,6 +135,11 @@ namespace Simple
         }
 
         {
+            m_pCamera = std::make_unique<Simple::Camera>(windowWidth, windowHeight);
+            m_pCamera->InitializeGraphicsResource(pGraphics);
+        }
+
+        {
             m_pDirectionalLight = std::make_unique<Light::DirectionalLight>();
             m_pDirectionalLight->InitializeGraphicsResource(pGraphics);
 

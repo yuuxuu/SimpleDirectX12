@@ -28,7 +28,6 @@ namespace System
 
         std::unique_ptr<Simple::Input>      m_pInput;
         std::unique_ptr<Simple::Scene>      m_pScene;
-        std::unique_ptr<Simple::Camera>     m_pCamera;
 
         Graphics::IGraphics*                pGraphics;
 

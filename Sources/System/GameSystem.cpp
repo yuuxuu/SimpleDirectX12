@@ -41,9 +41,6 @@ namespace System
         m_pScene = std::make_unique<Simple::Scene>();
         m_pScene->SetUpScene(pGraphics, windowWidth, windowHeight);
 
-        m_pCamera = std::make_unique<Simple::Camera>(windowWidth, windowHeight);
-        m_pCamera->InitializeGraphicsResource(pGraphics);
-
         // イベントハンドル生成
         m_hGame = CreateEvent(NULL, false, false, NULL);
         if (!m_hGame) {
@@ -94,13 +91,9 @@ namespace System
     {
         m_pInput->UpdateInput();
 
-        m_pCamera->Update(*m_pInput.get());
-
-        m_pScene->UpdateScene(pGraphics);
+        m_pScene->UpdateScene(pGraphics, *m_pInput.get());
 
         pGraphics->Update();
-
-        m_pCamera->SetGraphicsResource(pGraphics);
 
         m_pScene->DrawScene(pGraphics);
 

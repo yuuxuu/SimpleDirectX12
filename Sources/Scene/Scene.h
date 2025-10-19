@@ -21,6 +21,8 @@ namespace Simple
     }
 
     class ModelMesh;
+    class Camera;
+    class Input;
 
     using ModelMeshVec = std::vector<std::unique_ptr<ModelMesh>>;
     using DirectionalLight = std::unique_ptr<Light::DirectionalLight>;
@@ -32,6 +34,8 @@ namespace Simple
         ModelMeshVec        m_pModelMeshVec;
         DirectionalLight    m_pDirectionalLight;
         PointLightVec       m_pPointLightVec;
+
+        std::unique_ptr <Simple::Camera> m_pCamera;
 
         Graphics::IDX12Resouce* pConstantBufferResource;
 
@@ -45,7 +49,7 @@ namespace Simple
 
         void SetUpScene(Graphics::IGraphics* graphics, const UINT windowWidth, const UINT windowHeight);
 
-        void UpdateScene(Graphics::IGraphics* graphics);
+        void UpdateScene(Graphics::IGraphics* graphics, const Input& input);
 
         void DrawScene(Graphics::IGraphics* graphics);
     };
