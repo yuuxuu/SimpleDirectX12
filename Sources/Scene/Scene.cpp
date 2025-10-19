@@ -9,6 +9,7 @@
 
 #include "Param/BufferParam.h"
 #include "Param/ModelDrawInfoParam.h"
+#include "Param/ShaderParam.h"
 
 #include "Buffer/VertexBuffer.h"
 #include "Material/Material.h"
@@ -28,6 +29,7 @@
 #include "ModelLoader/PMX/PMXLoader.h"
 
 #include "System/ThreadPoolSystem.h"
+#include "System/ShaderCacheSystem.h"
 
 namespace Simple 
 {
@@ -178,8 +180,10 @@ namespace Simple
         }
     }
 
-    void Scene::UpdateScene(Graphics::IGraphics* pGraphics)
+    void Scene::UpdateScene(Graphics::IGraphics* pGraphics, const Input& input)
     {
+        m_pCamera->Update(input);
+        m_pCamera->SetGraphicsResource(pGraphics);
         {
             PointLightConstantBuffer pointLightConstantBuffer;
             for (auto i = 0; i < m_pPointLightVec.size(); ++i)
@@ -199,9 +203,15 @@ namespace Simple
 
     void Scene::DrawScene(Graphics::IGraphics* pGraphics)
     {
-        m_pDirectionalLight->SetGraphicsResource(pGraphics);
+        Simple::ShaderParam param;
+        param.targetShaderFile = ShaderFileName_Model;
+        param.SetupResources[1] = m_pCamera->GetBufferResource();
+        param.SetupResources[3] = m_pDirectionalLight->GetBufferResource();
+        param.SetupResources[4] = pConstantBufferResource;
 
-        pGraphics->SetConstantBufferResource(4, pConstantBufferResource);
+        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
+        shaderCacheSystem.SetCurrentShader(param);
+        pGraphics->SetShaderPipeline();
 
         //for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
         //    itr->get()->SetGraphicsResource(pGraphics);
