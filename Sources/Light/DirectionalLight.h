@@ -33,7 +33,7 @@ namespace Light
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        Graphics::IDX12Resouce* GetBufferResource() const { return pConstantBufferResource; }
     };
 } // namespace Light
 } // namespace Simple

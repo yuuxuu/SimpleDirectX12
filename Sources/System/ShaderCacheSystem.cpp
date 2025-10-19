@@ -10,6 +10,7 @@
 #include "GraphicsAPI/Shader/Shader.h"
 
 #include "GraphicsAPI/DirectX12/DX12Device.h"
+#include "GraphicsAPI/DirectX12/DX12HeapAllocator.h"
 
 #include "GraphicsAPI/DirectX12/DX12Pipline/PSOFactory/DX12GraphicsPSOAbstractFactory.h"
 
@@ -59,7 +60,7 @@ namespace System
 
     void ShaderCacheSystem::SetCurrentShader(const ShaderParam& shaderParam)
     {
-        if (m_pCurrentShader.first != shaderParam.targetShaderFile)
+        if (m_pCurrentShader.first.targetShaderFile != shaderParam.targetShaderFile)
         {
             auto itr = m_shaderMap.find(shaderParam.targetShaderFile);
             if (itr == m_shaderMap.cend())
@@ -70,11 +71,15 @@ namespace System
                 return;
             }
 
-            m_pCurrentShader = { shaderParam.targetShaderFile, &itr->second };
+            m_pCurrentShader = { shaderParam, &itr->second };
+        }
+        else if(m_pCurrentShader.first.SetupResources != shaderParam.SetupResources)
+        {
+            m_pCurrentShader.first = shaderParam;
         }
     }
 
-    void ShaderCacheSystem::SetPipline(Graphics::DX12Command* pDX12Command)
+    void ShaderCacheSystem::SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command, Graphics::DX12HeapAllocator* pHeapAllocator)
     {
         if (!m_pCurrentShader.second)
         {
@@ -83,6 +88,13 @@ namespace System
 
         m_pCurrentShader.second->pPSO->SetRootSignature(pDX12Command);
         m_pCurrentShader.second->pPSO->SetPipeline(pDX12Command);
+
+        pHeapAllocator->SetDescriptorHeap(pDX12Command);
+
+        for (const auto& resourceMap : m_pCurrentShader.first.SetupResources)
+        {
+            pGraphics->SetConstantBufferResource(resourceMap.first, resourceMap.second);
+        }
     }
 
 } // namespace System

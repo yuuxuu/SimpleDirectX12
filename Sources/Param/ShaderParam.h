@@ -9,6 +9,8 @@
 
 #include "IParam.h"
 
+#include "../GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
+
 namespace Simple
 {
     static const std::string& ShaderFileName_Model = "Model.hlsl";
@@ -25,6 +27,8 @@ namespace Simple
     struct ShaderParam : public IParam
     {
         std::string targetShaderFile;
+
+        std::map<int, Graphics::IDX12Resouce*> SetupResources;
     };
 } // namespace
 

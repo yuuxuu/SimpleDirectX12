@@ -192,9 +192,6 @@ namespace Graphics
 
     void DX12Graphics::SetShaderPipeline()
     {
-        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
-        shaderCacheSystem.SetPipline(m_pDX12Command.get());
-        
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
         {
@@ -202,7 +199,8 @@ namespace Graphics
             return;
         }
 
-        pHeapAllocatorItr->second->SetDescriptorHeap(m_pDX12Command.get());
+        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
+        shaderCacheSystem.SetPipline(this, m_pDX12Command.get(), pHeapAllocatorItr->second.get());
     }
 
     void DX12Graphics::InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType)

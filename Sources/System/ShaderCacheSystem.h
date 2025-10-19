@@ -9,6 +9,7 @@
 
 #include "GraphicsAPI/Shader/IShader.h"
 #include "GraphicsAPI/DirectX12/DX12Pipline/PSO/IDX12PSO.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 #include "Param/ShaderParam.h"
 
@@ -16,6 +17,7 @@ namespace Graphics
 {
 	class DX12Device;
 	class DX12Command;
+	class DX12HeapAllocator;
 }
 
 namespace Simple
@@ -43,7 +45,7 @@ namespace System
 	private:
 		ShaderMap m_shaderMap;
 
-		std::pair<std::string, ShaderPSOPair*> m_pCurrentShader;
+		std::pair<ShaderParam, ShaderPSOPair*> m_pCurrentShader;
 
 	private:
 		ShaderCacheSystem();
@@ -58,9 +60,9 @@ namespace System
 
 		void Initialize(Graphics::DX12Device* pDX12Device);
 
-		void SetCurrentShader(const ShaderParam& shaderFileName);
+		void SetCurrentShader(const ShaderParam& shaderParam);
 
-		void SetPipline(Graphics::DX12Command* pDX12Command);
+		void SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command, Graphics::DX12HeapAllocator* pHeapAllocator);
 	};
 } // namespace System
 } // namespace Simple
