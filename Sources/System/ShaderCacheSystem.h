@@ -62,7 +62,7 @@ namespace System
 
 		void SetCurrentShader(const ShaderParam& shaderParam);
 
-		void SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command, Graphics::DX12HeapAllocator* pHeapAllocator);
+		void SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command);
 	};
 } // namespace System
 } // namespace Simple

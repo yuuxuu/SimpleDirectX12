@@ -79,7 +79,7 @@ namespace System
         }
     }
 
-    void ShaderCacheSystem::SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command, Graphics::DX12HeapAllocator* pHeapAllocator)
+    void ShaderCacheSystem::SetPipline(Graphics::IGraphics* pGraphics, Graphics::DX12Command* pDX12Command)
     {
         if (!m_pCurrentShader.second)
         {
@@ -88,8 +88,6 @@ namespace System
 
         m_pCurrentShader.second->pPSO->SetRootSignature(pDX12Command);
         m_pCurrentShader.second->pPSO->SetPipeline(pDX12Command);
-
-        pHeapAllocator->SetDescriptorHeap(pDX12Command);
 
         for (const auto& resourceMap : m_pCurrentShader.first.SetupResources)
         {

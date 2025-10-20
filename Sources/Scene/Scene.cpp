@@ -209,9 +209,7 @@ namespace Simple
         param.SetupResources[3] = m_pDirectionalLight->GetBufferResource();
         param.SetupResources[4] = pConstantBufferResource;
 
-        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
-        shaderCacheSystem.SetCurrentShader(param);
-        pGraphics->SetShaderPipeline();
+        pGraphics->SetShaderPipeline(&param);
 
         //for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
         //    itr->get()->SetGraphicsResource(pGraphics);

@@ -27,7 +27,7 @@ namespace Graphics
 
         virtual void Update() = 0;
 
-        virtual void SetShaderPipeline() = 0;
+        virtual void SetShaderPipeline(Simple::IParam* param) = 0;
 
         virtual void InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType GraphicsResourceType) = 0;
 

@@ -58,7 +58,7 @@ namespace Graphics
 
         void Update() override;
 
-        void SetShaderPipeline() override;
+        void SetShaderPipeline(Simple::IParam* param) override;
 
         void InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* param, GraphicsResourceType graphicsResourceType) override;
 

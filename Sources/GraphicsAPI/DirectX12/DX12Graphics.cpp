@@ -190,7 +190,7 @@ namespace Graphics
         m_pDX12Command->SetRenderTargetView(&renderTargetViewHandle, &depthStencilViewHandle);
     }
 
-    void DX12Graphics::SetShaderPipeline()
+    void DX12Graphics::SetShaderPipeline(Simple::IParam* param)
     {
         auto pHeapAllocatorItr = m_pDX12HeapAllocatorMap.find(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         if (pHeapAllocatorItr == m_pDX12HeapAllocatorMap.end())
@@ -199,8 +199,14 @@ namespace Graphics
             return;
         }
 
-        auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
-        shaderCacheSystem.SetPipline(this, m_pDX12Command.get(), pHeapAllocatorItr->second.get());
+        pHeapAllocatorItr->second->SetDescriptorHeap(m_pDX12Command.get());
+
+        if (auto pShaderParam = dynamic_cast<Simple::ShaderParam*>(param))
+        {
+            auto& shaderCacheSystem = Simple::System::ShaderCacheSystem::GetSystem();
+            shaderCacheSystem.SetCurrentShader(*pShaderParam);
+            shaderCacheSystem.SetPipline(this, m_pDX12Command.get());
+        }
     }
 
     void DX12Graphics::InitializeGraphicsBufferResource(IDX12Resouce*& pGraphicsResource, Simple::IParam* pParam, GraphicsResourceType graphicsResourceType)
