@@ -12,8 +12,9 @@
 
 #include "Math/math.h"
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
+
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
 namespace Simple 
 {
@@ -42,9 +43,9 @@ namespace Simple
         std::vector<VertexBuffer>       m_vertices;
         std::vector<DWORD>              m_indecies;
 
-        Graphics::IGraphicsResource*    pConstantBufferResource;
-        Graphics::IGraphicsResource*    pVertexBufferResource;
-        Graphics::IGraphicsResource*    pIndexBufferResource;
+        Graphics::IDX12Resouce*         pConstantBufferResource;
+        Graphics::IDX12Resouce*         pVertexBufferResource;
+        Graphics::IDX12Resouce*         pIndexBufferResource;
 
     private:
         Mesh(const Mesh&) = delete;

@@ -10,8 +10,9 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
+
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
 #include "Buffer/MaterialBuffer.h"
 
@@ -22,7 +23,7 @@ namespace Simple
     private:
         Simple::MaterialBuffer          m_MaterialBuffer;
 
-        Graphics::IGraphicsResource*    pGraphicsResource;
+        Graphics::IDX12Resouce*         pGraphicsResource;
 
     private:
         Material(const Material&) = delete;

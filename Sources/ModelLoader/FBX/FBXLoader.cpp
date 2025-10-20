@@ -10,7 +10,6 @@
 #include "math/math.h"
 
 #include "Mesh/Mesh.h"
-#include "Mesh/MeshBone.h"
 
 #include "Mesh/ModelMesh.h"
 
@@ -358,8 +357,6 @@ namespace ModelLoader
 
             auto clusterCount = pFbxSkin->GetClusterCount();
 
-            pPraram->vecMeshBone.reserve(clusterCount);
-
             for (auto cIndex = 0; cIndex < clusterCount; ++cIndex)
             {
                 auto pFbxCluster = pFbxSkin->GetCluster(cIndex);
@@ -374,12 +371,6 @@ namespace ModelLoader
                 for (int rIndex = 0; rIndex < row; rIndex++)
                     for (int cIndex = 0; cIndex < col; cIndex++)
                         mat.m[rIndex][cIndex] = static_cast<float>(fbxMatrix.Get(rIndex, cIndex));
-
-                auto pMeshBone = std::make_unique<MeshBone>(mat);
-
-                pPraram->vecMeshBone.emplace_back(pMeshBone.get());
-
-                pModelMesh->RegisterMeshBone(pFbxCluster->GetLink()->GetName(), pMeshBone);
             }
         }
     }

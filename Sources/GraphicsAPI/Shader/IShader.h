@@ -16,10 +16,11 @@ namespace Shader
 {
     class IShader 
     {
-    protected:
+    public:
         IShader() {};
         virtual ~IShader() {};
 
+    protected:
         virtual bool Initialize(const std::string& shaderFilePath) = 0;
 
         virtual void CompileShader(const std::string& shaderFilePath, const std::string& entryPoint, const std::string& shaderModel) = 0;

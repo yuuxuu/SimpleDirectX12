@@ -10,7 +10,7 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "GraphicsAPI/IGraphics.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 namespace Simple
 {
@@ -21,6 +21,8 @@ namespace Simple
     }
 
     class ModelMesh;
+    class Camera;
+    class Input;
 
     using ModelMeshVec = std::vector<std::unique_ptr<ModelMesh>>;
     using DirectionalLight = std::unique_ptr<Light::DirectionalLight>;
@@ -33,7 +35,9 @@ namespace Simple
         DirectionalLight    m_pDirectionalLight;
         PointLightVec       m_pPointLightVec;
 
-        Graphics::IGraphicsResource* pConstantBufferResource;
+        std::unique_ptr <Simple::Camera> m_pCamera;
+
+        Graphics::IDX12Resouce* pConstantBufferResource;
 
     private:
         Scene(const Scene&) = delete;
@@ -45,7 +49,7 @@ namespace Simple
 
         void SetUpScene(Graphics::IGraphics* graphics, const UINT windowWidth, const UINT windowHeight);
 
-        void UpdateScene(Graphics::IGraphics* graphics);
+        void UpdateScene(Graphics::IGraphics* graphics, const Input& input);
 
         void DrawScene(Graphics::IGraphics* graphics);
     };

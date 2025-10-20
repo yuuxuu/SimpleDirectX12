@@ -38,10 +38,5 @@ namespace Light
         pGraphics->UpdateGraphicsBufferResource(pConstantBufferResource, &directionalLight, &param, Graphics::GraphicsResourceType::CBV);
     }
 
-    void DirectionalLight::SetGraphicsResource(Graphics::IGraphics* pGraphics)
-    {
-        pGraphics->SetConstantBufferResource(3, pConstantBufferResource);
-    }
-
 } // namespace Light
 } // namespace Simple

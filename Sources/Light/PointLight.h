@@ -10,8 +10,7 @@
 #ifndef _POINT_LIGHT_H_
 #define _POINT_LIGHT_H_
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
 
 #include "Buffer/LightBuffer.h"
 

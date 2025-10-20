@@ -12,8 +12,8 @@
 
 #include "Math/math.h"
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
 namespace Simple 
 {
@@ -31,7 +31,7 @@ namespace Simple
 
         float                           m_speed;
 
-        Graphics::IGraphicsResource*    pGraphicsResource;
+        Graphics::IDX12Resouce*         pGraphicsResource;
 
     private:
         Camera(const Camera&) = delete;
@@ -56,6 +56,8 @@ namespace Simple
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
         void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+
+        Graphics::IDX12Resouce* GetBufferResource() const { return pGraphicsResource; }
     };
 
 } // namespace

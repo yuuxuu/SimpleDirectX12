@@ -10,8 +10,9 @@
 #ifndef _DIRECTIONAL_LIGHT_H_
 #define _DIRECTIONAL_LIGHT_H_
 
-#include "GraphicsAPI/IGraphics.h"
-#include "GraphicsAPI/IGraphicsResource.h"
+#include "GraphicsAPI/DirectX12/IGraphics.h"
+
+#include "GraphicsAPI/DirectX12/DX12Resource/IDX12Resource.h"
 
 namespace Simple 
 {
@@ -20,7 +21,7 @@ namespace Light
     class DirectionalLight
     {
     private:
-        Graphics::IGraphicsResource* pConstantBufferResource;
+        Graphics::IDX12Resouce* pConstantBufferResource;
 
     private:
         DirectionalLight(const DirectionalLight&) = delete;
@@ -32,7 +33,7 @@ namespace Light
 
         void InitializeGraphicsResource(Graphics::IGraphics* pGraphics);
 
-        void SetGraphicsResource(Graphics::IGraphics* pGraphics);
+        Graphics::IDX12Resouce* GetBufferResource() const { return pConstantBufferResource; }
     };
 } // namespace Light
 } // namespace Simple
