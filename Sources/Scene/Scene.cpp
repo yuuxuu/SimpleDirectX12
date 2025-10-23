@@ -209,6 +209,7 @@ namespace Simple
         param.SetupResources[3] = m_pDirectionalLight->GetBufferResource();
         param.SetupResources[4] = pConstantBufferResource;
 
+        // WebHookテスト
         pGraphics->SetShaderPipeline(&param);
 
         //for (auto itr = m_pPointLightVec.cbegin(); itr != m_pPointLightVec.cend(); itr++)
